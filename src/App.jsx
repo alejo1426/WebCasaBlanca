@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar'; 
 import Login from './components/Login';
 import SignUp from './components/SignUp';
+import Sidebar from './components/Sidebar';
 
 const App = () => {
     return (
@@ -12,6 +13,7 @@ const App = () => {
                 </>} />
                 <Route path="/Login" element={<Login />} />
                 <Route path="/signup" element={<SignUp />} />
+                <Route path="/Sidebar" element={<Sidebar />} />
             </Routes>
         </Router>
     );

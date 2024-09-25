@@ -1,11 +1,50 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom'; 
+import { supabase } from '../../supabaseClient'; // Asegúrate de importar tu cliente supabase
+import bcrypt from 'bcryptjs'; // Importa bcrypt
 
 const Login = () => {
-
     const navigate = useNavigate();
+    const [usuario, setUsuario] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
 
     const handleSignUpClick = () => {
-        navigate('/signup'); // Cambia a la ruta correspondiente
+        navigate('/signup');
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        // Validaciones simples
+        if (!usuario || !password) {
+            setError('Por favor completa todos los campos.');
+            return;
+        }
+
+        // Obtén el usuario de tu base de datos
+        const { data: user, error: fetchError } = await supabase
+            .from('usuarios') // Asegúrate de que este es el nombre correcto de la tabla
+            .select('*')
+            .eq('usuario', usuario) // O eq('usuario', email) si usas usuario en vez de correo
+            .single();
+
+        if (fetchError) {
+            setError('Error al obtener el usuario. Inténtalo de nuevo.');
+            console.error(fetchError);
+            return;
+        }
+
+        // Compara la contraseña hasheada con la contraseña ingresada
+        const isPasswordValid = user && await bcrypt.compare(password, user.password);
+        
+        if (!isPasswordValid) {
+            setError('Credenciales incorrectas. Por favor, intenta de nuevo.');
+        } else {
+            console.log('Usuario autenticado');
+            // Redirige a la página principal o donde necesites
+            navigate('/Sidebar');
+        }
     };
 
     return (
@@ -16,9 +55,9 @@ const Login = () => {
                 </div>
                 <h1 className="text-4xl font-bold text-[#006aff]">CASA BLANCA</h1>
             </div>
-            <form className="flex flex-col space-y-4">
+            <form className="flex flex-col space-y-4" onSubmit={handleSubmit}>
                 <div>
-                    <label htmlFor="email" className="block mb-2 text-sm font-medium text-[#111827]">Usuario</label>
+                    <label htmlFor="usuario" className="block mb-2 text-sm font-medium text-[#111827]">Usuario</label>
                     <div className="relative text-gray-400">
                         <span className="absolute inset-y-0 left-0 flex items-center p-1 pl-3">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-mail">
@@ -26,7 +65,16 @@ const Login = () => {
                                 <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
                             </svg>
                         </span>
-                        <input type="email" name="email" id="email" className="pl-12 mb-2 bg-gray-50 text-gray-600 border border-gray-300 rounded-lg focus:border-transparent focus:ring-1 focus:ring-gray-400 focus:outline-none block w-full p-2.5" placeholder="user123" autoComplete="off" />
+                        <input 
+                            type="text" 
+                            name="usuario" 
+                            id="usuario" 
+                            className="pl-12 mb-2 bg-gray-50 text-gray-600 border border-gray-300 rounded-lg focus:border-transparent focus:ring-1 focus:ring-gray-400 focus:outline-none block w-full p-2.5" 
+                            placeholder="user123" 
+                            value={usuario}
+                            onChange={(e) => setUsuario(e.target.value)} 
+                            autoComplete="off" 
+                        />
                     </div>
                 </div>
                 <div>
@@ -40,9 +88,19 @@ const Login = () => {
                                 <path d="m8.5 10 7 4"></path>
                             </svg>
                         </span>
-                        <input type="password" name="password" id="password" placeholder="••••••••••" className="pl-12 mb-2 bg-gray-50 text-gray-600 border border-gray-300 rounded-lg focus:border-transparent focus:ring-1 focus:ring-gray-400 focus:outline-none block w-full p-2.5" autoComplete="new-password" />
+                        <input 
+                            type="password" 
+                            name="password" 
+                            id="password" 
+                            placeholder="••••••••••" 
+                            className="pl-12 mb-2 bg-gray-50 text-gray-600 border border-gray-300 rounded-lg focus:border-transparent focus:ring-1 focus:ring-gray-400 focus:outline-none block w-full p-2.5" 
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)} 
+                            autoComplete="current-password" 
+                        />
                     </div>
                 </div>
+                {error && <p className="text-red-600">{error}</p>} {/* Mostrar mensaje de error */}
                 <button type="submit" className="w-full text-[#ffffff] bg-[#0d00ff] focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-4">Ingresar</button>
                 <div className="text-sm font-light text-[#000000] text-center">
                     No tienes una cuenta? <span className="font-medium text-[#0d00ff] hover:underline cursor-pointer" onClick={handleSignUpClick}>Registrarse</span>

@@ -1,0 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  background: linear-gradient(to bottom right, #003b5c, #f8e72d);
+  min-height: 100vh; /* Asegúrate de que el fondo cubra toda la pantalla */
+  display: flex; /* Para centrar los contenidos */
+  align-items: center; /* Centrar verticalmente */
+  justify-content: center; /* Centrar horizontalmente */
+}

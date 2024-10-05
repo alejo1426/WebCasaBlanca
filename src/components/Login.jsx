@@ -1,7 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; 
-import { supabase } from '../../supabaseClient'; 
-import bcrypt from 'bcryptjs';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
     const navigate = useNavigate();
@@ -9,7 +7,7 @@ const Login = () => {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
 
-    const handleSignUpClick = () => {
+    const handleRegistroClick = () => {
         navigate('/signup');
     };
 
@@ -22,25 +20,29 @@ const Login = () => {
             return;
         }
 
-        // Obtén el usuario de tu base de datos
-        const { data: user, error: fetchError } = await supabase
-            .from('usuarios')
-            .select('*')
-            .eq('usuario', usuario)
-            .single();
+        try {
+            const response = await fetch('https://backend-jwt-ashy.vercel.app/api/auth/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username: usuario, password }),
+            });
 
-        if (fetchError) {
-            setError('Error al acceder verifica los datos e intentalo de nuevo.');
-            return;
-        }
+            const data = await response.json();
 
-        // Compara la contraseña hasheada con la contraseña ingresada
-        const isPasswordValid = user && await bcrypt.compare(password, user.password);
-        
-        if (!isPasswordValid) {
-            setError('Error al acceder verifica los datos e intentalo de nuevo.');
-        } else {
+            if (!response.ok) {
+                setError(data.error || 'Error al acceder, verifica los datos e inténtalo de nuevo.');
+                return;
+            }
+
+            // Guardar el token en el almacenamiento local o en algún estado
+            localStorage.setItem('token', data.token);
+
+            // Redirigir al usuario después del inicio de sesión exitoso
             navigate('/Sidebar');
+        } catch (error) {
+            setError('Error en la conexión al servidor. Inténtalo de nuevo más tarde.');
         }
     };
 
@@ -57,10 +59,7 @@ const Login = () => {
                     <label htmlFor="usuario" className="block mb-2 text-sm font-medium text-[#111827]">Usuario</label>
                     <div className="relative text-gray-400">
                         <span className="absolute inset-y-0 left-0 flex items-center p-1 pl-3">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-mail">
-                                <rect width="20" height="16" x="2" y="4" rx="2"></rect>
-                                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
-                            </svg>
+                            {/* SVG Icon */}
                         </span>
                         <input 
                             type="text" 
@@ -78,12 +77,7 @@ const Login = () => {
                     <label htmlFor="password" className="block mb-2 text-sm font-medium text-[#111827]">Password</label>
                     <div className="relative text-gray-400">
                         <span className="absolute inset-y-0 left-0 flex items-center p-1 pl-3">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-square-asterisk">
-                                <rect width="18" height="18" x="3" y="3" rx="2"></rect>
-                                <path d="M12 8v8"></path>
-                                <path d="m8.5 14 7-4"></path>
-                                <path d="m8.5 10 7 4"></path>
-                            </svg>
+                            {/* SVG Icon */}
                         </span>
                         <input 
                             type="password" 
@@ -100,7 +94,7 @@ const Login = () => {
                 {error && <p className="text-red-600">{error}</p>}
                 <button type="submit" className="w-full text-[#ffffff] bg-[#0d00ff] focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-4">Ingresar</button>
                 <div className="text-sm font-light text-[#000000] text-center">
-                    No tienes una cuenta? <span className="font-medium text-[#0d00ff] hover:underline cursor-pointer" onClick={handleSignUpClick}>Registrarse</span>
+                    No tienes una cuenta? <span className="font-medium text-[#0d00ff] hover:underline cursor-pointer" onClick={handleRegistroClick}>Registrarse</span>
                 </div>
             </form>
         </div>

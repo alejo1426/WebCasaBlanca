@@ -1,9 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '../../supabaseClient';
-import bcrypt from 'bcryptjs';
 
-const SignUp = () => {
+const Registro = () => {
     const navigate = useNavigate();
 
     // Crear los estados para cada campo del formulario
@@ -15,65 +13,46 @@ const SignUp = () => {
     const [telefono, setTelefono] = useState('');
     const [direccion, setDireccion] = useState('');
     const [edad, setEdad] = useState('');
-    const [tipo] = useState('usuario');
+    const [error, setError] = useState('');
 
     // Función para manejar el envío del formulario
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         if (!nombres || !apellidos || !correo || !usuario || !password || !telefono || !direccion || !edad) {
-            alert('Por favor, llena todos los campos para poder registrarte.');
+            setError('Por favor, llena todos los campos para poder registrarte.');
             return;
         }
 
         if (parseInt(edad) < 15) {
-            alert('Debes tener al menos 15 años para registrarte.');
+            setError('Debes tener al menos 15 años para registrarte.');
             return;
         }
 
-        const { data: DatoExistente, error: userError } = await supabase
-        .from('usuarios')
-        .select('*')
-        .or(`correo.eq.${correo},usuario.eq.${usuario}`)
-        .single(); // Obteniene un solo registro que coincida
+        // Realiza la solicitud a tu API de registro
+        const response = await fetch('https://backend-jwt-ashy.vercel.app/api/auth/registro', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                nombres,
+                apellidos,
+                correo,
+                usuario,
+                password,
+                telefono,
+                direccion,
+                edad: parseInt(edad),
+                tipo: 'usuario',
+            }),
+        });
 
-        if (userError && userError.code !== 'PGRST116') { // Codigo PGRST116 significa no se encontraron registros
-            console.error('Error al verificar usuario/correo:', userError);
-            alert('Hubo un error al verificar los datos. Inténtalo de nuevo más tarde.');
-            return;
-        }
+        const data = await response.json();
 
-        if (DatoExistente) {
-            if (DatoExistente.correo === correo) {
-                alert('El correo ya está registrado. Por favor, usa otro.');
-            } else if (DatoExistente.usuario === usuario) {
-                alert('El usuario ya existe. Por favor, elige otro.');
-            }
-            return;
-        }
-        // Hashear la contra
-        const hashedPassword = await bcrypt.hash(password, 10);
-
-        // Insertar los datos en Supabase
-        const { data, error } = await supabase
-            .from('usuarios')
-            .insert([
-                {
-                    nombres,
-                    apellidos,
-                    correo,
-                    usuario,
-                    password: hashedPassword,
-                    telefono,
-                    direccion,
-                    edad: parseInt(edad),
-                    tipo 
-                }
-            ]);
-
-        if (error) {
-            console.error('Error al registrar usuario:', error);
-            alert('Hubo un error en el registro. Verifica que el correo y usuario no estén registrados.');
+        if (!response.ok) {
+            // Manejo de errores según el código de estado
+            setError(data.message || 'Hubo un error en el registro. Intenta nuevamente.');
         } else {
             console.log('Usuario registrado:', data);
             alert('¡Registro exitoso!');
@@ -91,6 +70,7 @@ const SignUp = () => {
             </div>
             <div className="text-sm font-light text-[#6B7280] pb-8 text-center">Regístrate con nosotros y disfruta!!</div>
             <form className="flex flex-col" onSubmit={handleSubmit}>
+                {/* Campos del formulario */}
                 <div className="pb-2">
                     <label htmlFor="nombres" className="block mb-2 text-sm font-medium text-[#111827]">Nombres</label>
                     <input
@@ -187,6 +167,7 @@ const SignUp = () => {
                         onChange={(e) => setEdad(e.target.value)}
                     />
                 </div>
+                {error && <p className="text-red-600">{error}</p>}
                 <button type="submit" className="w-full text-[#FFFFFF] bg-[#4F46E5] focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mb-6">Registrarse</button>
                 <div className="text-sm font-light text-[#6B7280]">
                     ¿Ya estás vinculado con nosotros? <span className="font-medium text-[#4F46E5] hover:underline cursor-pointer" onClick={() => navigate('/Login')}>Iniciar Sesión</span>
@@ -196,4 +177,4 @@ const SignUp = () => {
     );
 };
 
-export default SignUp;
+export default Registro;

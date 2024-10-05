@@ -1,15 +1,14 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '../../supabaseClient'; // Asegúrate de haber configurado supabaseClient.js
+import { supabase } from '../../supabaseClient';
 import bcrypt from 'bcryptjs';
 
 const SignUp = () => {
     const navigate = useNavigate();
 
-    // Crear estados para cada campo del formulario
+    // Crear los estados para cada campo del formulario
     const [nombres, setNombres] = useState('');
     const [apellidos, setApellidos] = useState('');
-    const [cedula, setCedula] = useState('');
     const [correo, setCorreo] = useState('');
     const [usuario, setUsuario] = useState('');
     const [password, setPassword] = useState('');
@@ -20,29 +19,34 @@ const SignUp = () => {
 
     // Función para manejar el envío del formulario
     const handleSubmit = async (e) => {
-        e.preventDefault(); // Evita el comportamiento por defecto del formulario
+        e.preventDefault();
 
-        if (parseInt(edad) < 18) {
-            alert('Debes tener al menos 18 años para registrarte.');
+        if (!nombres || !apellidos || !correo || !usuario || !password || !telefono || !direccion || !edad) {
+            alert('Por favor, llena todos los campos para poder registrarte.');
             return;
         }
 
-        const { data: existingUser, error: userError } = await supabase
+        if (parseInt(edad) < 15) {
+            alert('Debes tener al menos 15 años para registrarte.');
+            return;
+        }
+
+        const { data: DatoExistente, error: userError } = await supabase
         .from('usuarios')
         .select('*')
         .or(`correo.eq.${correo},usuario.eq.${usuario}`)
-        .single(); // Obtener un solo registro que coincida
+        .single(); // Obteniene un solo registro que coincida
 
-        if (userError && userError.code !== 'PGRST116') { // PGRST116: No se encontraron registros
+        if (userError && userError.code !== 'PGRST116') { // Codigo PGRST116 significa no se encontraron registros
             console.error('Error al verificar usuario/correo:', userError);
             alert('Hubo un error al verificar los datos. Inténtalo de nuevo más tarde.');
             return;
         }
 
-        if (existingUser) {
-            if (existingUser.correo === correo) {
+        if (DatoExistente) {
+            if (DatoExistente.correo === correo) {
                 alert('El correo ya está registrado. Por favor, usa otro.');
-            } else if (existingUser.usuario === usuario) {
+            } else if (DatoExistente.usuario === usuario) {
                 alert('El usuario ya existe. Por favor, elige otro.');
             }
             return;
@@ -52,15 +56,14 @@ const SignUp = () => {
 
         // Insertar los datos en Supabase
         const { data, error } = await supabase
-            .from('usuarios') // El nombre de tu tabla en Supabase
+            .from('usuarios')
             .insert([
                 {
                     nombres,
                     apellidos,
-                    cedula,
                     correo,
                     usuario,
-                    password: hashedPassword,  // Cambiado a 'password' para que coincida con la tabla
+                    password: hashedPassword,
                     telefono,
                     direccion,
                     edad: parseInt(edad),
@@ -110,18 +113,6 @@ const SignUp = () => {
                         placeholder="Ingrese sus apellidos"
                         value={apellidos}
                         onChange={(e) => setApellidos(e.target.value)}
-                    />
-                </div>
-                <div className="pb-2">
-                    <label htmlFor="cedula" className="block mb-2 text-sm font-medium text-[#111827]">Cédula</label>
-                    <input
-                        type="text"
-                        name="cedula"
-                        id="cedula"
-                        className="pl-12 mb-2 bg-gray-50 text-gray-600 border focus:border-transparent border-gray-300 sm:text-sm rounded-lg ring ring-transparent focus:ring-1 focus:outline-none focus:ring-gray-400 block w-full p-2.5"
-                        placeholder="Ingrese su cédula"
-                        value={cedula}
-                        onChange={(e) => setCedula(e.target.value)}
                     />
                 </div>
                 <div className="pb-2">

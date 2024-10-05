@@ -85,7 +85,7 @@ const SignUp = () => {
         <div className="flex flex-col w-full max-w-lg mx-auto p-30 md:p-20 2xl:p-30 bg-[#ffffff] rounded-2xl shadow-xl">
             <div className="flex flex-col justify-center items-center gap-4 pb-4">
                 <div>
-                    <img src="/src/assets/logo.jpeg" width="200" alt="Logo" />
+                    <img src="https://eojuwteklxhwwurpioyb.supabase.co/storage/v1/object/public/Img/logo.jpeg" width="200" alt="Logo" />
                 </div>
                 <h1 className="text-4xl font-bold text-[#006aff]">CASA BLANCA</h1>
             </div>

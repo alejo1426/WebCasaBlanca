@@ -13,7 +13,7 @@ const Dashboard = () => {
         <div className="flex-grow flex flex-col">
             <TopBar toggleSidebar={toggleSidebar} />
             <main className="p-6 grid grid-cols-3 gap-6">
-            <h1>DATOS</h1>
+            <h1>DATOS basicos</h1>
             </main>
         </div>
     </div>

@@ -168,9 +168,9 @@ const Registro = () => {
                     />
                 </div>
                 {error && <p className="text-red-600">{error}</p>}
-                <button type="submit" className="w-full text-[#FFFFFF] bg-[#4F46E5] focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mb-6">Registrarse</button>
+                <button type="submit" className="w-full text-[#FFFFFF] bg-[#194cac] focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mb-6">Registrarse</button>
                 <div className="text-sm font-light text-[#6B7280]">
-                    ¿Ya estás vinculado con nosotros? <span className="font-medium text-[#4F46E5] hover:underline cursor-pointer" onClick={() => navigate('/Login')}>Iniciar Sesión</span>
+                    ¿Ya estás vinculado con nosotros? <span className="font-medium text-[#153c85] hover:underline cursor-pointer" onClick={() => navigate('/Login')}>Iniciar Sesión</span>
                 </div>
             </form>
         </div>

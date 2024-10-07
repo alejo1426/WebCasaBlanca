@@ -42,7 +42,7 @@ const Login = () => {
             // Redirigir al usuario después del inicio de sesión exitoso
             navigate('/Dashboard');
         } catch (error) {
-            setError('Error en la conexión al servidor. Inténtalo de nuevo más tarde.');
+            setError(`Error en la conexión: ${error.message}`);
         }
     };
 
@@ -92,9 +92,9 @@ const Login = () => {
                     </div>
                 </div>
                 {error && <p className="text-red-600">{error}</p>}
-                <button type="submit" className="w-full text-[#ffffff] bg-[#0d00ff] focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-4">Ingresar</button>
+                <button type="submit" className="w-full text-[#ffffff] bg-[#1c8be6] focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-4">Ingresar</button>
                 <div className="text-sm font-light text-[#000000] text-center">
-                    No tienes una cuenta? <span className="font-medium text-[#0d00ff] hover:underline cursor-pointer" onClick={handleRegistroClick}>Registrarse</span>
+                    No tienes una cuenta? <span className="font-medium text-[#0059ff] hover:underline cursor-pointer" onClick={handleRegistroClick}>Registrarse</span>
                 </div>
             </form>
         </div>

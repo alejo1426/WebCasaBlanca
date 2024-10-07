@@ -1,6 +1,7 @@
+/* eslint-disable react/prop-types */
 import { useState, useRef, useEffect } from 'react';
 
-const Sidebar = () => {
+const Sidebar = ({ setSelectedView, setSelectedItem }) => {
   const [active, setActive] = useState(null);
   const subMenuRefs = useRef({});
   const [heights, setHeights] = useState({});
@@ -60,7 +61,13 @@ const Sidebar = () => {
                 id={name}
                 name="sidebar"
                 className="absolute scale-0"
-                onChange={() => handleToggle(name)}
+                onChange={() => {
+                  handleToggle(name);
+                  if (name === 'Dashboard') {
+                    setSelectedView('dashboard'); // Cambiar a la vista de dashboard
+                    setSelectedItem(null); // Reiniciar el elemento seleccionado
+                  }
+                }}
                 checked={active === name}
               />
               <label
@@ -117,3 +124,4 @@ const Sidebar = () => {
 };
 
 export default Sidebar;
+

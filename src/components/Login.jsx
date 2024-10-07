@@ -40,7 +40,7 @@ const Login = () => {
             localStorage.setItem('token', data.token);
 
             // Redirigir al usuario después del inicio de sesión exitoso
-            navigate('/Sidebar');
+            navigate('/dashboard');
         } catch (error) {
             setError('Error en la conexión al servidor. Inténtalo de nuevo más tarde.');
         }

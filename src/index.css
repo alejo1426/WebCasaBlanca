@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 body {
-  background: linear-gradient(to bottom right, #003b5c, #f8e72d);
+  background: linear-gradient(to bottom, #002f6c, #ffffff, #76c7f5);
   min-height: 100vh; /* Asegúrate de que el fondo cubra toda la pantalla */
   display: flex; /* Para centrar los contenidos */
   align-items: center; /* Centrar verticalmente */

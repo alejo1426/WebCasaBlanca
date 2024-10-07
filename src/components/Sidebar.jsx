@@ -28,7 +28,7 @@ const Sidebar = ({ setSelectedView, setSelectedItem }) => {
   const menuItems = [
     { name: 'Dashboard', icon: 'Dashboard' },
     { name: 'Clases', icon: 'lock-on' },
-    { name: 'Perfil', icon: 'person', subMenu: ['Información personal', 'Seguridad'] },
+    { name: 'Perfil', icon: 'person' },
     { name: 'Torneos', icon: 'lock-on' },
     {
       name: 'Ajustes',
@@ -53,59 +53,84 @@ const Sidebar = ({ setSelectedView, setSelectedItem }) => {
       >
         <header className="flex items-center h-18 pb-2 border-b border-gray-300"></header>
 
-        <ul className="list-none p-0 m-0 w-full flex-1 mt-8 lg:mt-4">
-          {menuItems.map(({ name, icon, subMenu }) => (
-            <li key={name}>
-              <input
-                type="radio"
-                id={name}
-                name="sidebar"
-                className="absolute scale-0"
-                onChange={() => {
-                  handleToggle(name);
-                  if (name === 'Dashboard') {
-                    setSelectedView('dashboard'); // Cambiar a la vista de dashboard
-                    setSelectedItem(null); // Reiniciar el elemento seleccionado
-                  }
-                }}
-                checked={active === name}
-              />
-              <label
-                htmlFor={name}
-                className={`flex items-center h-12 w-full rounded-md p-4 cursor-pointer ${
-                  active === name ? 'bg-blue-400 text-white' : 'hover:bg-gray-200'
-                }`}
-              >
-                <i className={`ai-${icon}`}></i>
-                <p className="flex-1 text-gray-800">{name}</p>
-                {subMenu && (
-                  <i
-                    className={`ai-chevron-down-small transform transition-transform duration-300 ${
-                      active === name ? 'rotate-180' : ''
-                    }`}
-                  ></i>
-                )}
-              </label>
-              {subMenu && (
-                <div
-                  ref={(el) => (subMenuRefs.current[name] = el)}
-                  style={{ height: heights[name] }}
-                  className="sub-menu bg-white shadow-md rounded-md overflow-hidden transition-height duration-300 ease-in-out"
+        {/* Contenedor de la lista y la imagen */}
+        <div className="flex-1 overflow-y-auto">
+          <ul className="list-none p-0 m-0 w-full flex-1 mt-8 lg:mt-4">
+            {menuItems.map(({ name, icon, subMenu }) => (
+              <li key={name}>
+                <input
+                  type="radio"
+                  id={name}
+                  name="sidebar"
+                  className="absolute scale-0"
+                  onChange={() => {
+                    handleToggle(name);
+
+                    if (name === 'Dashboard') {
+                      setSelectedView('dashboard');
+                    } else if (name === 'Clases') {
+                      setSelectedView('clases');
+                    } else if (name === 'Torneos') {
+                      setSelectedView('torneos');
+                    } else if (name === 'Perfil') {
+                      setSelectedView('perfil');
+                    } else if (name === 'Ajustes') {
+                      setSelectedView('ajustes');
+                      setSelectedItem('agregar');
+                    }
+                  }}
+                  checked={active === name}
+                />
+                
+                <label
+                  htmlFor={name}
+                  className={`flex items-center h-12 w-full rounded-md p-4 cursor-pointer ${
+                    active === name ? 'bg-blue-400 text-white' : 'hover:bg-gray-200'
+                  }`}
                 >
-                  <ul className="list-none p-0 m-0">
-                    {subMenu.map((subItem) => (
-                      <li key={subItem}>
-                        <button className="w-full text-left pl-12 py-2 text-gray-800 hover:bg-gray-200">
-                          {subItem}
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-            </li>
-          ))}
-        </ul>
+                  <i className={`ai-${icon}`}></i>
+                  <p className="flex-1 text-gray-800">{name}</p>
+                  {subMenu && (
+                    <i
+                      className={`ai-chevron-down-small transform transition-transform duration-300 ${
+                        active === name ? 'rotate-180' : ''
+                      }`}
+                    ></i>
+                  )}
+                </label>
+
+                {subMenu && (
+                  <div
+                    ref={(el) => (subMenuRefs.current[name] = el)}
+                    style={{ height: heights[name] }}
+                    className="sub-menu bg-white shadow-md rounded-md overflow-hidden transition-height duration-300 ease-in-out"
+                  >
+                    <ul className="list-none p-0 m-0">
+                      {subMenu.map((subItem) => (
+                        <li key={subItem}>
+                          <button
+                            className="w-full text-left pl-12 py-2 text-gray-800 hover:bg-gray-200"
+                            onClick={() => {
+                              setSelectedView('ajustes');
+                              setSelectedItem(subItem.toLowerCase());
+                            }}
+                          >
+                            {subItem}
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {/* Imagen en el espacio entre Ajustes y Cerrar sesión */}
+        <div className="flex justify-center mt-4 mb-4">
+          <img src="../assets/logo.jpeg" alt="Logo" className="w-auto h-auto" />
+        </div>
 
         <button className="w-full py-3 text-center bg-red-500 text-white rounded-md hover:bg-red-600 mt-auto">
           Cerrar sesión
@@ -124,4 +149,3 @@ const Sidebar = ({ setSelectedView, setSelectedItem }) => {
 };
 
 export default Sidebar;
-

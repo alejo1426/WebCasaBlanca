@@ -2,101 +2,117 @@ import { useState, useRef, useEffect } from 'react';
 
 const Sidebar = () => {
   const [active, setActive] = useState(null);
-  const subMenuRefs = useRef({}); // Para manejar múltiples submenús
-  const [heights, setHeights] = useState({}); // Almacenar alturas
+  const subMenuRefs = useRef({});
+  const [heights, setHeights] = useState({});
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   useEffect(() => {
-    // Establece la altura de cada submenú según si está activo o no
-    const newHeights = {};
-    Object.keys(subMenuRefs.current).forEach((key) => {
-      newHeights[key] = key === active ? `${subMenuRefs.current[key].scrollHeight}px` : '0px';
-    });
+    const newHeights = Object.fromEntries(
+      Object.keys(subMenuRefs.current).map((key) => [
+        key,
+        key === active ? `${subMenuRefs.current[key].scrollHeight}px` : '0px',
+      ])
+    );
     setHeights(newHeights);
   }, [active]);
 
   const handleToggle = (item) => {
-    setActive(active === item ? null : item); // Alternar el submenú
+    setActive((prev) => (prev === item ? null : item));
   };
 
+  const handleCloseSidebar = (e) => {
+    if (e.target.id === 'overlay') setIsSidebarOpen(false);
+  };
+
+  const menuItems = [
+    { name: 'Dashboard', icon: 'Dashboard' },
+    { name: 'Clases', icon: 'lock-on' },
+    { name: 'Perfil', icon: 'person', subMenu: ['Información personal', 'Seguridad'] },
+    { name: 'Torneos', icon: 'lock-on' },
+    {
+      name: 'Ajustes',
+      icon: 'gear',
+      subMenu: ['Agregar', 'Modificar', 'Eliminar'],
+    },
+  ];
+
   return (
-    <aside className="fixed top-6 left-6 bottom-11 w-64 p-4 bg-white bg-opacity-80 rounded-xl flex flex-col gap-2 shadow-lg">
-      <header className="flex items-center h-18 pb-2 border-b border-gray-300"></header>
-      <ul className="list-none p-0 m-0 w-full">
-        {['dashboard', 'settings', 'create', 'profile', 'notifications', 'products', 'account'].map((item) => (
-          <li key={item}>
-            <input
-              type="radio"
-              id={item}
-              name="sidebar"
-              className="absolute scale-0"
-              onChange={() => handleToggle(item)}
-              checked={active === item}
-            />
-            <label
-              htmlFor={item}
-              className={`flex items-center h-12 w-full rounded-md p-4 cursor-pointer ${
-                active === item ? 'bg-blue-400 text-white' : 'hover:bg-gray-200'
-              }`}
-            >
-              <i className={`ai-${item === 'dashboard' ? 'dashboard' : item === 'settings' ? 'gear' : item === 'create' ? 'folder-add' : item === 'profile' ? 'person' : item === 'notifications' ? 'bell' : item === 'products' ? 'cart' : 'lock-on'}`}></i>
-              <p className="flex-1 text-gray-800">{item.charAt(0).toUpperCase() + item.slice(1)}</p>
-              {['settings', 'create', 'profile'].includes(item) && (
-                <i className={`ai-chevron-down-small transform transition-transform duration-300 ${active === item ? 'rotate-180' : ''}`}></i>
-              )}
-            </label>
-            {['settings', 'create', 'profile'].includes(item) && (
-              <div
-                ref={(el) => (subMenuRefs.current[item] = el)} // Guardar referencia de cada submenú
-                style={{ height: heights[item] }}
-                className={`sub-menu bg-white shadow-md rounded-md overflow-hidden transition-height duration-300 ease-in-out`}
+    <>
+      <button
+        className="lg:hidden fixed top-4 left-4 z-50 bg-blue-500 text-white p-3 rounded-full shadow-md"
+        onClick={() => setIsSidebarOpen((prev) => !prev)}
+      >
+        <i className="ai-menu text-xl"></i>
+      </button>
+
+      <aside
+        className={`fixed top-0 left-0 h-full w-64 p-4 bg-white bg-opacity-80 rounded-xl shadow-lg transition-transform transform ${
+          isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
+        } lg:translate-x-0 lg:inset-y-0 lg:fixed lg:left-0 lg:top-0 z-40 flex flex-col`}
+      >
+        <header className="flex items-center h-18 pb-2 border-b border-gray-300"></header>
+
+        <ul className="list-none p-0 m-0 w-full flex-1 mt-8 lg:mt-4">
+          {menuItems.map(({ name, icon, subMenu }) => (
+            <li key={name}>
+              <input
+                type="radio"
+                id={name}
+                name="sidebar"
+                className="absolute scale-0"
+                onChange={() => handleToggle(name)}
+                checked={active === name}
+              />
+              <label
+                htmlFor={name}
+                className={`flex items-center h-12 w-full rounded-md p-4 cursor-pointer ${
+                  active === name ? 'bg-blue-400 text-white' : 'hover:bg-gray-200'
+                }`}
               >
-                <ul className="list-none p-0 m-0">
-                  {item === 'settings' && (
-                    <>
-                      <li>
-                        <button className="w-full text-left pl-12 py-2 text-gray-800 hover:bg-gray-200">Display</button>
+                <i className={`ai-${icon}`}></i>
+                <p className="flex-1 text-gray-800">{name}</p>
+                {subMenu && (
+                  <i
+                    className={`ai-chevron-down-small transform transition-transform duration-300 ${
+                      active === name ? 'rotate-180' : ''
+                    }`}
+                  ></i>
+                )}
+              </label>
+              {subMenu && (
+                <div
+                  ref={(el) => (subMenuRefs.current[name] = el)}
+                  style={{ height: heights[name] }}
+                  className="sub-menu bg-white shadow-md rounded-md overflow-hidden transition-height duration-300 ease-in-out"
+                >
+                  <ul className="list-none p-0 m-0">
+                    {subMenu.map((subItem) => (
+                      <li key={subItem}>
+                        <button className="w-full text-left pl-12 py-2 text-gray-800 hover:bg-gray-200">
+                          {subItem}
+                        </button>
                       </li>
-                      <li>
-                        <button className="w-full text-left pl-12 py-2 text-gray-800 hover:bg-gray-200">Appearance</button>
-                      </li>
-                      <li>
-                        <button className="w-full text-left pl-12 py-2 text-gray-800 hover:bg-gray-200">Preferences</button>
-                      </li>
-                    </>
-                  )}
-                  {item === 'create' && (
-                    <>
-                      <li>
-                        <button className="w-full text-left pl-12 py-2 text-gray-800 hover:bg-gray-200">Article</button>
-                      </li>
-                      <li>
-                        <button className="w-full text-left pl-12 py-2 text-gray-800 hover:bg-gray-200">Document</button>
-                      </li>
-                      <li>
-                        <button className="w-full text-left pl-12 py-2 text-gray-800 hover:bg-gray-200">Video</button>
-                      </li>
-                      <li>
-                        <button className="w-full text-left pl-12 py-2 text-gray-800 hover:bg-gray-200">Presentation</button>
-                      </li>
-                    </>
-                  )}
-                  {item === 'profile' && (
-                    <>
-                      <li>
-                        <button className="w-full text-left pl-12 py-2 text-gray-800 hover:bg-gray-200">Avatar</button>
-                      </li>
-                      <li>
-                        <button className="w-full text-left pl-12 py-2 text-gray-800 hover:bg-gray-200">Theme</button>
-                      </li>
-                    </>
-                  )}
-                </ul>
-              </div>
-            )}
-          </li>
-        ))}
-      </ul>
-    </aside>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </li>
+          ))}
+        </ul>
+
+        <button className="w-full py-3 text-center bg-red-500 text-white rounded-md hover:bg-red-600 mt-auto">
+          Cerrar sesión
+        </button>
+      </aside>
+
+      {isSidebarOpen && (
+        <div
+          id="overlay"
+          className="fixed inset-0 bg-black bg-opacity-50 z-30 lg:hidden"
+          onClick={handleCloseSidebar}
+        ></div>
+      )}
+    </>
   );
 };
 

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { jwtDecode } from 'jwt-decode'; // Importar jwt-decode
 
 const Login = () => {
     const navigate = useNavigate();
@@ -36,11 +37,20 @@ const Login = () => {
                 return;
             }
 
-            // Guardar el token en el almacenamiento local o en algún estado
+            // Guardar el token en el almacenamiento local
             localStorage.setItem('token', data.token);
 
-            // Redirigir al usuario después del inicio de sesión exitoso
-            navigate('/Dashboard');
+            // Decodificar el token para obtener el rol del usuario
+            const decodedToken = jwtDecode(data.token);
+            const userRole = decodedToken.role;
+
+            // Redirigir según el rol del usuario
+            if (userRole === 'admin') {
+                navigate('/DashboardAdmin'); // Redirigir al panel de admin
+            } else {
+                navigate('/Dashboard'); // Redirigir al panel de usuario normal
+            }
+
         } catch (error) {
             setError(`Error en la conexión: ${error.message}`);
         }

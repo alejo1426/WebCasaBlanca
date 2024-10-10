@@ -1,20 +1,20 @@
-import { useState } from 'react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { jwtDecode } from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode'; // Asegúrate de que jwt-decode esté instalado
 import Sidebar from './Sidebar';
 import TopBar from './Topbar';
-import DashboardView from './views/DashboardView'; // Importa el nuevo componente
+import DashboardView from './views/DashboardView';
 import ClasesView from './views/ClasesView';
 import PerfilView from './views/PerfilView';
 import TorneosView from './views/TorneosView';
-import AjustesView from './views/AjustesView'; // Importa el componente de clases // Importa el componente de torneos
+import AjustesView from './views/AjustesView';
 
-const Dashboard = () => {
-  const navigate = useNavigate();
-  const [selectedView, setSelectedView] = useState('dashboard'); // Vista inicial: dashboard
+const DashboardAdmin = () => {
+  const navigate = useNavigate(); // Hook para redireccionar
+  const [selectedView, setSelectedView] = useState('dashboard');
   const [selectedItem, setSelectedItem] = useState('agregar');
 
+  // Función para verificar si el token ha expirado
   const isTokenExpired = (token) => {
     try {
       const decodedToken = jwtDecode(token);
@@ -47,7 +47,7 @@ const Dashboard = () => {
       case 'torneos':
         return <TorneosView />;
       case 'ajustes':
-        return <AjustesView selectedItem={selectedItem}/>;
+        return <AjustesView selectedItem={selectedItem} />;
       default:
         return <DashboardView />;
     }
@@ -61,9 +61,10 @@ const Dashboard = () => {
         <main className="h-screen bg-white text-gray-800 flex px-4 lg:ml-64 ml-0 rounded-xl shadow">
           <div className="flex-grow p-4">{renderSelectedView()}</div>
         </main>
+        <h1>ADMIN</h1>
       </div>
     </div>
   );
 };
 
-export default Dashboard;
+export default DashboardAdmin;

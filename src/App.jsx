@@ -4,7 +4,6 @@ import Login from './components/Login';
 import SignUp from './components/SignUp';
 import Sidebar from './components/Sidebar';
 import Dashboard from './components/Dashboard';
-import DashboardAdmin from './components/DashboardAdmin';
 
 const App = () => {
     return (
@@ -17,7 +16,6 @@ const App = () => {
                 <Route path="/signup" element={<SignUp />} />
                 <Route path="/Sidebar" element={<Sidebar />} />
                 <Route path="/Dashboard" element={<Dashboard />} />
-                <Route path="/DashboardAdmin" element={<DashboardAdmin />} />
             </Routes>
         </Router>
     );

@@ -1,11 +1,29 @@
 /* eslint-disable react/prop-types */
 import { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { jwtDecode } from 'jwt-decode'; // Asegúrate de tener esto instalado
 
 const Sidebar = ({ setSelectedView, setSelectedItem }) => {
   const [active, setActive] = useState(null);
   const subMenuRefs = useRef({});
   const [heights, setHeights] = useState({});
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const navigate = useNavigate();
+  const [role, setRole] = useState(null); // Estado para almacenar el rol del usuario
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+
+    if (token) {
+      try {
+        const decodedToken = jwtDecode(token);
+        setRole(decodedToken.role); // Asignar el rol del token al estado
+      } catch (error) {
+        console.error("Error decoding token:", error);
+        setRole(null); // Si hay un error, establecer el rol como null
+      }
+    }
+  }, []);
 
   useEffect(() => {
     const newHeights = Object.fromEntries(
@@ -25,6 +43,12 @@ const Sidebar = ({ setSelectedView, setSelectedItem }) => {
     if (e.target.id === 'overlay') setIsSidebarOpen(false);
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    navigate('/login');
+  };
+
+  // Modificamos los elementos del menú para incluir una verificación del rol
   const menuItems = [
     { name: 'Dashboard', icon: 'Dashboard' },
     { name: 'Clases', icon: 'lock-on' },
@@ -35,7 +59,13 @@ const Sidebar = ({ setSelectedView, setSelectedItem }) => {
       icon: 'gear',
       subMenu: ['Agregar', 'Modificar', 'Eliminar'],
     },
-  ];
+  ].filter(item => {
+    // Filtrar según el rol del usuario
+    if (item.name === 'Ajustes' && role !== 'admin') {
+      return false; // Ocultar 'Ajustes' si el rol no es admin
+    }
+    return true; // Mostrar los demás elementos
+  });
 
   return (
     <>
@@ -53,7 +83,6 @@ const Sidebar = ({ setSelectedView, setSelectedItem }) => {
       >
         <header className="flex items-center h-18 pb-2 border-b border-gray-300"></header>
 
-        {/* Contenedor de la lista y la imagen */}
         <div className="flex-1 overflow-y-auto">
           <ul className="list-none p-0 m-0 w-full flex-1 mt-8 lg:mt-4">
             {menuItems.map(({ name, icon, subMenu }) => (
@@ -127,12 +156,11 @@ const Sidebar = ({ setSelectedView, setSelectedItem }) => {
           </ul>
         </div>
 
-        {/* Imagen en el espacio entre Ajustes y Cerrar sesión */}
         <div className="flex justify-center mt-4 mb-4">
           <img src="../assets/logo.jpeg" alt="Logo" className="w-auto h-auto" />
         </div>
 
-        <button className="w-full py-3 text-center bg-red-500 text-white rounded-md hover:bg-red-600 mt-auto">
+        <button className="w-full py-3 text-center bg-red-500 text-white rounded-md hover:bg-red-600 mt-auto" onClick={handleLogout}>
           Cerrar sesión
         </button>
       </aside>

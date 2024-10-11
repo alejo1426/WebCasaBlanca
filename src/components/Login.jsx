@@ -42,14 +42,8 @@ const Login = () => {
 
             // Decodificar el token para obtener el rol del usuario
             const decodedToken = jwtDecode(data.token);
-            const userRole = decodedToken.role;
 
-            // Redirigir según el rol del usuario
-            if (userRole === 'admin') {
-                navigate('/DashboardAdmin'); // Redirigir al panel de admin
-            } else {
-                navigate('/Dashboard'); // Redirigir al panel de usuario normal
-            }
+            navigate('/Dashboard')
 
         } catch (error) {
             setError(`Error en la conexión: ${error.message}`);

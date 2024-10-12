@@ -17,9 +17,6 @@ const HeroSection = () => {
 
   return (
     <div className="hero-section">
-      {/* Mantén la animación fade-in en el Header */}
-      <Header className="fade-in" />
-
       <div className="main-image fade-in" style={{ backgroundImage: `url(${backgroundImage})` }}>
         <div className="titular" data-aos="fade-up">
           <h1>Academia de Tenis casa blanca</h1>

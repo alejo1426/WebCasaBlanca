@@ -44,7 +44,8 @@ const Registro = () => {
                 telefono,
                 direccion,
                 edad: parseInt(edad),
-                tipo: 'usuario',
+                rol: 'usuario',
+                nivel_aprendizaje: 'principiante',
             }),
         });
 

@@ -5,6 +5,16 @@
 .App {
     text-align: center;
   }
+
+  .Dashboard-text {
+    text-shadow: 
+      0 0 5px rgba(255, 255, 255, 0.6), /* Blanco suave */
+      0 0 10px rgba(0, 0, 255, 0.8),     /* Azul claro */
+      0 0 15px rgba(0, 0, 255, 1),       /* Azul más intenso */
+      0 0 20px rgba(0, 0, 139, 1),       /* Azul oscuro */
+      0 0 30px rgba(0, 0, 139, 1);       /* Azul oscuro */
+  }
+  
   
   .App-logo {
     height: 40vmin;

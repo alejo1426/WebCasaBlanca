@@ -51,7 +51,7 @@ const Sidebar = ({ setSelectedView, setSelectedItem }) => {
   // Modificamos los elementos del menú para incluir una verificación del rol
   const menuItems = [
     { name: 'Dashboard', icon: 'Dashboard' },
-    { name: 'Clases', icon: 'lock-on' },
+    { name: 'Inscripciones', icon: 'lock-on' },
     { name: 'Perfil', icon: 'person' },
     { name: 'Torneos', icon: 'lock-on' },
     {
@@ -97,8 +97,8 @@ const Sidebar = ({ setSelectedView, setSelectedItem }) => {
 
                     if (name === 'Dashboard') {
                       setSelectedView('dashboard');
-                    } else if (name === 'Clases') {
-                      setSelectedView('clases');
+                    } else if (name === 'Inscripciones') {
+                      setSelectedView('inscripciones');
                     } else if (name === 'Torneos') {
                       setSelectedView('torneos');
                     } else if (name === 'Perfil') {
@@ -157,7 +157,7 @@ const Sidebar = ({ setSelectedView, setSelectedItem }) => {
         </div>
 
         <div className="flex justify-center mt-4 mb-4">
-          <img src="../assets/logo.jpeg" alt="Logo" className="w-auto h-auto" />
+          <img src='../assets/logo.jpeg' alt="Logo" className="w-auto h-auto" />
         </div>
 
         <button className="w-full py-3 text-center bg-red-500 text-white rounded-md hover:bg-red-600 mt-auto" onClick={handleLogout}>

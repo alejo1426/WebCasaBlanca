@@ -4,7 +4,7 @@ import { jwtDecode } from 'jwt-decode';
 import Sidebar from './Sidebar';
 import TopBar from './Topbar';
 import DashboardView from './views/DashboardView'; // Importa el nuevo componente
-import ClasesView from './views/ClasesView';
+import InscripcionesView from './views/InscripcionesView';
 import PerfilView from './views/PerfilView';
 import TorneosView from './views/TorneosView';
 import AjustesView from './views/AjustesView'; // Importa el componente de clases // Importa el componente de torneos
@@ -39,8 +39,8 @@ const Dashboard = () => {
     switch (selectedView) {
       case 'dashboard':
         return <DashboardView />;
-      case 'clases':
-        return <ClasesView />;
+      case 'inscripciones':
+        return <InscripcionesView />;
       case 'perfil':
         return <PerfilView />;
       case 'torneos':
@@ -57,7 +57,7 @@ const Dashboard = () => {
       <Sidebar setSelectedView={setSelectedView} setSelectedItem={setSelectedItem} />
       <div className="flex-grow flex flex-col">
         <TopBar />
-        <main className="h-screen bg-white text-gray-800 flex px-4 lg:ml-64 ml-0 rounded-xl shadow">
+        <main className="max-h-screen bg-white text-gray-800 flex px-4 lg:ml-64 ml-0 rounded-xl shadow overflow-y-auto">
           <div className="flex-grow p-4">{renderSelectedView()}</div>
         </main>
       </div>

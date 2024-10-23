@@ -1,40 +1,49 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../../../supabaseClient';
 import { jwtDecode } from 'jwt-decode';
-import UpdateUser from '../Form/FormUpdateUser'; // Importar el nuevo componente
+import UpdateUser from '../Form/FormUpdateUser';
 
 const PerfilView = () => {
   const [userData, setUserData] = useState(null);
 
+  // Función para obtener datos del usuario
+  const fetchUserData = async () => {
+    const token = localStorage.getItem('token');
+
+    if (!token || typeof token !== 'string') {
+      console.error('Invalid token:', token);
+      return;
+    }
+
+    try {
+      const decodedToken = jwtDecode(token);
+      const userId = decodedToken.id;
+
+      const { data, error } = await supabase
+        .from('usuarios')
+        .select('*')
+        .eq('id', userId)
+        .single();
+
+      if (error) throw error;
+
+      setUserData(data);
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+    }
+  };
+
+  // useEffect para obtener datos al montar el componente
   useEffect(() => {
-    const fetchUserData = async () => {
-      const token = localStorage.getItem('token');
-
-      if (!token || typeof token !== 'string') {
-        console.error('Invalid token:', token);
-        return;
-      }
-
-      try {
-        const decodedToken = jwtDecode(token);
-        const userId = decodedToken.id;
-
-        const { data, error } = await supabase
-          .from('usuarios')
-          .select('*')
-          .eq('id', userId)
-          .single();
-
-        if (error) throw error;
-
-        setUserData(data);
-      } catch (error) {
-        console.error('Error fetching user data:', error);
-      }
-    };
-
     fetchUserData();
   }, []);
+
+  // Función para manejar la actualización de usuario
+  const handleUserUpdate = async (updatedData) => {
+    setUserData(updatedData); // Actualiza el estado local
+    // O también podrías volver a llamar a fetchUserData si necesitas confirmar que la actualización fue exitosa
+    // await fetchUserData();
+  };
 
   if (!userData) {
     return <p>Cargando...</p>;
@@ -53,11 +62,10 @@ const PerfilView = () => {
         <p><strong>Edad:</strong> {userData.edad}</p>
         <p><strong>Rol:</strong> {userData.rol}</p>
         <p><strong>Nivel de Aprendizaje:</strong> {userData.nivel_aprendizaje}</p>
-        <p><strong>Fecha de Registro:</strong> {new Date(userData.fecha_registro).toLocaleString()}</p>
       </section>
 
-      {/* Renderizar el componente para actualizar los datos */}
-      <UpdateUser userData={userData} setUserData={setUserData} />
+      {/* Pasar la función handleUserUpdate al componente UpdateUser */}
+      <UpdateUser userData={userData} onUserUpdate={handleUserUpdate} />
     </div>
   );
 };

@@ -1,6 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { ToastContainer, toast } from 'react-toastify'; // Asegúrate de tener la biblioteca instalada
+import 'react-toastify/dist/ReactToastify.css';
 
-const UpdateUser = ({ userData }) => {
+const UpdateUser = ({ userData, onUserUpdate }) => {
   const [formData, setFormData] = useState({
     nombres: userData.nombres || '',
     apellidos: userData.apellidos || '',
@@ -13,6 +15,22 @@ const UpdateUser = ({ userData }) => {
     rol: userData.rol || '',
     nivel_aprendizaje: userData.nivel_aprendizaje || '',
   });
+
+  // Efecto para actualizar el formulario cuando cambian los datos del usuario
+  useEffect(() => {
+    setFormData({
+      nombres: userData.nombres || '',
+      apellidos: userData.apellidos || '',
+      correo: userData.correo || '',
+      usuario: userData.usuario || '',
+      password: '', // Mantener el campo de contraseña vacío
+      telefono: userData.telefono || '',
+      direccion: userData.direccion || '',
+      edad: userData.edad || '',
+      rol: userData.rol || '',
+      nivel_aprendizaje: userData.nivel_aprendizaje || '',
+    });
+  }, [userData]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -37,13 +55,16 @@ const UpdateUser = ({ userData }) => {
       const result = await response.json();
 
       if (response.ok) {
-        alert('Datos actualizados exitosamente');
+        toast.success('¡Datos actualizados exitosamente!');
+
+        // Llama a la función para actualizar los datos en el componente padre
+        onUserUpdate({ ...formData, id: userData.id });
       } else {
-        alert(result.error || 'Hubo un error al actualizar los datos');
+        toast.error(result.error || 'Hubo un error al actualizar los datos');
       }
     } catch (error) {
       console.error('Error al actualizar los datos:', error);
-      alert('Error al actualizar los datos');
+      toast.error('Error al actualizar los datos. Ocurrió un error inesperado.');
     }
   };
 
@@ -56,7 +77,7 @@ const UpdateUser = ({ userData }) => {
           <input
             type="text"
             name="nombres"
-            value={formData.nombres || ''}
+            value={formData.nombres}
             onChange={handleInputChange}
             className="mt-1 block w-full border-gray-300 rounded-md"
             required
@@ -67,7 +88,7 @@ const UpdateUser = ({ userData }) => {
           <input
             type="text"
             name="apellidos"
-            value={formData.apellidos || ''}
+            value={formData.apellidos}
             onChange={handleInputChange}
             className="mt-1 block w-full border-gray-300 rounded-md"
             required
@@ -78,7 +99,7 @@ const UpdateUser = ({ userData }) => {
           <input
             type="email"
             name="correo"
-            value={formData.correo || ''}
+            value={formData.correo}
             onChange={handleInputChange}
             className="mt-1 block w-full border-gray-300 rounded-md"
             required
@@ -89,7 +110,7 @@ const UpdateUser = ({ userData }) => {
           <input
             type="text"
             name="usuario"
-            value={formData.usuario || ''}
+            value={formData.usuario}
             onChange={handleInputChange}
             className="mt-1 block w-full border-gray-300 rounded-md"
             required
@@ -100,7 +121,7 @@ const UpdateUser = ({ userData }) => {
           <input
             type="password"
             name="password"
-            value={formData.password || ''}
+            value={formData.password}
             onChange={handleInputChange}
             className="mt-1 block w-full border-gray-300 rounded-md"
             placeholder="Deja en blanco para mantener la misma contraseña"
@@ -111,7 +132,7 @@ const UpdateUser = ({ userData }) => {
           <input
             type="tel"
             name="telefono"
-            value={formData.telefono || ''}
+            value={formData.telefono}
             onChange={handleInputChange}
             className="mt-1 block w-full border-gray-300 rounded-md"
           />
@@ -121,7 +142,7 @@ const UpdateUser = ({ userData }) => {
           <input
             type="text"
             name="direccion"
-            value={formData.direccion || ''}
+            value={formData.direccion}
             onChange={handleInputChange}
             className="mt-1 block w-full border-gray-300 rounded-md"
           />
@@ -131,7 +152,7 @@ const UpdateUser = ({ userData }) => {
           <input
             type="number"
             name="edad"
-            value={formData.edad || ''}
+            value={formData.edad}
             onChange={handleInputChange}
             className="mt-1 block w-full border-gray-300 rounded-md"
             min="15"
@@ -141,7 +162,7 @@ const UpdateUser = ({ userData }) => {
           <label className="block text-gray-700">Rol</label>
           <select
             name="rol"
-            value={formData.rol || ''}
+            value={formData.rol}
             onChange={handleInputChange}
             className="mt-1 block w-full border-gray-300 rounded-md"
             required
@@ -156,7 +177,7 @@ const UpdateUser = ({ userData }) => {
           <label className="block text-gray-700">Nivel de Aprendizaje</label>
           <select
             name="nivel_aprendizaje"
-            value={formData.nivel_aprendizaje || ''}
+            value={formData.nivel_aprendizaje}
             onChange={handleInputChange}
             className="mt-1 block w-full border-gray-300 rounded-md"
           >
@@ -173,6 +194,9 @@ const UpdateUser = ({ userData }) => {
           Actualizar Datos
         </button>
       </form>
+
+      {/* Contenedor de Toastify */}
+      <ToastContainer />
     </section>
   );
 };

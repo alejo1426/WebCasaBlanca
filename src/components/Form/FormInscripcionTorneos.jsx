@@ -10,7 +10,7 @@ const FormInscripcionTorneos = ({ selectedItem }) => {
     fecha_inicio, 
     fecha_fin, 
     ubicacion, 
-    categoria, 
+    categoria, // Cambiado a categoría
     premios, 
     cupo_maximo,
     id: torneoId // Asegúrate de tener el ID del torneo
@@ -30,6 +30,33 @@ const FormInscripcionTorneos = ({ selectedItem }) => {
     } catch (error) {
       console.error("Error al decodificar el token:", error);
       toast.error('Error al procesar tu solicitud.');
+      return;
+    }
+
+    // Obtener el nivel del usuario desde Supabase
+    let usuarioCategoria;
+    try {
+      const { data: usuarioData, error: usuarioError } = await supabase
+        .from('usuarios')
+        .select('nivel_aprendizaje') // Asegúrate de que este campo es correcto
+        .eq('id', usuarioId)
+        .single();
+      
+      if (usuarioError) {
+        console.error("Error al obtener la categoría del usuario:", usuarioError);
+        toast.error('No se pudo obtener la categoría del usuario.');
+        return;
+      }
+      usuarioCategoria = usuarioData.nivel_aprendizaje; // Asegúrate de que esto refleja la categoría
+    } catch (error) {
+      console.error('Error al buscar la categoría del usuario:', error);
+      toast.error('Error al buscar la categoría del usuario.');
+      return;
+    }
+
+    // Validar si la categoría del usuario coincide con la categoría del torneo
+    if (usuarioCategoria !== categoria) {
+      toast.error(`No puedes inscribirte. Tu categoría es ${usuarioCategoria}, pero el torneo es de categoría ${categoria}.`);
       return;
     }
 
@@ -97,5 +124,3 @@ const FormInscripcionTorneos = ({ selectedItem }) => {
 };
 
 export default FormInscripcionTorneos;
-
-

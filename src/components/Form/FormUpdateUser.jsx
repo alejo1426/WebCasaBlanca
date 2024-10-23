@@ -158,35 +158,42 @@ const UpdateUser = ({ userData, onUserUpdate }) => {
             min="15"
           />
         </div>
-        <div className="mb-4">
-          <label className="block text-gray-700">Rol</label>
-          <select
-            name="rol"
-            value={formData.rol}
-            onChange={handleInputChange}
-            className="mt-1 block w-full border-gray-300 rounded-md"
-            required
-          >
-            <option value="">Seleccionar Rol</option>
-            <option value="admin">Admin</option>
-            <option value="instructor">Instructor</option>
-            <option value="usuario">Usuario</option>
-          </select>
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700">Nivel de Aprendizaje</label>
-          <select
-            name="nivel_aprendizaje"
-            value={formData.nivel_aprendizaje}
-            onChange={handleInputChange}
-            className="mt-1 block w-full border-gray-300 rounded-md"
-          >
-            <option value="">Seleccionar Nivel</option>
-            <option value="principiante">Principiante</option>
-            <option value="intermedio">Intermedio</option>
-            <option value="avanzado">Avanzado</option>
-          </select>
-        </div>
+
+        {/* Mostrar campos adicionales solo si el rol es admin */}
+        {formData.rol === 'admin' && (
+          <>
+            <div className="mb-4">
+              <label className="block text-gray-700">Rol</label>
+              <select
+                name="rol"
+                value={formData.rol}
+                onChange={handleInputChange}
+                className="mt-1 block w-full border-gray-300 rounded-md"
+                required
+              >
+                <option value="">Seleccionar Rol</option>
+                <option value="admin">Admin</option>
+                <option value="instructor">Instructor</option>
+                <option value="usuario">Usuario</option>
+              </select>
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-700">Nivel de Aprendizaje</label>
+              <select
+                name="nivel_aprendizaje"
+                value={formData.nivel_aprendizaje}
+                onChange={handleInputChange}
+                className="mt-1 block w-full border-gray-300 rounded-md"
+              >
+                <option value="">Seleccionar Nivel</option>
+                <option value="principiante">Principiante</option>
+                <option value="intermedio">Intermedio</option>
+                <option value="avanzado">Avanzado</option>
+              </select>
+            </div>
+          </>
+        )}
+
         <button
           type="submit"
           className="w-full py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"

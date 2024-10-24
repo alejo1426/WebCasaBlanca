@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import { supabase } from '../../../supabaseClient';
 import { jwtDecode } from 'jwt-decode';
 import CardItem from '../Card/CardItem';
-import DetallesClase from '../Detalles/DetallesClase';
-import DetallesTorneo from '../Detalles/DetallesTorneo';
+import DetallesClase from '../DetallesViewInscripciones/DetallesClase';
+import DetallesTorneo from '../DetallesViewInscripciones/DetallesTorneo';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 

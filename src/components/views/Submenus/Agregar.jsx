@@ -4,99 +4,113 @@ import BarraFiltro from '../../SearchBar/SearchBar';
 import FormUser from '../../Form/FormUser';
 import FormClases from '../../Form/FormClases';
 import FormTorneo from '../../Form/FormTorneos';
-import FormCanchas from '../../Form/FormCanchas'; // Importar el formulario de canchas
-import Modal from '../../Ventana/Modal';// Importar el componente Modal
+import FormCanchas from '../../Form/FormCanchas'; // Importar FormCanchas
+import Modal from '../../Ventana/Modal';
 
 const Agregar = () => {
   const [filterType, setFilterType] = useState('clases');
-  const [searchTerm, setSearchTerm] = useState('');
   const [results, setResults] = useState([]);
-  const [selectedData, setSelectedData] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const fetchResults = async (filter, search) => {
-    let query;
-
-    switch (filter) {
-      case 'clases':
-        query = supabase.from('clases');
-        break;
-      case 'usuarios':
-        query = supabase.from('usuarios');
-        break;
-      case 'torneos':
-        query = supabase.from('torneos');
-        break;
-      case 'canchas':
-        query = supabase.from('canchas');
-        break;
-      default:
-        return;
-    }
-
-    if (search) {
-      let { data: fetchedData, error } = await query
-        .select('*')
-        .or(
-          filter === 'usuarios'
-            ? `nombres.ilike.%${search}%,apellidos.ilike.%${search}%`
-            : `nombre.ilike.%${search}%` // Para clases, torneos y canchas
-        );
-
-      if (error) {
-        console.error('Error fetching data:', error);
-      } else {
-        setResults(fetchedData);
-      }
+  // Función para recuperar los datos de clases
+  const fetchClasses = async () => {
+    const { data, error } = await supabase.from('clases').select('*');
+    if (error) {
+      console.error('Error fetching classes:', error);
     } else {
-      setResults([]);
+      setResults(data);
+    }
+  };
+
+  // Función para recuperar los datos de torneos
+  const fetchTournaments = async () => {
+    const { data, error } = await supabase.from('torneos').select('*');
+    if (error) {
+      console.error('Error fetching tournaments:', error);
+    } else {
+      setResults(data);
+    }
+  };
+
+  // Función para recuperar los datos de usuarios
+  const fetchUsers = async () => {
+    const { data, error } = await supabase.from('usuarios').select('*');
+    if (error) {
+      console.error('Error fetching users:', error);
+    } else {
+      setResults(data);
+    }
+  };
+
+  // Función para recuperar los datos de canchas
+  const fetchCanchas = async () => {
+    const { data, error } = await supabase.from('canchas').select('*');
+    if (error) {
+      console.error('Error fetching canchas:', error);
+    } else {
+      setResults(data);
     }
   };
 
   useEffect(() => {
-    if (searchTerm) {
-      fetchResults(filterType, searchTerm);
-    } else {
-      setResults([]);
+    // Cargar datos según el filtro al inicio
+    if (filterType === 'clases') {
+      fetchClasses();
+    } else if (filterType === 'torneos') {
+      fetchTournaments();
+    } else if (filterType === 'usuarios') {
+      fetchUsers();
+    } else if (filterType === 'canchas') {
+      fetchCanchas();
     }
-  }, [filterType, searchTerm]);
+  }, [filterType]);
 
   const handleFilterChange = (selectedFilter) => {
     setFilterType(selectedFilter);
+    if (selectedFilter === 'clases') {
+      fetchClasses(); // Cargar clases al cambiar el filtro
+    } else if (selectedFilter === 'torneos') {
+      fetchTournaments(); // Cargar torneos al cambiar el filtro
+    } else if (selectedFilter === 'usuarios') {
+      fetchUsers(); // Cargar usuarios al cambiar el filtro
+    } else if (selectedFilter === 'canchas') {
+      fetchCanchas(); // Cargar canchas al cambiar el filtro
+    }
   };
 
-  const handleSearchChange = (searchTerm) => {
-    setSearchTerm(searchTerm);
+  const handleTournamentAdded = () => {
+    fetchTournaments(); // Actualiza los usuarios después de agregar uno
   };
 
-  const handleDataClick = (data) => {
-    setSelectedData(data);
-    setIsModalOpen(true);
+  const handleClaseAdded = () => {
+    fetchClasses(); // Actualiza las canchas después de agregar una
   };
 
-  const closeModal = () => {
-    setIsModalOpen(false);
-    setSelectedData(null);
+  const handleUserAdded = () => {
+    fetchUsers(); // Actualiza los usuarios después de agregar uno
+  };
+
+  const handleCanchaAdded = () => {
+    fetchCanchas(); // Actualiza las canchas después de agregar una
   };
 
   return (
     <div className="container mx-auto p-6">
       <h2 className="text-2xl font-bold mb-6">Agregar {filterType}</h2>
 
-      <BarraFiltro onFilterChange={handleFilterChange} onSearchChange={handleSearchChange} />
+      <BarraFiltro onFilterChange={handleFilterChange} />
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
         <div className="col-span-1">
           <h3 className="text-xl font-semibold mb-4">Resultados</h3>
-          <p>Mostrando resultados para: {filterType}, búsqueda: {searchTerm}</p>
           <ul className="mt-4 space-y-2">
             {results.map((result) => (
-              <li
-                key={result.id}
-                className="border p-2 rounded-md shadow cursor-pointer"
-                onClick={() => handleDataClick(result)}
-              >
-                {filterType === 'usuarios' ? `${result.nombres} ${result.apellidos}` : result.nombre}
+              <li key={result.id} className="border p-2 rounded-md shadow">
+                {filterType === 'clases' ? result.nombre :
+                 filterType === 'torneos' ? result.nombre :
+                 filterType === 'usuarios' ? result.nombres :
+                 result.nombre // Mostrar nombre para canchas
+                }
               </li>
             ))}
           </ul>
@@ -104,15 +118,15 @@ const Agregar = () => {
 
         {/* Renderiza el formulario correspondiente */}
         <div className="col-span-1">
-          {filterType === 'usuarios' && <FormUser />}
-          {filterType === 'clases' && <FormClases />}
-          {filterType === 'torneos' && <FormTorneo />}
-          {filterType === 'canchas' && <FormCanchas />}
+          {filterType === 'clases' && <FormClases onClassAdded={handleClaseAdded} />}
+          {filterType === 'torneos' && <FormTorneo onTournamentAdded={handleTournamentAdded} />}
+          {filterType === 'usuarios' && <FormUser onUserAdded={handleUserAdded} />}
+          {filterType === 'canchas' && <FormCanchas onCanchaAdded={handleCanchaAdded} />} {/* Renderizar FormCanchas */}
         </div>
       </div>
 
       {/* Modal para mostrar detalles */}
-      <Modal isOpen={isModalOpen} onClose={closeModal} data={selectedData} />
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </div>
   );
 };

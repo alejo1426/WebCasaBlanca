@@ -1,20 +1,23 @@
 import React from 'react';
 
 const DetallesTorneo = ({ torneo, onDelete }) => {
+  const formatDate = (date) => 
+    date ? new Date(date).toLocaleDateString('es-ES', { timeZone: 'UTC' }) : 'No disponible';
+
   return (
-    <div className="mt-4 bg-white p-4 rounded-lg shadow-md">
-      <h2 className="font-bold text-lg">{torneo.nombre}</h2>
-      <p><strong>Descripción:</strong> {torneo.descripcion}</p>
-      <p><strong>Fecha de Inicio:</strong> {new Date(torneo.fecha_inicio).toLocaleDateString('es-ES', { timeZone: 'UTC' })}</p>
-      <p><strong>Fecha de Fin:</strong> {new Date(torneo.fecha_fin).toLocaleDateString('es-ES', { timeZone: 'UTC' })}</p>
-      <p><strong>Ubicación:</strong> {torneo.ubicacion}</p>
-      <p><strong>Categoría:</strong> {torneo.categoria}</p>
-      <p><strong>Premios:</strong> {torneo.premios}</p>
-      <p><strong>Cupo Máximo:</strong> {torneo.cupo_maximo}</p>
-      <p><strong>Fecha de Inscripción:</strong> {new Date(torneo.fecha_inscripcion).toLocaleDateString('es-ES')}</p>
+    <div className="mt-4 bg-white p-6 rounded-lg shadow-lg transition-transform transform hover:scale-105">
+      <h2 className="font-bold text-2xl mb-2 text-gray-800">{torneo.nombre}</h2>
+      <p className="text-gray-600"><strong>Descripción:</strong> {torneo.descripcion}</p>
+      <p className="text-gray-600"><strong>Fecha de Inicio:</strong> <span className="font-semibold">{formatDate(torneo.fecha_inicio)}</span></p>
+      <p className="text-gray-600"><strong>Fecha de Fin:</strong> <span className="font-semibold">{formatDate(torneo.fecha_fin)}</span></p>
+      <p className="text-gray-600"><strong>Ubicación:</strong> <span className="font-semibold">{torneo.ubicacion}</span></p>
+      <p className="text-gray-600"><strong>Categoría:</strong> <span className="font-semibold">{torneo.categoria}</span></p>
+      <p className="text-gray-600"><strong>Premios:</strong> <span className="font-semibold">{torneo.premios}</span></p>
+      <p className="text-gray-600"><strong>Cupo Máximo:</strong> <span className="font-semibold">{torneo.cupo_maximo}</span></p>
+      <p className="text-gray-600"><strong>Fecha de Inscripción:</strong> <span className="font-semibold">{formatDate(torneo.fecha_inscripcion)}</span></p>
       <button 
         onClick={onDelete} 
-        className="mt-4 w-full py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
+        className="mt-4 w-full py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors"
       >
         Eliminar Inscripción
       </button>

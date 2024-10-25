@@ -9,40 +9,37 @@ const DashboardView = () => {
   const [tournaments, setTournaments] = useState([]);
   const [selectedItem, setSelectedItem] = useState(null);
   const [selectedType, setSelectedType] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loadingClasses, setLoadingClasses] = useState(true);
+  const [loadingTournaments, setLoadingTournaments] = useState(true);
 
   const fetchClassesWithInstructors = async () => {
     try {
-      setLoading(true);
       const { data, error } = await supabase
         .from('clases')
         .select('id, nombre, descripcion, horario, fecha_inicio, fecha_fin, nivel, instructor_id, usuarios!clases_instructor_id_fkey(nombres, apellidos)')
         .eq('usuarios.rol', 'instructor');
 
       if (error) throw error;
-
       setClasses(data);
     } catch (error) {
       console.error('Error fetching classes:', error.message);
     } finally {
-      setLoading(false);
+      setLoadingClasses(false);
     }
   };
 
   const fetchTournaments = async () => {
     try {
-      setLoading(true);
       const { data, error } = await supabase
         .from('torneos')
         .select('id, nombre, descripcion, fecha_inicio, fecha_fin, categoria, cupo_maximo, ubicacion, premios');
 
       if (error) throw error;
-
       setTournaments(data);
     } catch (error) {
       console.error('Error fetching tournaments:', error.message);
     } finally {
-      setLoading(false);
+      setLoadingTournaments(false);
     }
   };
 
@@ -56,40 +53,28 @@ const DashboardView = () => {
     setSelectedType(type);
   };
 
+  const renderSection = (title, loading, data, type) => (
+    <section className="mb-8">
+      <h1 className="text-2xl font-bold mb-4">{title}</h1>
+      {loading ? (
+        <p className="text-center text-lg">Cargando {title.toLowerCase()}...</p>
+      ) : data.length === 0 ? (
+        <p>No hay {title.toLowerCase()} disponibles</p>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {data.map(item => (
+            <CardItem key={item.id} item={item} type={type} onSelect={() => handleSelectItem(item, type)} />
+          ))}
+        </div>
+      )}
+    </section>
+  );
+
   return (
     <div className="flex flex-col lg:flex-row w-full h-full">
       <div className="flex-grow p-4">
-        {/* Sección de Clases */}
-        <section className="mb-8">
-          <h1 className="text-2xl font-bold mb-4">Sección de Clases</h1>
-          {loading ? (
-            <p className="text-center text-lg">Cargando clases...</p>
-          ) : classes.length === 0 ? (
-            <p>No hay clases disponibles</p>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {classes.map((cls) => (
-                <CardItem key={cls.id} item={cls} type="class" onSelect={() => handleSelectItem(cls, 'class')} />
-              ))}
-            </div>
-          )}
-        </section>
-
-        {/* Sección de Torneos */}
-        <section className="mb-8">
-          <h1 className="text-2xl font-bold mb-4">Sección de Torneos</h1>
-          {loading ? (
-            <p className="text-center text-lg">Cargando torneos...</p>
-          ) : tournaments.length === 0 ? (
-            <p>No hay torneos disponibles</p>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {tournaments.map((tournament) => (
-                <CardItem key={tournament.id} item={tournament} type="tournament" onSelect={() => handleSelectItem(tournament, 'tournament')} />
-              ))}
-            </div>
-          )}
-        </section>
+        {renderSection('Sección de Clases', loadingClasses, classes, 'class')}
+        {renderSection('Sección de Torneos', loadingTournaments, tournaments, 'tournament')}
       </div>
 
       {/* Sección de Formulario */}

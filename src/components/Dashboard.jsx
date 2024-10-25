@@ -32,7 +32,7 @@ const Dashboard = () => {
       localStorage.removeItem('token'); // Eliminar el token expirado
       navigate('/login'); // Redirigir a la página de inicio de sesión
     }
-  }, [navigate]);
+  }, [navigate, selectedView, selectedItem]);
 
   // Función para renderizar el componente según la vista seleccionada
   const renderSelectedView = () => {

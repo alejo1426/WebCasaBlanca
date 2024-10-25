@@ -4,129 +4,91 @@ import BarraFiltro from '../../SearchBar/SearchBar';
 import FormUser from '../../Form/FormUser';
 import FormClases from '../../Form/FormClases';
 import FormTorneo from '../../Form/FormTorneos';
-import FormCanchas from '../../Form/FormCanchas'; // Importar FormCanchas
+import FormCanchas from '../../Form/FormCanchas';
 import Modal from '../../Ventana/Modal';
 
 const Agregar = () => {
   const [filterType, setFilterType] = useState('clases');
   const [results, setResults] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [searchTerm, setSearchTerm] = useState(''); // Nuevo estado para el término de búsqueda
 
-  // Función para recuperar los datos de clases
-  const fetchClasses = async () => {
-    const { data, error } = await supabase.from('clases').select('*');
-    if (error) {
-      console.error('Error fetching classes:', error);
-    } else {
-      setResults(data);
+  const fetchData = async (table, search = '') => {
+    let query = supabase.from(table).select('*');
+
+    if (search) {
+      query = query.ilike('nombre', `%${search}%`); // Ajusta esto según la estructura de tu base de datos
     }
-  };
 
-  // Función para recuperar los datos de torneos
-  const fetchTournaments = async () => {
-    const { data, error } = await supabase.from('torneos').select('*');
+    const { data, error } = await query;
     if (error) {
-      console.error('Error fetching tournaments:', error);
-    } else {
-      setResults(data);
-    }
-  };
-
-  // Función para recuperar los datos de usuarios
-  const fetchUsers = async () => {
-    const { data, error } = await supabase.from('usuarios').select('*');
-    if (error) {
-      console.error('Error fetching users:', error);
-    } else {
-      setResults(data);
-    }
-  };
-
-  // Función para recuperar los datos de canchas
-  const fetchCanchas = async () => {
-    const { data, error } = await supabase.from('canchas').select('*');
-    if (error) {
-      console.error('Error fetching canchas:', error);
+      console.error(`Error fetching ${table}:`, error);
     } else {
       setResults(data);
     }
   };
 
   useEffect(() => {
-    // Cargar datos según el filtro al inicio
-    if (filterType === 'clases') {
-      fetchClasses();
-    } else if (filterType === 'torneos') {
-      fetchTournaments();
-    } else if (filterType === 'usuarios') {
-      fetchUsers();
-    } else if (filterType === 'canchas') {
-      fetchCanchas();
-    }
-  }, [filterType]);
+    fetchData(filterType, searchTerm);
+  }, [filterType, searchTerm]); // Ahora también depende de searchTerm
 
   const handleFilterChange = (selectedFilter) => {
     setFilterType(selectedFilter);
-    if (selectedFilter === 'clases') {
-      fetchClasses(); // Cargar clases al cambiar el filtro
-    } else if (selectedFilter === 'torneos') {
-      fetchTournaments(); // Cargar torneos al cambiar el filtro
-    } else if (selectedFilter === 'usuarios') {
-      fetchUsers(); // Cargar usuarios al cambiar el filtro
-    } else if (selectedFilter === 'canchas') {
-      fetchCanchas(); // Cargar canchas al cambiar el filtro
-    }
+    fetchData(selectedFilter, searchTerm); // Llamar a fetchData con el nuevo filtro y término de búsqueda
   };
 
-  const handleTournamentAdded = () => {
-    fetchTournaments(); // Actualiza los usuarios después de agregar uno
+  const handleDataAdded = () => {
+    fetchData(filterType, searchTerm); // Actualizar resultados después de agregar un elemento
   };
 
-  const handleClaseAdded = () => {
-    fetchClasses(); // Actualiza las canchas después de agregar una
+  const handleItemClick = (item) => {
+    setSelectedItem(item);
+    setIsModalOpen(true);
   };
 
-  const handleUserAdded = () => {
-    fetchUsers(); // Actualiza los usuarios después de agregar uno
-  };
-
-  const handleCanchaAdded = () => {
-    fetchCanchas(); // Actualiza las canchas después de agregar una
+  const formComponents = {
+    clases: <FormClases onClassAdded={handleDataAdded} />,
+    torneos: <FormTorneo onTournamentAdded={handleDataAdded} />,
+    usuarios: <FormUser onUserAdded={handleDataAdded} />,
+    canchas: <FormCanchas onCanchaAdded={handleDataAdded} />
   };
 
   return (
     <div className="container mx-auto p-6">
       <h2 className="text-2xl font-bold mb-6">Agregar {filterType}</h2>
 
-      <BarraFiltro onFilterChange={handleFilterChange} />
+      <BarraFiltro 
+        onFilterChange={handleFilterChange} 
+        onSearchChange={setSearchTerm} // Pasar la función para actualizar el término de búsqueda
+        showSearch={true} // Asegúrate de que la barra de búsqueda se muestre
+      />
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
         <div className="col-span-1">
           <h3 className="text-xl font-semibold mb-4">Resultados</h3>
           <ul className="mt-4 space-y-2">
             {results.map((result) => (
-              <li key={result.id} className="border p-2 rounded-md shadow">
-                {filterType === 'clases' ? result.nombre :
-                 filterType === 'torneos' ? result.nombre :
-                 filterType === 'usuarios' ? result.nombres :
-                 result.nombre // Mostrar nombre para canchas
-                }
+              <li
+                key={result.id}
+                className="border p-2 rounded-md shadow cursor-pointer"
+                onClick={() => handleItemClick(result)}
+              >
+                {filterType === 'usuarios' ? result.usuario : result.nombre}
               </li>
             ))}
           </ul>
         </div>
 
-        {/* Renderiza el formulario correspondiente */}
         <div className="col-span-1">
-          {filterType === 'clases' && <FormClases onClassAdded={handleClaseAdded} />}
-          {filterType === 'torneos' && <FormTorneo onTournamentAdded={handleTournamentAdded} />}
-          {filterType === 'usuarios' && <FormUser onUserAdded={handleUserAdded} />}
-          {filterType === 'canchas' && <FormCanchas onCanchaAdded={handleCanchaAdded} />} {/* Renderizar FormCanchas */}
+          {formComponents[filterType]}
         </div>
       </div>
 
-      {/* Modal para mostrar detalles */}
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      {/* Modal para mostrar detalles del elemento seleccionado */}
+      {selectedItem && (
+        <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} data={selectedItem} />
+      )}
     </div>
   );
 };

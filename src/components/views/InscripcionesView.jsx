@@ -16,156 +16,136 @@ const InscripcionesView = () => {
   const [selectedTorneo, setSelectedTorneo] = useState(null);
 
   useEffect(() => {
-    const fetchClasesInscritas = async () => {
+    const fetchInscripciones = async () => {
       const token = localStorage.getItem('token');
       let usuarioId;
 
       try {
         const decoded = jwtDecode(token);
         usuarioId = decoded.id;
-      } catch (error) {
-        console.error("Error al decodificar el token:", error);
+      } catch {
         setErrorMessage('No se pudo obtener el ID del usuario.');
         return;
       }
 
       try {
         setLoading(true);
-        
-        // Obtener inscripciones a clases
-        const { data: inscripcionesClases, error: inscripcionesError } = await supabase
-          .from('inscripcionesclases')
-          .select('clase_id, fecha_inscripcion')
-          .eq('usuario_id', usuarioId);
-
-        if (inscripcionesError) throw inscripcionesError;
-
-        const claseIds = inscripcionesClases.map(inscripcion => inscripcion.clase_id);
-
-        if (claseIds.length === 0) {
-          setClasesInscritas([]);
-        } else {
-          const { data: clases, error: clasesError } = await supabase
-            .from('clases')
-            .select('id, nombre, descripcion, horario, nivel, fecha_inicio, fecha_fin, usuarios!clases_instructor_id_fkey(nombres, apellidos)')
-            .in('id', claseIds);
-
-          if (clasesError) throw clasesError;
-
-          const clasesConInscripcion = clases.map(clase => {
-            const inscripcion = inscripcionesClases.find(insc => insc.clase_id === clase.id);
-            return { ...clase, fecha_inscripcion: inscripcion.fecha_inscripcion };
-          });
-
-          setClasesInscritas(clasesConInscripcion);
-        }
-
-        // Obtener inscripciones a torneos
-        const { data: inscripcionesTorneos, error: inscripcionesTorneoError } = await supabase
-          .from('inscripcionestorneos')
-          .select('torneo_id, fecha_inscripcion')
-          .eq('usuario_id', usuarioId);
-
-        if (inscripcionesTorneoError) throw inscripcionesTorneoError;
-
-        const torneoIds = inscripcionesTorneos.map(inscripcion => inscripcion.torneo_id);
-
-        if (torneoIds.length > 0) {
-          const { data: torneos, error: torneosError } = await supabase
-            .from('torneos')
-            .select('id, nombre, descripcion, fecha_inicio, fecha_fin, ubicacion, categoria, premios, cupo_maximo')
-            .in('id', torneoIds);
-
-          if (torneosError) throw torneosError;
-
-          const torneosConInscripcion = torneos.map(torneo => {
-            const inscripcion = inscripcionesTorneos.find(insc => insc.torneo_id === torneo.id);
-            return { ...torneo, fecha_inscripcion: inscripcion.fecha_inscripcion };
-          });
-
-          setTorneosInscritos(torneosConInscripcion);
-        } else {
-          setTorneosInscritos([]);
-        }
-      } catch (error) {
-        console.error('Error al obtener datos:', error);
+        await Promise.all([
+          fetchClasesInscritas(usuarioId),
+          fetchTorneosInscritos(usuarioId),
+        ]);
+      } catch {
         setErrorMessage('Error al cargar las clases o torneos.');
       } finally {
         setLoading(false);
       }
     };
 
-    fetchClasesInscritas();
+    fetchInscripciones();
   }, []);
 
-  const handleDeleteInscripcion = async (claseId) => {
-    const token = localStorage.getItem('token');
-    let usuarioId;
+  const fetchClasesInscritas = async (usuarioId) => {
+    const { data: inscripcionesClases, error: inscripcionesError } = await supabase
+      .from('inscripcionesclases')
+      .select('clase_id, fecha_inscripcion')
+      .eq('usuario_id', usuarioId);
 
-    try {
-      const decoded = jwtDecode(token);
-      usuarioId = decoded.id;
-    } catch (error) {
-      console.error("Error al decodificar el token:", error);
-      toast.error('Error al procesar tu solicitud.');
+    if (inscripcionesError) throw inscripcionesError;
+
+    const claseIds = inscripcionesClases.map(inscripcion => inscripcion.clase_id);
+    if (claseIds.length === 0) {
+      setClasesInscritas([]);
       return;
     }
 
-    const { error } = await supabase
-      .from('inscripcionesclases')
-      .delete()
-      .eq('usuario_id', usuarioId)
-      .eq('clase_id', claseId);
+    const { data: clases, error: clasesError } = await supabase
+      .from('clases')
+      .select('id, nombre, descripcion, horario, nivel, fecha_inicio, fecha_fin, usuarios!clases_instructor_id_fkey(nombres, apellidos)')
+      .in('id', claseIds);
 
-    if (error) {
-      console.error('Error al eliminar la inscripción:', error);
-      toast.error('Hubo un problema al eliminar la inscripción.');
-    } else {
-      setClasesInscritas(prev => prev.filter(clase => clase.id !== claseId));
-      toast.success('¡Inscripción eliminada correctamente!');
-      setSelectedClase(null);
+    if (clasesError) throw clasesError;
+
+    const clasesConInscripcion = clases.map(clase => {
+      const inscripcion = inscripcionesClases.find(insc => insc.clase_id === clase.id);
+      return { ...clase, fecha_inscripcion: inscripcion.fecha_inscripcion };
+    });
+
+    setClasesInscritas(clasesConInscripcion);
+  };
+
+  const fetchTorneosInscritos = async (usuarioId) => {
+    const { data: inscripcionesTorneos, error: inscripcionesError } = await supabase
+      .from('inscripcionestorneos')
+      .select('torneo_id, fecha_inscripcion')
+      .eq('usuario_id', usuarioId);
+
+    if (inscripcionesError) throw inscripcionesError;
+
+    const torneoIds = inscripcionesTorneos.map(inscripcion => inscripcion.torneo_id);
+    if (torneoIds.length === 0) {
+      setTorneosInscritos([]);
+      return;
     }
+
+    const { data: torneos, error: torneosError } = await supabase
+      .from('torneos')
+      .select('id, nombre, descripcion, fecha_inicio, fecha_fin, ubicacion, categoria, premios, cupo_maximo')
+      .in('id', torneoIds);
+
+    if (torneosError) throw torneosError;
+
+    const torneosConInscripcion = torneos.map(torneo => {
+      const inscripcion = inscripcionesTorneos.find(insc => insc.torneo_id === torneo.id);
+      return { ...torneo, fecha_inscripcion: inscripcion.fecha_inscripcion };
+    });
+
+    setTorneosInscritos(torneosConInscripcion);
+  };
+
+  const handleDeleteInscripcion = async (claseId) => {
+    await deleteInscripcion('inscripcionesclases', claseId, 'clase_id', setClasesInscritas);
   };
 
   const handleDeleteInscripcionTorneo = async (torneoId) => {
+    await deleteInscripcion('inscripcionestorneos', torneoId, 'torneo_id', setTorneosInscritos);
+  };
+
+  const deleteInscripcion = async (table, id, idField, setState) => {
     const token = localStorage.getItem('token');
     let usuarioId;
 
     try {
       const decoded = jwtDecode(token);
       usuarioId = decoded.id;
-    } catch (error) {
-      console.error("Error al decodificar el token:", error);
+    } catch {
       toast.error('Error al procesar tu solicitud.');
       return;
     }
 
     const { error } = await supabase
-      .from('inscripcionestorneos')
+      .from(table)
       .delete()
       .eq('usuario_id', usuarioId)
-      .eq('torneo_id', torneoId);
+      .eq(idField, id);
 
     if (error) {
-      console.error('Error al eliminar la inscripción:', error);
-      toast.error('Hubo un problema al eliminar la inscripción al torneo.');
+      toast.error('Hubo un problema al eliminar la inscripción.');
     } else {
-      setTorneosInscritos(prev => prev.filter(torneo => torneo.id !== torneoId));
-      toast.success('¡Inscripción al torneo eliminada correctamente!');
-      setSelectedTorneo(null);
+      setState(prev => prev.filter(item => item.id !== id));
+      toast.success('¡Inscripción eliminada correctamente!');
     }
   };
 
   return (
-    <div className="flex-grow p-4 flex">
+    <div className="flex-grow p-6 flex flex-col md:flex-row">
       <div className="flex-1">
-        <h1 className="text-2xl font-bold mb-4">Mis Clases Inscritas</h1>
+        <h1 className="text-2xl font-bold mb-6">Mis Clases Inscritas</h1>
         {loading ? (
           <p className="text-center text-lg">Cargando clases...</p>
         ) : errorMessage ? (
           <p className="text-red-500">{errorMessage}</p>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {clasesInscritas.length > 0 ? (
               clasesInscritas.map(clase => (
                 <CardItem 
@@ -186,12 +166,11 @@ const InscripcionesView = () => {
           </div>
         )}
 
-        {/* Sección de torneos */}
-        <h1 className="text-2xl font-bold mb-4 mt-8">Mis Torneos Inscritos</h1>
+        <h1 className="text-2xl font-bold mb-6 mt-8">Mis Torneos Inscritos</h1>
         {loading ? (
           <p className="text-center text-lg">Cargando torneos...</p>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {torneosInscritos.length > 0 ? (
               torneosInscritos.map(torneo => (
                 <CardItem 
@@ -213,8 +192,7 @@ const InscripcionesView = () => {
         )}
       </div>
 
-      {/* Detalles de la clase o torneo seleccionado */}
-      <div className="w-1/3 ml-4">
+      <div className="w-full md:w-1/3 md:ml-6 mt-6 md:mt-0">
         {selectedClase ? (
           <DetallesClase 
             clase={selectedClase} 
@@ -232,7 +210,6 @@ const InscripcionesView = () => {
         )}
       </div>
 
-      {/* Contenedor de Toastify */}
       <ToastContainer />
     </div>
   );

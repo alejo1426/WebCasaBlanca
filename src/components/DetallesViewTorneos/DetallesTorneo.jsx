@@ -11,6 +11,7 @@ const DetallesTorneo = ({ tournament, participants, positions }) => {
       <p><strong>Categoría:</strong> {tournament.categoria}</p>
       <p><strong>Premios:</strong> {tournament.premios}</p>
       <p><strong>Cupo máximo:</strong> {tournament.cupo_maximo}</p>
+      <p><strong>Inscripciones actuales:</strong> {tournament.inscripciones_actuales}</p>
       <p><strong>Estado:</strong> {tournament.estado}</p>
 
       {tournament.estado === 'proximo' && (

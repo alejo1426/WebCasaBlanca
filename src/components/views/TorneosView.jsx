@@ -16,8 +16,8 @@ const TorneosView = () => {
   const fetchTournaments = async () => {
     const { data, error } = await supabase
       .from('torneos')
-      .select('id, nombre, descripcion, fecha_inicio, fecha_fin, ubicacion, categoria, premios, cupo_maximo, estado');
-
+      .select('id, nombre, descripcion, fecha_inicio, fecha_fin, ubicacion, categoria, premios, cupo_maximo, inscripciones_actuales, estado');
+  
     if (error) {
       console.error("Error fetching tournaments:", error);
     } else {

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../../../supabaseClient';
-import { ToastContainer, toast } from 'react-toastify'; // Importar ToastContainer y toast
-import 'react-toastify/dist/ReactToastify.css'; // Importar estilos de react-toastify
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const FormUpdateClases = ({ initialData, onUpdate }) => {
   const [classData, setClassData] = useState({
@@ -23,15 +23,15 @@ const FormUpdateClases = ({ initialData, onUpdate }) => {
         .from('usuarios')
         .select('id, nombres, apellidos')
         .eq('rol', 'instructor');
-      
+
       if (error) {
         console.error('Error fetching instructors:', error);
-        toast.error('Error al obtener instructores'); // Usar toast para mostrar errores
+        toast.error('Error al obtener instructores');
       } else {
         setInstructors(fetchedInstructors);
       }
     };
-    
+
     fetchInstructors();
   }, []);
 
@@ -53,21 +53,37 @@ const FormUpdateClases = ({ initialData, onUpdate }) => {
     return horarioRegex.test(horario);
   };
 
-  // Comprobar si ya existe una clase con el mismo horario y fecha de inicio
+  // Validar fechas: fecha_fin debe ser posterior a fecha_inicio
+  const areDatesValid = () => {
+    if (classData.fecha_fin && classData.fecha_inicio > classData.fecha_fin) {
+      toast.error('La fecha de fin debe ser posterior a la fecha de inicio.');
+      return false;
+    }
+    return true;
+  };
+
+  // Comprobar si ya existe una clase con el mismo horario y fecha de inicio, excluyendo la propia clase si no han cambiado
   const claseConflicto = async () => {
+    if (
+      initialData.fecha_inicio === classData.fecha_inicio &&
+      initialData.horario === classData.horario
+    ) {
+      return false; // No hay conflicto si no han cambiado estos campos
+    }
+
     const { data, error } = await supabase
       .from('clases')
       .select('id')
       .eq('fecha_inicio', classData.fecha_inicio)
       .eq('horario', classData.horario)
-      .neq('id', initialData.id); // Excluir la clase que se está modificando
+      .neq('id', initialData.id);
 
     if (error) {
       console.error('Error al verificar conflictos de horario:', error);
-      toast.error('Error al verificar horarios'); // Usar toast para mostrar errores
+      toast.error('Error al verificar horarios');
       return false;
     }
-    return data.length > 0; // Retorna true si hay conflictos
+    return data.length > 0;
   };
 
   // Manejar el envío del formulario
@@ -78,6 +94,11 @@ const FormUpdateClases = ({ initialData, onUpdate }) => {
     // Validar que todos los campos estén llenos
     if (Object.values(classData).some((value) => value === '')) {
       toast.error('Todos los campos deben estar llenos.');
+      return;
+    }
+
+    // Validar fechas
+    if (!areDatesValid()) {
       return;
     }
 
@@ -94,28 +115,28 @@ const FormUpdateClases = ({ initialData, onUpdate }) => {
       return;
     }
 
+    // Preparar solo los campos que han cambiado para la actualización
+    const updatedFields = {};
+    for (const key in classData) {
+      if (classData[key] !== initialData[key]) {
+        updatedFields[key] = classData[key];
+      }
+    }
+
     try {
       const { error } = await supabase
         .from('clases')
-        .update({
-          nombre: classData.nombre,
-          descripcion: classData.descripcion,
-          horario: classData.horario,
-          nivel: classData.nivel,
-          instructor_id: classData.instructor_id,
-          fecha_inicio: classData.fecha_inicio,
-          fecha_fin: classData.fecha_fin,
-        })
-        .eq('id', initialData.id); // Suponiendo que el ID de la clase está en initialData
+        .update(updatedFields)
+        .eq('id', initialData.id);
 
       if (error) {
         throw error;
       }
-      toast.success('Clase modificada con éxito'); // Usar toast para mostrar éxito
+      toast.success('Clase modificada con éxito');
       onUpdate(); // Llamamos a onUpdate para actualizar la lista de resultados
     } catch (error) {
       console.error('Error al modificar la clase:', error);
-      toast.error('Error al modificar la clase'); // Usar toast para mostrar errores
+      toast.error('Error al modificar la clase');
     }
   };
 
@@ -155,7 +176,7 @@ const FormUpdateClases = ({ initialData, onUpdate }) => {
             value={classData.horario}
             onChange={handleChange}
             className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-            placeholder="Ej: 7am - 8am" // Indicar el formato esperado
+            placeholder="Ej: 7am - 8am"
             required
           />
         </div>
@@ -217,19 +238,21 @@ const FormUpdateClases = ({ initialData, onUpdate }) => {
             value={classData.fecha_fin}
             onChange={handleChange}
             className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            required
           />
         </div>
 
-        {/* Botón de submit */}
-        <button
-          type="submit"
-          className="py-2 px-4 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition"
-        >
-          Modificar Clase
-        </button>
+        {/* Botón para enviar */}
+        <div>
+          <button
+            type="submit"
+            className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600"
+          >
+            Modificar Clase
+          </button>
+        </div>
       </form>
-
-      <ToastContainer /> {/* Agregar el ToastContainer aquí */}
+      <ToastContainer />
     </>
   );
 };

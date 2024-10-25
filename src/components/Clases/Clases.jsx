@@ -16,7 +16,7 @@ const Clases = () => {
           <p><FaClock /> <strong>Horario:</strong> 6:00 PM - 8:00 PM</p>
           <p><FaDollarSign /> <strong>Precio:</strong> $20 por participante</p>
           <p><strong>Categoría:</strong> Grupo</p>
-          <Link to="/ClasesFormulario">
+          <Link to="/formulario">
             <button className="form-button">Formulario</button>
           </Link>
         </div>
@@ -29,7 +29,7 @@ const Clases = () => {
           <p><FaClock /> <strong>Horario:</strong> 4:00 PM - 5:00 PM</p>
           <p><FaDollarSign /> <strong>Precio:</strong> $40 por participante</p>
           <p><strong>Categoría:</strong> Individual</p>
-          <Link to="/ClasesFormulario">
+          <Link to="/formulario">
             <button className="form-button">Formulario</button>
           </Link>
         </div>

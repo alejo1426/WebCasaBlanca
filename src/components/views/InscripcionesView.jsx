@@ -6,6 +6,7 @@ import DetallesClase from '../DetallesViewInscripciones/DetallesClase';
 import DetallesTorneo from '../DetallesViewInscripciones/DetallesTorneo';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import ModalConfirmacion from '../Ventana/ModalConfirmacion'; // Importar el modal
 
 const InscripcionesView = () => {
   const [clasesInscritas, setClasesInscritas] = useState([]);
@@ -14,6 +15,8 @@ const InscripcionesView = () => {
   const [loading, setLoading] = useState(true);
   const [selectedClase, setSelectedClase] = useState(null);
   const [selectedTorneo, setSelectedTorneo] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false); // Estado para el modal
+  const [inscripcionToDelete, setInscripcionToDelete] = useState(null); // Inscripción a eliminar
 
   useEffect(() => {
     const fetchInscripciones = async () => {
@@ -102,12 +105,32 @@ const InscripcionesView = () => {
     setTorneosInscritos(torneosConInscripcion);
   };
 
-  const handleDeleteInscripcion = async (claseId) => {
-    await deleteInscripcion('inscripcionesclases', claseId, 'clase_id', setClasesInscritas);
+  const handleDeleteInscripcion = (claseId) => {
+    setInscripcionToDelete({ id: claseId, type: 'clases' }); // Guarda el ID y tipo
+    setIsModalOpen(true); // Abre el modal
   };
 
-  const handleDeleteInscripcionTorneo = async (torneoId) => {
-    await deleteInscripcion('inscripcionestorneos', torneoId, 'torneo_id', setTorneosInscritos);
+  const handleDeleteInscripcionTorneo = (torneoId) => {
+    setInscripcionToDelete({ id: torneoId, type: 'torneos' }); // Guarda el ID y tipo
+    setIsModalOpen(true); // Abre el modal
+  };
+
+  const confirmDeleteInscripcion = async () => {
+    if (!inscripcionToDelete) return; // Verifica que haya una inscripción seleccionada
+
+    const { id, type } = inscripcionToDelete; // Obtiene el ID y tipo
+
+    try {
+      await deleteInscripcion(
+        type === 'clases' ? 'inscripcionesclases' : 'inscripcionestorneos',
+        id,
+        type === 'clases' ? 'clase_id' : 'torneo_id',
+        type === 'clases' ? setClasesInscritas : setTorneosInscritos
+      );
+    } finally {
+      setIsModalOpen(false); // Cierra el modal
+      setInscripcionToDelete(null); // Resetea el estado
+    }
   };
 
   const deleteInscripcion = async (table, id, idField, setState) => {
@@ -211,6 +234,14 @@ const InscripcionesView = () => {
       </div>
 
       <ToastContainer />
+
+      {/* Modal de confirmación */}
+      <ModalConfirmacion 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+        onConfirm={confirmDeleteInscripcion} // Llama a la función de confirmación
+        tipo={inscripcionToDelete ? (inscripcionToDelete.type === 'clases' ? 'clase' : 'torneo') : ''} // Pasar tipo según el caso
+      />
     </div>
   );
 };

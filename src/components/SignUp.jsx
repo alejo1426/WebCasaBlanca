@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import '../css/Signup.css';
 
 const Registro = () => {
     const navigate = useNavigate();
@@ -62,118 +63,59 @@ const Registro = () => {
     };
 
     return (
-        <div className="flex flex-col w-full max-w-lg mx-auto p-30 md:p-20 2xl:p-30 bg-[#ffffff] rounded-2xl shadow-xl">
-            <div className="flex flex-col justify-center items-center gap-4 pb-4">
-                <div>
-                    <img src="https://eojuwteklxhwwurpioyb.supabase.co/storage/v1/object/public/Img/logo.jpeg" width="200" alt="Logo" />
+        <div className="relative w-full min-h-screen flex items-center justify-center">
+            {/* Video de fondo */}
+            <video
+                autoPlay
+                loop
+                muted
+                className="absolute inset-0 w-full h-full object-cover -z-10"
+            >
+                <source src="/video/Signup.mp4" type="video/mp4" />
+                Your browser does not support the video tag.
+            </video>
+
+            {/* Contenedor del formulario */}
+            <div className="flex flex-col w-full max-w-lg mx-auto p-6 md:p-10 bg-opacity-80 backdrop-blur-lg rounded-2xl shadow-2xl relative z-10">
+                <div className="flex flex-col justify-center items-center gap-4 pb-4">
+                    <div>
+                        <img src="https://eojuwteklxhwwurpioyb.supabase.co/storage/v1/object/public/Img/logo.jpeg" width="150" alt="Logo" />
+                    </div>
+                    <h1 className="neon-text-titulo text-4xl font-bold text-[#006aff]">CASA BLANCA</h1>
                 </div>
-                <h1 className="text-4xl font-bold text-[#006aff]">CASA BLANCA</h1>
+                <div className="neon-text-subtitulo text-sm font-bold text-[#ffffff] pb-8 text-center">Regístrate con nosotros y disfruta!!</div>
+                <form className="flex flex-col space-y-4" onSubmit={handleSubmit}>
+                    {/* Campos del formulario */}
+                    {[
+                        { label: 'Nombres', id: 'nombres', value: nombres, onChange: setNombres, type: 'text', placeholder: 'Ingrese sus nombres' },
+                        { label: 'Apellidos', id: 'apellidos', value: apellidos, onChange: setApellidos, type: 'text', placeholder: 'Ingrese sus apellidos' },
+                        { label: 'Correo', id: 'correo', value: correo, onChange: setCorreo, type: 'email', placeholder: 'Ingrese su correo' },
+                        { label: 'Usuario', id: 'usuario', value: usuario, onChange: setUsuario, type: 'text', placeholder: 'Ingrese su usuario' },
+                        { label: 'Password', id: 'password', value: password, onChange: setPassword, type: 'password', placeholder: '••••••••••' },
+                        { label: 'Teléfono', id: 'telefono', value: telefono, onChange: setTelefono, type: 'text', placeholder: 'Ingrese su teléfono' },
+                        { label: 'Dirección', id: 'direccion', value: direccion, onChange: setDireccion, type: 'text', placeholder: 'Ingrese su dirección' },
+                        { label: 'Edad', id: 'edad', value: edad, onChange: setEdad, type: 'number', placeholder: 'Ingrese su edad' },
+                    ].map(({ label, id, value, onChange, type, placeholder }) => (
+                        <div key={id} className="pb-2">
+                            <label htmlFor={id} className="label-text block mb-2 text-sm font-medium text-[#ffffff]">{label}</label>
+                            <input
+                                type={type}
+                                name={id}
+                                id={id}
+                                className="pl-12 mb-2 bg-white text-gray-600 border focus:border-transparent border-gray-300 sm:text-sm rounded-lg ring ring-transparent focus:ring-1 focus:outline-none focus:ring-gray-400 block w-full p-2.5"
+                                placeholder={placeholder}
+                                value={value}
+                                onChange={(e) => onChange(e.target.value)}
+                            />
+                        </div>
+                    ))}
+                    {error && <p className="text-red-600">{error}</p>}
+                    <button type="submit" className="w-full text-[#ffffff] bg-[#1c8be6] focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-4">Registrarse</button>
+                    <div className="text-sm font-light text-[#ffffff] text-center">
+                        ¿Ya estás vinculado con nosotros? <span className="font-medium text-[#0059ff] hover:underline cursor-pointer" onClick={() => navigate('/Login')}>Iniciar Sesión</span>
+                    </div>
+                </form>
             </div>
-            <div className="text-sm font-light text-[#6B7280] pb-8 text-center">Regístrate con nosotros y disfruta!!</div>
-            <form className="flex flex-col" onSubmit={handleSubmit}>
-                {/* Campos del formulario */}
-                <div className="pb-2">
-                    <label htmlFor="nombres" className="block mb-2 text-sm font-medium text-[#111827]">Nombres</label>
-                    <input
-                        type="text"
-                        name="nombres"
-                        id="nombres"
-                        className="pl-12 mb-2 bg-gray-50 text-gray-600 border focus:border-transparent border-gray-300 sm:text-sm rounded-lg ring ring-transparent focus:ring-1 focus:outline-none focus:ring-gray-400 block w-full p-2.5"
-                        placeholder="Ingrese sus nombres"
-                        value={nombres}
-                        onChange={(e) => setNombres(e.target.value)}
-                    />
-                </div>
-                <div className="pb-2">
-                    <label htmlFor="apellidos" className="block mb-2 text-sm font-medium text-[#111827]">Apellidos</label>
-                    <input
-                        type="text"
-                        name="apellidos"
-                        id="apellidos"
-                        className="pl-12 mb-2 bg-gray-50 text-gray-600 border focus:border-transparent border-gray-300 sm:text-sm rounded-lg ring ring-transparent focus:ring-1 focus:outline-none focus:ring-gray-400 block w-full p-2.5"
-                        placeholder="Ingrese sus apellidos"
-                        value={apellidos}
-                        onChange={(e) => setApellidos(e.target.value)}
-                    />
-                </div>
-                <div className="pb-2">
-                    <label htmlFor="correo" className="block mb-2 text-sm font-medium text-[#111827]">Correo</label>
-                    <input
-                        type="email"
-                        name="correo"
-                        id="correo"
-                        className="pl-12 mb-2 bg-gray-50 text-gray-600 border focus:border-transparent border-gray-300 sm:text-sm rounded-lg ring ring-transparent focus:ring-1 focus:outline-none focus:ring-gray-400 block w-full p-2.5"
-                        placeholder="Ingrese su correo"
-                        value={correo}
-                        onChange={(e) => setCorreo(e.target.value)}
-                    />
-                </div>
-                <div className="pb-2">
-                    <label htmlFor="usuario" className="block mb-2 text-sm font-medium text-[#111827]">Usuario</label>
-                    <input
-                        type="text"
-                        name="usuario"
-                        id="usuario"
-                        className="pl-12 mb-2 bg-gray-50 text-gray-600 border focus:border-transparent border-gray-300 sm:text-sm rounded-lg ring ring-transparent focus:ring-1 focus:outline-none focus:ring-gray-400 block w-full p-2.5"
-                        placeholder="Ingrese su usuario"
-                        value={usuario}
-                        onChange={(e) => setUsuario(e.target.value)}
-                    />
-                </div>
-                <div className="pb-2">
-                    <label htmlFor="password" className="block mb-2 text-sm font-medium text-[#111827]">Password</label>
-                    <input
-                        type="password"
-                        name="password"
-                        id="password"
-                        className="pl-12 mb-2 bg-gray-50 text-gray-600 border focus:border-transparent border-gray-300 sm:text-sm rounded-lg ring ring-transparent focus:ring-1 focus:outline-none focus:ring-gray-400 block w-full p-2.5"
-                        placeholder="••••••••••"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                    />
-                </div>
-                <div className="pb-2">
-                    <label htmlFor="telefono" className="block mb-2 text-sm font-medium text-[#111827]">Teléfono</label>
-                    <input
-                        type="text"
-                        name="telefono"
-                        id="telefono"
-                        className="pl-12 mb-2 bg-gray-50 text-gray-600 border focus:border-transparent border-gray-300 sm:text-sm rounded-lg ring ring-transparent focus:ring-1 focus:outline-none focus:ring-gray-400 block w-full p-2.5"
-                        placeholder="Ingrese su teléfono"
-                        value={telefono}
-                        onChange={(e) => setTelefono(e.target.value)}
-                    />
-                </div>
-                <div className="pb-2">
-                    <label htmlFor="direccion" className="block mb-2 text-sm font-medium text-[#111827]">Dirección</label>
-                    <input
-                        type="text"
-                        name="direccion"
-                        id="direccion"
-                        className="pl-12 mb-2 bg-gray-50 text-gray-600 border focus:border-transparent border-gray-300 sm:text-sm rounded-lg ring ring-transparent focus:ring-1 focus:outline-none focus:ring-gray-400 block w-full p-2.5"
-                        placeholder="Ingrese su dirección"
-                        value={direccion}
-                        onChange={(e) => setDireccion(e.target.value)}
-                    />
-                </div>
-                <div className="pb-2">
-                    <label htmlFor="edad" className="block mb-2 text-sm font-medium text-[#111827]">Edad</label>
-                    <input
-                        type="number"
-                        name="edad"
-                        id="edad"
-                        className="pl-12 mb-2 bg-gray-50 text-gray-600 border focus:border-transparent border-gray-300 sm:text-sm rounded-lg ring ring-transparent focus:ring-1 focus:outline-none focus:ring-gray-400 block w-full p-2.5"
-                        placeholder="Ingrese su edad"
-                        value={edad}
-                        onChange={(e) => setEdad(e.target.value)}
-                    />
-                </div>
-                {error && <p className="text-red-600">{error}</p>}
-                <button type="submit" className="w-full text-[#FFFFFF] bg-[#194cac] focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mb-6">Registrarse</button>
-                <div className="text-sm font-light text-[#6B7280]">
-                    ¿Ya estás vinculado con nosotros? <span className="font-medium text-[#153c85] hover:underline cursor-pointer" onClick={() => navigate('/Login')}>Iniciar Sesión</span>
-                </div>
-            </form>
         </div>
     );
 };

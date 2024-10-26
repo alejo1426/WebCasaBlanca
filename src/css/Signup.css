@@ -1,0 +1,36 @@
+.neon-text-titulo {
+    text-shadow: 
+      0 0 5px rgba(255, 255, 255, 0.5), /* Blanco suave */
+      0 0 10px rgba(255, 255, 255, 0.3), /* Blanco más suave */
+      0 0 15px rgba(0, 110, 220, 0.5),    /* Azul claro */
+      0 0 20px rgba(0, 80, 160, 0.5),     /* Azul medio */
+      0 0 30px rgba(0, 140, 255, 0.7);    /* Azul intenso */
+}
+
+
+.neon-text-subtitulo {
+    text-shadow: 
+      0 0 5px rgba(0, 0, 0, 0.8), /* Negro suave */
+      0 0 10px rgba(0, 0, 0, 0.8), /* Negro suave */
+      0 0 15px rgba(0, 0, 0, 0.8), /* Negro suave */
+      0 0 20px rgba(0, 0, 0, 1),    /* Negro más intenso */
+      0 0 30px rgba(0, 0, 0, 1);    /* Negro más intenso */
+}
+
+.label-text{
+    text-shadow: 
+      0 0 5px rgba(0, 0, 0, 0.8), /* Negro suave */
+      0 0 10px rgba(0, 0, 0, 0.8), /* Negro suave */
+      0 0 15px rgba(0, 0, 0, 0.8), /* Negro suave */
+      0 0 20px rgba(0, 0, 0, 1),    /* Negro más intenso */
+      0 0 30px rgba(0, 0, 0, 1);
+}
+
+button {
+    transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+button:hover {
+    transform: scale(1.05);
+    background-color: #1a75d5; /* Puedes ajustar el color al estado hover */
+}

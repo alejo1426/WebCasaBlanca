@@ -25,7 +25,9 @@ const DetallesTorneo = ({ tournament, participants, positions }) => {
           <h3 className="font-bold mb-2">Participantes:</h3>
           <ul className="list-disc ml-5">
             {participants.map((participant, index) => (
-              <li key={index}>{participant.usuarios.nombres}</li>
+              <li key={index}>
+                {participant.usuarios.nombres} {participant.usuarios.apellidos} {/* Cambiado aquí */}
+              </li>
             ))}
           </ul>
         </div>
@@ -45,7 +47,9 @@ const DetallesTorneo = ({ tournament, participants, positions }) => {
               {positions.map((position, index) => (
                 <tr key={index}>
                   <td className="py-2 border-b">{position.posicion}</td>
-                  <td className="py-2 border-b">{position.jugador}</td>
+                  <td className="py-2 border-b">
+                    {position.usuarios.nombres} {position.usuarios.apellidos} {/* Cambiado aquí */}
+                  </td>
                 </tr>
               ))}
             </tbody>

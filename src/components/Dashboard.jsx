@@ -7,6 +7,7 @@ import DashboardView from './views/DashboardView'; // Importa el nuevo component
 import InscripcionesView from './views/InscripcionesView';
 import PerfilView from './views/PerfilView';
 import TorneosView from './views/TorneosView';
+import GestorView from './views/GestorView';
 import AjustesView from './views/AjustesView'; // Importa el componente de clases // Importa el componente de torneos
 
 const Dashboard = () => {
@@ -45,6 +46,8 @@ const Dashboard = () => {
         return <PerfilView />;
       case 'torneos':
         return <TorneosView />;
+      case 'gestion':
+        return <GestorView />
       case 'ajustes':
         return <AjustesView selectedItem={selectedItem}/>;
       default:
@@ -53,10 +56,10 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="flex h-screen w-screen bg-gray-900 text-gray-100">
+    <div className="flex h-screen w-screen bg-[#1d3557] text-gray-100">
       <Sidebar setSelectedView={setSelectedView} setSelectedItem={setSelectedItem} />
       <div className="flex-grow flex flex-col">
-        <TopBar />
+        <TopBar selectedView={selectedView} />
         <main className="max-h-screen bg-white text-gray-800 flex px-4 lg:ml-64 ml-0 rounded-xl shadow overflow-y-auto">
           <div className="flex-grow p-4">{renderSelectedView()}</div>
         </main>

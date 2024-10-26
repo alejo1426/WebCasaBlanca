@@ -78,10 +78,24 @@ const FormUpdateTorneos = ({ initialData, onTournamentUpdated }) => {
       return;
     }
 
+    // Preparar solo los campos que han cambiado para la actualización
+    const updatedFields = {};
+    for (const key in tournamentData) {
+      if (tournamentData[key] !== initialData[key]) {
+        updatedFields[key] = tournamentData[key];
+      }
+    }
+
+    // Validar que se hayan realizado modificaciones
+    if (Object.keys(updatedFields).length === 0) {
+      toast.info('No se modificó ningún campo.');
+      return;
+    }
+
     // Actualizar torneo en la base de datos
     const { error } = await supabase
       .from('torneos')
-      .update(tournamentData)
+      .update(updatedFields)
       .eq('id', initialData.id);
     if (error) {
       console.error('Error al actualizar el torneo:', error);

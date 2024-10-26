@@ -37,13 +37,24 @@ const FormUpdateCanchas = ({ initialData, onUpdate }) => {
     // Validar campos
     if (!validateForm()) return;
 
+    // Preparar solo los campos que han cambiado para la actualización
+    const updatedFields = {};
+    for (const key in canchaData) {
+      if (canchaData[key] !== initialData[key]) {
+        updatedFields[key] = canchaData[key];
+      }
+    }
+
+    // Validar que se hayan realizado modificaciones
+    if (Object.keys(updatedFields).length === 0) {
+      toast.info('No se modificó ningún campo.');
+      return;
+    }
+
     try {
       const { error } = await supabase
         .from('canchas')
-        .update({
-          nombre: canchaData.nombre,
-          capacidad: canchaData.capacidad,
-        })
+        .update(updatedFields)
         .eq('id', initialData.id); // Suponiendo que el ID de la cancha está en initialData
 
       // Verificar si hubo un error

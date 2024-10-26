@@ -49,7 +49,7 @@ const FormUpdateClases = ({ initialData, onUpdate }) => {
 
   // Validar el formato del horario
   const isHorarioValido = (horario) => {
-    const horarioRegex = /^(1[0-2]|[1-9])(am|pm)\s*-\s*(1[0-2]|[1-9])(am|pm)$/;
+    const horarioRegex = /^(1[0-2]|[1-9])(am|pm) - (1[0-2]|[1-9])(am|pm)$/;
     return horarioRegex.test(horario);
   };
 
@@ -93,50 +93,56 @@ const FormUpdateClases = ({ initialData, onUpdate }) => {
 
     // Validar que todos los campos estén llenos
     if (Object.values(classData).some((value) => value === '')) {
-      toast.error('Todos los campos deben estar llenos.');
-      return;
+        toast.error('Todos los campos deben estar llenos.');
+        return;
     }
 
     // Validar fechas
     if (!areDatesValid()) {
-      return;
+        return;
     }
 
     // Validar horario
     if (!isHorarioValido(classData.horario)) {
-      toast.error('El horario debe estar en el formato correcto (ej: 7am - 8am)');
-      return;
+        toast.error('El horario debe estar en el formato correcto (ej: 7am - 8am)');
+        return;
     }
 
     // Comprobar conflictos
     const conflicto = await claseConflicto();
     if (conflicto) {
-      toast.error('Ya existe una clase programada para ese horario y fecha de inicio.');
-      return;
+        toast.error('Ya existe una clase programada para ese horario y fecha de inicio.');
+        return;
     }
 
     // Preparar solo los campos que han cambiado para la actualización
     const updatedFields = {};
     for (const key in classData) {
-      if (classData[key] !== initialData[key]) {
-        updatedFields[key] = classData[key];
-      }
+        if (classData[key] !== initialData[key]) {
+            updatedFields[key] = classData[key];
+        }
+    }
+
+    // Validar que se hayan realizado modificaciones
+    if (Object.keys(updatedFields).length === 0) {
+        toast.info('No se modificó ningún campo.');
+        return;
     }
 
     try {
-      const { error } = await supabase
-        .from('clases')
-        .update(updatedFields)
-        .eq('id', initialData.id);
+        const { error } = await supabase
+            .from('clases')
+            .update(updatedFields)
+            .eq('id', initialData.id);
 
-      if (error) {
-        throw error;
-      }
-      toast.success('Clase modificada con éxito');
-      onUpdate(); // Llamamos a onUpdate para actualizar la lista de resultados
+        if (error) {
+            throw error;
+        }
+        toast.success('Clase modificada con éxito');
+        onUpdate(); // Llamamos a onUpdate para actualizar la lista de resultados
     } catch (error) {
-      console.error('Error al modificar la clase:', error);
-      toast.error('Error al modificar la clase');
+        console.error('Error al modificar la clase:', error);
+        toast.error('Error al modificar la clase');
     }
   };
 

@@ -1,51 +1,52 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../../../../supabaseClient';
 import BarraFiltro from '../../SearchBar/SearchBar';
-import ModalConfirmacion from '../../Ventana/ModalConfirmacion'; // Importar el modal
+import ModalConfirmacion from '../../Ventana/ModalConfirmacion';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const Eliminar = () => {
   const [filterType, setFilterType] = useState('clases');
+  const [searchTerm, setSearchTerm] = useState(''); // Estado para el término de búsqueda
   const [results, setResults] = useState([]);
   const [selectedItem, setSelectedItem] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Funciones para recuperar datos
-  const fetchClasses = async () => {
-    const { data, error } = await supabase.from('clases').select('*');
+  // Función para recuperar datos
+  const fetchResults = async () => {
+    let query = supabase.from(filterType).select('*');
+
+    // Si hay un término de búsqueda, agrega el filtro
+    if (searchTerm) {
+      if (filterType === 'usuarios') {
+        query = query.or(`nombres.ilike.%${searchTerm}%,apellidos.ilike.%${searchTerm}%`);
+      } else {
+        query = query.or(`nombre.ilike.%${searchTerm}%`);
+      }
+    }
+
+    const { data, error } = await query;
     if (error) {
-      console.error('Error fetching classes:', error);
+      console.error(`Error fetching ${filterType}:`, error);
     } else {
       setResults(data);
     }
   };
 
-  const fetchTournaments = async () => {
-    const { data, error } = await supabase.from('torneos').select('*');
-    if (error) {
-      console.error('Error fetching tournaments:', error);
-    } else {
-      setResults(data);
-    }
-  };
+  // Función para recuperar el nombre del instructor al seleccionar un elemento
+  const fetchInstructorName = async (id) => {
+    const { data, error } = await supabase
+      .from('clases')
+      .select('usuarios!clases_instructor_id_fkey(nombres, apellidos)')
+      .eq('id', id)
+      .single();
 
-  const fetchUsers = async () => {
-    const { data, error } = await supabase.from('usuarios').select('*');
     if (error) {
-      console.error('Error fetching users:', error);
-    } else {
-      setResults(data);
+      console.error('Error fetching instructor name:', error);
+      return null;
     }
-  };
-
-  const fetchCanchas = async () => {
-    const { data, error } = await supabase.from('canchas').select('*');
-    if (error) {
-      console.error('Error fetching canchas:', error);
-    } else {
-      setResults(data);
-    }
+    
+    return `${data.usuarios.nombres} ${data.usuarios.apellidos}`;
   };
 
   // Función de eliminación
@@ -62,36 +63,39 @@ const Eliminar = () => {
   };
 
   useEffect(() => {
-    // Cargar datos según el filtro al inicio
-    if (filterType === 'clases') {
-      fetchClasses();
-    } else if (filterType === 'torneos') {
-      fetchTournaments();
-    } else if (filterType === 'usuarios') {
-      fetchUsers();
-    } else if (filterType === 'canchas') {
-      fetchCanchas();
-    }
-  }, [filterType]);
+    fetchResults(); // Carga datos cada vez que cambie el filtro o el término de búsqueda
+  }, [filterType, searchTerm]);
 
   const handleFilterChange = (selectedFilter) => {
     setFilterType(selectedFilter);
     setSelectedItem(null); // Reinicia la selección al cambiar de filtro
   };
 
-  const handleItemClick = (item) => {
-    setSelectedItem(item);
+  const handleSearchChange = (term) => {
+    setSearchTerm(term); // Actualiza el término de búsqueda
+  };
+
+  const handleItemClick = async (item) => {
+    const instructorNombre = filterType === 'clases' ? await fetchInstructorName(item.id) : null;
+    setSelectedItem({ ...item, instructorNombre }); // Agrega el nombre del instructor al elemento seleccionado
   };
 
   const handleDeleteClick = () => {
     setIsModalOpen(true); // Abre el modal de confirmación
   };
 
+  // Método para confirmar eliminación
+  const handleConfirmDelete = () => {
+    if (selectedItem) {
+      deleteItem(selectedItem.id); // Ejecuta la eliminación
+    }
+  };
+
   return (
     <div className="container mx-auto p-6">
       <h2 className="text-2xl font-bold mb-6">Eliminar {filterType}</h2>
 
-      <BarraFiltro onFilterChange={handleFilterChange} />
+      <BarraFiltro onFilterChange={handleFilterChange} onSearchChange={handleSearchChange} />
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
         <div className="col-span-1">
@@ -101,13 +105,9 @@ const Eliminar = () => {
               <li 
                 key={result.id} 
                 className="border p-2 rounded-md shadow cursor-pointer"
-                onClick={() => handleItemClick(result)} // Seleccionar elemento al hacer clic
+                onClick={() => handleItemClick(result)}
               >
-                {filterType === 'clases' ? result.nombre :
-                 filterType === 'torneos' ? result.nombre :
-                 filterType === 'usuarios' ? result.nombres :
-                 result.nombre // Mostrar nombre para canchas
-                }
+                {filterType === 'usuarios' ? `${result.nombres} ${result.apellidos}` : result.nombre}
               </li>
             ))}
           </ul>
@@ -125,7 +125,7 @@ const Eliminar = () => {
                     <p><strong>Descripción:</strong> {selectedItem.descripcion}</p>
                     <p><strong>Horario:</strong> {selectedItem.horario}</p>
                     <p><strong>Nivel:</strong> {selectedItem.nivel}</p>
-                    <p><strong>Instructor ID:</strong> {selectedItem.instructor_id}</p>
+                    <p><strong>Instructor:</strong> {selectedItem.instructorNombre}</p> {/* Muestra el nombre del instructor aquí */}
                     <p><strong>Fecha de Inicio:</strong> {selectedItem.fecha_inicio}</p>
                     <p><strong>Fecha de Fin:</strong> {selectedItem.fecha_fin || 'N/A'}</p>
                   </>
@@ -179,10 +179,8 @@ const Eliminar = () => {
       <ModalConfirmacion 
         isOpen={isModalOpen} 
         onClose={() => setIsModalOpen(false)} 
-        onConfirm={{
-          action: () => deleteItem(selectedItem.id), // Ejecuta la eliminación
-          type: filterType // Tipo de elemento a eliminar
-        }} 
+        onConfirm={handleConfirmDelete} 
+        tipo={filterType} 
       />
 
       {/* Contenedor para los toasts */}

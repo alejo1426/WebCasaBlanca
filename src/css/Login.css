@@ -1,0 +1,17 @@
+.neon-text-titulo {
+    text-shadow: 
+      0 0 5px rgba(255, 255, 255, 0.5), /* Blanco suave */
+      0 0 10px rgba(255, 255, 255, 0.3), /* Blanco más suave */
+      0 0 15px rgba(0, 110, 220, 0.5),    /* Azul claro */
+      0 0 20px rgba(0, 80, 160, 0.5),     /* Azul medio */
+      0 0 30px rgba(0, 140, 255, 0.7);    /* Azul intenso */
+}
+
+.label-text{
+    text-shadow: 
+      0 0 5px rgba(0, 0, 0, 0.8), /* Negro suave */
+      0 0 10px rgba(0, 0, 0, 0.8), /* Negro suave */
+      0 0 15px rgba(0, 0, 0, 0.8), /* Negro suave */
+      0 0 20px rgba(0, 0, 0, 1),    /* Negro más intenso */
+      0 0 30px rgba(0, 0, 0, 1);
+}

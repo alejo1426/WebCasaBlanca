@@ -31,7 +31,7 @@ const TorneosView = () => {
     if (tournament.estado === 'jugando') {
       const { data, error } = await supabase
         .from('inscripcionestorneos')
-        .select('usuarios(nombres)')
+        .select('usuarios(nombres, apellidos)') // Cargar nombres y apellidos
         .eq('torneo_id', tournament.id);
       if (!error) {
         setParticipants(data);
@@ -39,7 +39,7 @@ const TorneosView = () => {
     } else if (tournament.estado === 'finalizado') {
       const { data, error } = await supabase
         .from('posiciones')
-        .select('posicion, jugador')
+        .select('posicion, usuario_id, usuarios(nombres, apellidos)') // Traer posición y usuario vinculado
         .eq('torneo_id', tournament.id)
         .order('posicion', { ascending: true });
       if (!error) {

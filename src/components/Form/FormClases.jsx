@@ -42,6 +42,17 @@ const FormClases = ({ onClassAdded }) => {
     return horarioRegex.test(horario);
   };
 
+  const areDatesValid = () => {
+    const fechaInicio = new Date(classData.fecha_inicio);
+    const fechaFin = new Date(classData.fecha_fin);
+  
+    if (classData.fecha_fin && fechaInicio > fechaFin) {
+      toast.error('La fecha de fin debe ser posterior a la fecha de inicio.');
+      return false;
+    }
+    return true;
+  };
+
   const checkClassExists = async () => {
     const { data, error } = await supabase
       .from('clases')
@@ -62,6 +73,10 @@ const FormClases = ({ onClassAdded }) => {
     
     if (!Object.values(classData).every((field) => field !== '')) {
       toast.error('Todos los campos deben estar llenos.');
+      return;
+    }
+
+    if (!areDatesValid()) {
       return;
     }
 

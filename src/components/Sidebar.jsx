@@ -1,31 +1,34 @@
 /* eslint-disable react/prop-types */
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { jwtDecode } from 'jwt-decode'; // Asegúrate de tener esto instalado
+import { jwtDecode } from 'jwt-decode';
+import logo from '../assets/logo.jpeg';
 
 const Sidebar = ({ setSelectedView, setSelectedItem }) => {
-  const [active, setActive] = useState(null);
+  const [active, setActive] = useState(null); // Inicialmente null, sin submenús abiertos
+  const [selectedSubItem, setSelectedSubItem] = useState('Agregar'); // Estado para el submenú seleccionado
   const subMenuRefs = useRef({});
   const [heights, setHeights] = useState({});
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const navigate = useNavigate();
-  const [role, setRole] = useState(null); // Estado para almacenar el rol del usuario
+  const [role, setRole] = useState(null);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-
     if (token) {
       try {
         const decodedToken = jwtDecode(token);
-        setRole(decodedToken.role); // Asignar el rol del token al estado
+        setRole(decodedToken.role);
       } catch (error) {
         console.error("Error decoding token:", error);
-        setRole(null); // Si hay un error, establecer el rol como null
       }
     }
+    // Asegúrate de que active esté en null al cargar
+    setActive(null);
   }, []);
 
   useEffect(() => {
+    // Establece las alturas de los submenús según el estado activo
     const newHeights = Object.fromEntries(
       Object.keys(subMenuRefs.current).map((key) => [
         key,
@@ -36,7 +39,7 @@ const Sidebar = ({ setSelectedView, setSelectedItem }) => {
   }, [active]);
 
   const handleToggle = (item) => {
-    setActive((prev) => (prev === item ? null : item));
+    setActive((prev) => (prev === item ? null : item)); // Alterna el submenú al hacer clic
   };
 
   const handleCloseSidebar = (e) => {
@@ -48,40 +51,68 @@ const Sidebar = ({ setSelectedView, setSelectedItem }) => {
     navigate('/login');
   };
 
-  // Modificamos los elementos del menú para incluir una verificación del rol
+  const handleSubItemSelect = (subItem) => {
+    setSelectedSubItem(subItem);
+    setSelectedView('ajustes');
+    setSelectedItem(subItem.toLowerCase());
+  };
+
   const menuItems = [
-    { name: 'Dashboard', icon: 'Dashboard' },
-    { name: 'Inscripciones', icon: 'lock-on' },
-    { name: 'Perfil', icon: 'person' },
-    { name: 'Torneos', icon: 'lock-on' },
+    { name: 'Dashboard', icon: 'icons/dashboard.png' },
+    { name: 'Inscripciones', icon: 'icons/inscripcion.png' },
+    { name: 'Perfil', icon: 'icons/persona.png' },
+    { name: 'Torneos', icon: 'icons/torneo.png' },
+    { name: 'Gestion', icon: 'icons/gestion.png' }, // Nueva categoría
     {
       name: 'Ajustes',
-      icon: 'gear',
+      icon: 'icons/gear.png',
       subMenu: ['Agregar', 'Modificar', 'Eliminar'],
     },
   ].filter(item => {
-    // Filtrar según el rol del usuario
-    if (item.name === 'Ajustes' && role !== 'admin') {
-      return false; // Ocultar 'Ajustes' si el rol no es admin
-    }
-    return true; // Mostrar los demás elementos
+    // Filtrar "Ajustes" solo si el rol es admin
+    if (item.name === 'Ajustes' && role !== 'admin') return false;
+    // Filtrar "Resultados" solo si es visible
+    if (item.name === 'Gestion' && role !== 'instructor') return false;
+    return true; // Mostrar otros elementos
   });
+
+  const handleSelect = (name) => {
+    const views = {
+      Dashboard: 'dashboard',
+      Inscripciones: 'inscripciones',
+      Torneos: 'torneos',
+      Gestion: 'gestion', // Mapeo de Resultados
+      Perfil: 'perfil',
+      Ajustes: 'ajustes',
+    };
+    setSelectedView(views[name]);
+    if (name === 'Ajustes') {
+      setSelectedSubItem('Agregar'); // Establecer "Agregar" como el submenú seleccionado por defecto
+      setSelectedItem('agregar'); // Cambiar el ítem seleccionado en ajustes a "agregar"
+    }
+  };
 
   return (
     <>
       <button
-        className="lg:hidden fixed top-4 left-4 z-50 bg-blue-500 text-white p-3 rounded-full shadow-md"
+        className="lg:hidden fixed top-4 left-4 z-50 bg-[#b7bbc0] text-white p-3 rounded-full shadow-md"
         onClick={() => setIsSidebarOpen((prev) => !prev)}
       >
         <i className="ai-menu text-xl"></i>
       </button>
 
       <aside
-        className={`fixed top-0 left-0 h-full w-64 p-4 bg-white bg-opacity-80 rounded-xl shadow-lg transition-transform transform ${
+        className={`fixed top-0 left-0 h-full w-64 p-4 bg-[rgba(183,187,192,0.7)] rounded-xl shadow-lg transition-transform transform ${
           isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
         } lg:translate-x-0 lg:inset-y-0 lg:fixed lg:left-0 lg:top-0 z-40 flex flex-col`}
+        style={{
+          backgroundImage: `url(${logo})`, // Imagen de fondo
+          backgroundSize: '90%', // Ajusta el tamaño de la imagen al 50%
+          backgroundPosition: 'center 75%', // Posición en la parte inferior derecha
+          backgroundRepeat: 'no-repeat', // No repetir la imagen
+        }}
       >
-        <header className="flex items-center h-18 pb-2 border-b border-gray-300"></header>
+        <header className="flex items-center h-18 pb-2 border-b border-black"></header>
 
         <div className="flex-1 overflow-y-auto">
           <ul className="list-none p-0 m-0 w-full flex-1 mt-8 lg:mt-4">
@@ -94,36 +125,20 @@ const Sidebar = ({ setSelectedView, setSelectedItem }) => {
                   className="absolute scale-0"
                   onChange={() => {
                     handleToggle(name);
-
-                    if (name === 'Dashboard') {
-                      setSelectedView('dashboard');
-                    } else if (name === 'Inscripciones') {
-                      setSelectedView('inscripciones');
-                    } else if (name === 'Torneos') {
-                      setSelectedView('torneos');
-                    } else if (name === 'Perfil') {
-                      setSelectedView('perfil');
-                    } else if (name === 'Ajustes') {
-                      setSelectedView('ajustes');
-                      setSelectedItem('agregar');
-                    }
+                    handleSelect(name);
                   }}
                   checked={active === name}
                 />
                 
                 <label
                   htmlFor={name}
-                  className={`flex items-center h-12 w-full rounded-md p-4 cursor-pointer ${
-                    active === name ? 'bg-blue-400 text-white' : 'hover:bg-gray-200'
-                  }`}
+                  className={`flex items-center h-12 w-full rounded-md p-4 cursor-pointer ${active === name ? 'bg-[#457b9d] text-white' : 'hover:bg-gray-200'}`}
                 >
-                  <i className={`ai-${icon}`}></i>
-                  <p className="flex-1 text-gray-800">{name}</p>
+                  <img src={`/${icon}`} alt={name} className="w-6 h-6" />
+                  <p className="flex-1 font-semibold text-black">{name}</p>
                   {subMenu && (
                     <i
-                      className={`ai-chevron-down-small transform transition-transform duration-300 ${
-                        active === name ? 'rotate-180' : ''
-                      }`}
+                      className={`ai-chevron-down-small transition-transform duration-300 ${active === name ? 'rotate-180' : ''}`}
                     ></i>
                   )}
                 </label>
@@ -131,18 +146,17 @@ const Sidebar = ({ setSelectedView, setSelectedItem }) => {
                 {subMenu && (
                   <div
                     ref={(el) => (subMenuRefs.current[name] = el)}
-                    style={{ height: heights[name] }}
-                    className="sub-menu bg-white shadow-md rounded-md overflow-hidden transition-height duration-300 ease-in-out"
+                    style={{ height: heights[name], zIndex: '2' }} // Asegúrate de que el submenú esté por encima
+                    className="sub-menu bg-[rgba(183,187,192,0.7)] shadow-md rounded-md overflow-hidden transition-height duration-300 ease-in-out"
                   >
                     <ul className="list-none p-0 m-0">
                       {subMenu.map((subItem) => (
                         <li key={subItem}>
                           <button
-                            className="w-full text-left pl-12 py-2 text-gray-800 hover:bg-gray-200"
-                            onClick={() => {
-                              setSelectedView('ajustes');
-                              setSelectedItem(subItem.toLowerCase());
-                            }}
+                            className={`w-full text-left pl-12 py-2 font-semibold text-black hover:bg-[#457b9d] ${
+                              selectedSubItem === subItem ? 'bg-[#68b9eb] text-white' : ''
+                            }`}
+                            onClick={() => handleSubItemSelect(subItem)}
                           >
                             {subItem}
                           </button>
@@ -156,11 +170,10 @@ const Sidebar = ({ setSelectedView, setSelectedItem }) => {
           </ul>
         </div>
 
-        <div className="flex justify-center mt-4 mb-4">
-          <img src='../assets/logo.jpeg' alt="Logo" className="w-auto h-auto" />
-        </div>
-
-        <button className="w-full py-3 text-center bg-red-500 text-white rounded-md hover:bg-red-600 mt-auto" onClick={handleLogout}>
+        <button
+          className="w-full py-3 text-center bg-[#f1faee] font-semibold text-black rounded-md hover:bg-red-600 mt-auto"
+          onClick={handleLogout}
+        >
           Cerrar sesión
         </button>
       </aside>
@@ -170,6 +183,7 @@ const Sidebar = ({ setSelectedView, setSelectedItem }) => {
           id="overlay"
           className="fixed inset-0 bg-black bg-opacity-50 z-30 lg:hidden"
           onClick={handleCloseSidebar}
+          style={{ pointerEvents: 'all' }} // Asegúrate de que el overlay no intercepte clics en la sidebar
         ></div>
       )}
     </>

@@ -52,20 +52,40 @@ const TorneosView = () => {
     <div className="flex flex-col lg:flex-row p-4 space-y-6 lg:space-y-0 lg:space-x-6">
       {/* Sección de Torneos Disponibles */}
       <div className="lg:w-1/3">
-        <DetallesCardTorneos 
-          tournaments={tournaments} 
-          onTournamentSelect={fetchTournamentDetails} 
-        />
+        <div
+          className="bg-gray-100 p-6 rounded-lg shadow-md transition-shadow mb-4"
+          style={{
+            boxShadow: '0 8px 16px rgba(69, 123, 157, 0.4)', // Sombra azul personalizada
+            transition: 'box-shadow 0.3s ease-in-out',
+          }}
+          onMouseEnter={(e) => e.currentTarget.style.boxShadow = '0 12px 24px rgba(0, 102, 204, 0.8)'} // Sombra más azul al pasar el cursor
+          onMouseLeave={(e) => e.currentTarget.style.boxShadow = '0 8px 16px rgba(69, 123, 157, 0.4)'} // Vuelve a la sombra original
+        >
+          <DetallesCardTorneos 
+            tournaments={tournaments} 
+            onTournamentSelect={fetchTournamentDetails} 
+          />
+        </div>
       </div>
 
       {/* Sección de Detalles del Torneo Seleccionado */}
       <div className="lg:w-2/3">
         {selectedTournament ? (
-          <DetallesTorneo
-            tournament={selectedTournament}
-            participants={participants}
-            positions={positions}
-          />
+          <div
+            className="bg-gray-100 p-6 rounded-lg shadow-md transition-shadow"
+            style={{
+              boxShadow: '0 8px 16px rgba(69, 123, 157, 0.4)', // Sombra azul personalizada
+              transition: 'box-shadow 0.3s ease-in-out',
+            }}
+            onMouseEnter={(e) => e.currentTarget.style.boxShadow = '0 12px 24px rgba(0, 102, 204, 0.8)'} // Sombra más azul al pasar el cursor
+            onMouseLeave={(e) => e.currentTarget.style.boxShadow = '0 8px 16px rgba(69, 123, 157, 0.4)'} // Vuelve a la sombra original
+          >
+            <DetallesTorneo
+              tournament={selectedTournament}
+              participants={participants}
+              positions={positions}
+            />
+          </div>
         ) : (
           <div className="text-center bg-white p-6 rounded-lg shadow-md">
             <p>Selecciona un torneo para ver los detalles</p>

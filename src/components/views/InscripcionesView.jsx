@@ -217,15 +217,35 @@ const InscripcionesView = () => {
 
       <div className="w-full md:w-1/3 md:ml-6 mt-6 md:mt-0">
         {selectedClase ? (
-          <DetallesClase 
-            clase={selectedClase} 
-            onDelete={() => handleDeleteInscripcion(selectedClase.id)} 
-          />
+          <section 
+            className="bg-white p-6 rounded-lg transition-shadow mb-4 md:mb-0"
+            style={{ 
+              boxShadow: '0 8px 16px rgba(69, 123, 157, 0.4)', // Sombra azul personalizada
+              transition: 'box-shadow 0.3s ease-in-out' 
+            }}
+            onMouseEnter={(e) => e.currentTarget.style.boxShadow = '0 12px 24px rgba(0, 102, 204, 0.8)'} // Sombra más azul al pasar el cursor
+            onMouseLeave={(e) => e.currentTarget.style.boxShadow = '0 8px 16px rgba(69, 123, 157, 0.4)'} // Vuelve a la sombra original
+          >
+            <DetallesClase 
+              clase={selectedClase} 
+              onDelete={() => handleDeleteInscripcion(selectedClase.id)} 
+            />
+          </section>
         ) : selectedTorneo ? (
-          <DetallesTorneo 
-            torneo={selectedTorneo} 
-            onDelete={() => handleDeleteInscripcionTorneo(selectedTorneo.id)} 
-          />
+          <section 
+            className="bg-white p-6 rounded-lg transition-shadow mb-4 md:mb-0"
+            style={{ 
+              boxShadow: '0 8px 16px rgba(69, 123, 157, 0.4)', // Sombra azul personalizada
+              transition: 'box-shadow 0.3s ease-in-out' 
+            }}
+            onMouseEnter={(e) => e.currentTarget.style.boxShadow = '0 12px 24px rgba(0, 102, 204, 0.8)'} // Sombra más azul al pasar el cursor
+            onMouseLeave={(e) => e.currentTarget.style.boxShadow = '0 8px 16px rgba(69, 123, 157, 0.4)'} // Vuelve a la sombra original
+          >
+            <DetallesTorneo 
+              torneo={selectedTorneo} 
+              onDelete={() => handleDeleteInscripcionTorneo(selectedTorneo.id)} 
+            />
+          </section>
         ) : (
           <p className="text-center text-lg text-gray-500">
             Selecciona una clase o un torneo para ver los detalles.
@@ -233,15 +253,14 @@ const InscripcionesView = () => {
         )}
       </div>
 
-      <ToastContainer />
-
       {/* Modal de confirmación */}
       <ModalConfirmacion 
         isOpen={isModalOpen} 
         onClose={() => setIsModalOpen(false)} 
-        onConfirm={confirmDeleteInscripcion} // Llama a la función de confirmación
-        tipo={inscripcionToDelete ? (inscripcionToDelete.type === 'clases' ? 'clase' : 'torneo') : ''} // Pasar tipo según el caso
+        onConfirm={confirmDeleteInscripcion} 
       />
+      
+      <ToastContainer />
     </div>
   );
 };

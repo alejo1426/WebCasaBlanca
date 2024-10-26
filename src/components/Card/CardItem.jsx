@@ -6,7 +6,13 @@ const CardItem = ({ item, type, onSelect }) => {
 
   return (
     <div
-      className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow cursor-pointer"
+      className="bg-gray-300 p-6 rounded-lg transition-shadow cursor-pointer"
+      style={{ 
+        boxShadow: '0 8px 16px rgba(69, 123, 157, 0.4)', // Sombra azul personalizada
+        transition: 'box-shadow 0.3s ease-in-out' 
+      }}
+      onMouseEnter={(e) => e.currentTarget.style.boxShadow = '0 12px 24px rgba(0, 102, 204, 0.8)'} // Sombra más azul al pasar el cursor
+      onMouseLeave={(e) => e.currentTarget.style.boxShadow = '0 8px 16px rgba(69, 123, 157, 0.4)'} // Vuelve a la sombra original
       onClick={() => onSelect(item)}
     >
       <h2 className="font-bold text-xl mb-2 text-gray-800">{item.nombre}</h2>

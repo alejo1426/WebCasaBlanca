@@ -12,7 +12,7 @@ const Agregar = () => {
   const [results, setResults] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
-  const [searchTerm, setSearchTerm] = useState(''); // Nuevo estado para el término de búsqueda
+  const [searchTerm, setSearchTerm] = useState('');
 
   const fetchData = async (table, search = '') => {
     let query = supabase.from(table).select('*');
@@ -31,15 +31,15 @@ const Agregar = () => {
 
   useEffect(() => {
     fetchData(filterType, searchTerm);
-  }, [filterType, searchTerm]); // Ahora también depende de searchTerm
+  }, [filterType, searchTerm]);
 
   const handleFilterChange = (selectedFilter) => {
     setFilterType(selectedFilter);
-    fetchData(selectedFilter, searchTerm); // Llamar a fetchData con el nuevo filtro y término de búsqueda
+    fetchData(selectedFilter, searchTerm);
   };
 
   const handleDataAdded = () => {
-    fetchData(filterType, searchTerm); // Actualizar resultados después de agregar un elemento
+    fetchData(filterType, searchTerm);
   };
 
   const handleItemClick = (item) => {
@@ -60,18 +60,19 @@ const Agregar = () => {
 
       <BarraFiltro 
         onFilterChange={handleFilterChange} 
-        onSearchChange={setSearchTerm} // Pasar la función para actualizar el término de búsqueda
-        showSearch={true} // Asegúrate de que la barra de búsqueda se muestre
+        onSearchChange={setSearchTerm} 
+        showSearch={true} 
       />
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-        <div className="col-span-1">
+      <div className="grid grid-cols-1 rounded-lg md:grid-cols-2 gap-6 mt-6">
+        <div className="col-span-1 bg-gray-100">
           <h3 className="text-xl font-semibold mb-4">Resultados</h3>
           <ul className="mt-4 space-y-2">
             {results.map((result) => (
               <li
                 key={result.id}
-                className="border p-2 rounded-md shadow cursor-pointer"
+                className={`border p-2 rounded-md shadow cursor-pointer transition-transform duration-300 
+                            ${selectedItem?.id === result.id ? 'bg-gray-200' : 'hover:scale-105 hover:bg-gray-300'}`}
                 onClick={() => handleItemClick(result)}
               >
                 {filterType === 'usuarios' ? result.usuario : result.nombre}
@@ -81,11 +82,12 @@ const Agregar = () => {
         </div>
 
         <div className="col-span-1">
-          {formComponents[filterType]}
+          <div className="shadow-lg shadow-blue-500 p-4 rounded-md transition-transform duration-300 hover:shadow-blue-700 hover:scale-105">
+            {formComponents[filterType]}
+          </div>
         </div>
       </div>
 
-      {/* Modal para mostrar detalles del elemento seleccionado */}
       {selectedItem && (
         <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} data={selectedItem} />
       )}

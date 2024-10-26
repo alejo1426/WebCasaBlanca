@@ -10,7 +10,7 @@ const DetallesCardTorneos = ({ tournaments, onTournamentSelect }) => {
         {tournaments.map((tournament) => (
           <div
             key={tournament.id}
-            className="bg-white p-4 rounded-lg shadow-md cursor-pointer hover:bg-gray-100"
+            className="bg-white p-4 rounded-lg shadow-xl cursor-pointer hover:bg-gray-300"
             onClick={() => onTournamentSelect(tournament)}
           >
             <h3 className="font-bold text-lg">{tournament.nombre}</h3>

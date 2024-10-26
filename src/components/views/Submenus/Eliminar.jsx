@@ -7,16 +7,14 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const Eliminar = () => {
   const [filterType, setFilterType] = useState('clases');
-  const [searchTerm, setSearchTerm] = useState(''); // Estado para el término de búsqueda
+  const [searchTerm, setSearchTerm] = useState('');
   const [results, setResults] = useState([]);
   const [selectedItem, setSelectedItem] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Función para recuperar datos
   const fetchResults = async () => {
     let query = supabase.from(filterType).select('*');
 
-    // Si hay un término de búsqueda, agrega el filtro
     if (searchTerm) {
       if (filterType === 'usuarios') {
         query = query.or(`nombres.ilike.%${searchTerm}%,apellidos.ilike.%${searchTerm}%`);
@@ -33,7 +31,6 @@ const Eliminar = () => {
     }
   };
 
-  // Función para recuperar el nombre del instructor al seleccionar un elemento
   const fetchInstructorName = async (id) => {
     const { data, error } = await supabase
       .from('clases')
@@ -49,45 +46,43 @@ const Eliminar = () => {
     return `${data.usuarios.nombres} ${data.usuarios.apellidos}`;
   };
 
-  // Función de eliminación
   const deleteItem = async (id) => {
     const { error } = await supabase.from(filterType).delete().eq('id', id);
     if (error) {
       console.error('Error deleting item:', error);
     } else {
-      setResults(results.filter(item => item.id !== id)); // Actualiza la lista de resultados
-      setSelectedItem(null); // Reinicia el elemento seleccionado
-      toast.success('Elemento eliminado correctamente'); // Muestra el toast de éxito
+      setResults(results.filter(item => item.id !== id));
+      setSelectedItem(null);
+      toast.success('Elemento eliminado correctamente');
     }
-    setIsModalOpen(false); // Cierra el modal de confirmación
+    setIsModalOpen(false);
   };
 
   useEffect(() => {
-    fetchResults(); // Carga datos cada vez que cambie el filtro o el término de búsqueda
+    fetchResults();
   }, [filterType, searchTerm]);
 
   const handleFilterChange = (selectedFilter) => {
     setFilterType(selectedFilter);
-    setSelectedItem(null); // Reinicia la selección al cambiar de filtro
+    setSelectedItem(null);
   };
 
   const handleSearchChange = (term) => {
-    setSearchTerm(term); // Actualiza el término de búsqueda
+    setSearchTerm(term);
   };
 
   const handleItemClick = async (item) => {
     const instructorNombre = filterType === 'clases' ? await fetchInstructorName(item.id) : null;
-    setSelectedItem({ ...item, instructorNombre }); // Agrega el nombre del instructor al elemento seleccionado
+    setSelectedItem({ ...item, instructorNombre });
   };
 
   const handleDeleteClick = () => {
-    setIsModalOpen(true); // Abre el modal de confirmación
+    setIsModalOpen(true);
   };
 
-  // Método para confirmar eliminación
   const handleConfirmDelete = () => {
     if (selectedItem) {
-      deleteItem(selectedItem.id); // Ejecuta la eliminación
+      deleteItem(selectedItem.id);
     }
   };
 
@@ -104,7 +99,8 @@ const Eliminar = () => {
             {results.map((result) => (
               <li 
                 key={result.id} 
-                className="border p-2 rounded-md shadow cursor-pointer"
+                className={`border p-2 rounded-md cursor-pointer transition-transform duration-300 
+                            ${selectedItem?.id === result.id ? 'bg-gray-200' : 'hover:bg-gray-200 hover:scale-105'}`}
                 onClick={() => handleItemClick(result)}
               >
                 {filterType === 'usuarios' ? `${result.nombres} ${result.apellidos}` : result.nombre}
@@ -116,7 +112,7 @@ const Eliminar = () => {
         {/* Información detallada del elemento seleccionado */}
         <div className="col-span-1">
           {selectedItem && (
-            <div>
+            <div className="shadow-lg shadow-blue-500 p-4 rounded-md transition-transform duration-300 hover:shadow-blue-700 hover:scale-105">
               <h4 className="text-lg font-semibold mb-2">Detalles</h4>
               <div>
                 {filterType === 'clases' && (
@@ -125,7 +121,7 @@ const Eliminar = () => {
                     <p><strong>Descripción:</strong> {selectedItem.descripcion}</p>
                     <p><strong>Horario:</strong> {selectedItem.horario}</p>
                     <p><strong>Nivel:</strong> {selectedItem.nivel}</p>
-                    <p><strong>Instructor:</strong> {selectedItem.instructorNombre}</p> {/* Muestra el nombre del instructor aquí */}
+                    <p><strong>Instructor:</strong> {selectedItem.instructorNombre}</p>
                     <p><strong>Fecha de Inicio:</strong> {selectedItem.fecha_inicio}</p>
                     <p><strong>Fecha de Fin:</strong> {selectedItem.fecha_fin || 'N/A'}</p>
                   </>
@@ -175,7 +171,6 @@ const Eliminar = () => {
         </div>
       </div>
 
-      {/* Modal de confirmación */}
       <ModalConfirmacion 
         isOpen={isModalOpen} 
         onClose={() => setIsModalOpen(false)} 
@@ -183,7 +178,6 @@ const Eliminar = () => {
         tipo={filterType} 
       />
 
-      {/* Contenedor para los toasts */}
       <ToastContainer />
     </div>
   );

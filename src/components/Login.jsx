@@ -1,13 +1,14 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
-import '../css/Login.css'; // Importar jwt-decode
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'; // Importar estilos de react-toastify
+import '../css/Login.css'; // Importar estilos
 
 const Login = () => {
     const navigate = useNavigate();
     const [usuario, setUsuario] = useState('');
     const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
 
     const handleRegistroClick = () => {
         navigate('/signup');
@@ -18,7 +19,7 @@ const Login = () => {
 
         // Validaciones simples
         if (!usuario || !password) {
-            setError('Por favor completa todos los campos.');
+            toast.error('Por favor completa todos los campos.'); // Notificación de error
             return;
         }
 
@@ -34,7 +35,7 @@ const Login = () => {
             const data = await response.json();
 
             if (!response.ok) {
-                setError(data.error || 'Error al acceder, verifica los datos e inténtalo de nuevo.');
+                toast.error(data.error || 'Error al acceder, verifica los datos e inténtalo de nuevo.'); // Notificación de error
                 return;
             }
 
@@ -44,10 +45,11 @@ const Login = () => {
             // Decodificar el token para obtener el rol del usuario
             const decodedToken = jwtDecode(data.token);
 
+            toast.success('¡Inicio de sesión exitoso!'); // Notificación de éxito
             navigate('/Dashboard');
 
         } catch (error) {
-            setError(`Error en la conexión: ${error.message}`);
+            toast.error(`Error en la conexión: ${error.message}`); // Notificación de error
         }
     };
 
@@ -115,13 +117,25 @@ const Login = () => {
                             />
                         </div>
                     </div>
-                    {error && <p className="text-red-600">{error}</p>}
                     <button type="submit" className="w-full text-[#ffffff] bg-[#1c8be6] focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-4">Ingresar</button>
                     <div className="text-sm font-light text-[#ffffff] text-center">
                         No tienes una cuenta? <span className="font-medium text-[#0059ff] hover:underline cursor-pointer" onClick={handleRegistroClick}>Registrarse</span>
                     </div>
                 </form>
             </div>
+
+            {/* Componente ToastContainer para las notificaciones */}
+            <ToastContainer 
+                position="top-right" 
+                autoClose={5000} 
+                hideProgressBar 
+                newestOnTop 
+                closeOnClick 
+                rtl={false} 
+                pauseOnFocusLoss 
+                draggable 
+                pauseOnHover 
+            />
         </div>
     );
 };

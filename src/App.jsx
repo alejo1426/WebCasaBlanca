@@ -11,6 +11,8 @@ import Torneos from './components/Torneos'; // Importar la página de Torneos
 import Formulario from './components/Form/Formulario'; // Importar el componente Formulario
 import Clases from './components/Clases/Clases';
 import ClasesFormulario from './components/Clases/ClasesInfo';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
 import './App.css';
 
 const App = () => {

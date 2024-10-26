@@ -26,7 +26,7 @@ const DetallesTorneo = ({ tournament, participants, positions }) => {
           <ul className="list-disc ml-5">
             {participants.map((participant, index) => (
               <li key={index}>
-                {participant.usuarios.nombres} {participant.usuarios.apellidos} {/* Cambiado aquí */}
+                {participant.usuarios.nombres} {participant.usuarios.apellidos}
               </li>
             ))}
           </ul>
@@ -34,21 +34,21 @@ const DetallesTorneo = ({ tournament, participants, positions }) => {
       )}
 
       {tournament.estado === 'finalizado' && (
-        <div className="bg-gray-200 text-gray-900 p-4 rounded mt-4">
+        <div className="bg-blue-50 text-gray-900 p-4 rounded mt-4">
           <h3 className="font-bold mb-2">Tabla de Posiciones:</h3>
-          <table className="w-full text-left mt-2">
-            <thead>
+          <table className="w-full text-left mt-2 border-collapse">
+            <thead className="bg-blue-100">
               <tr>
-                <th className="border-b py-2">Posición</th>
-                <th className="border-b py-2">Jugador</th>
+                <th className="border-b py-2 px-4">Posición</th>
+                <th className="border-b py-2 px-4">Jugador</th>
               </tr>
             </thead>
             <tbody>
               {positions.map((position, index) => (
-                <tr key={index}>
-                  <td className="py-2 border-b">{position.posicion}</td>
-                  <td className="py-2 border-b">
-                    {position.usuarios.nombres} {position.usuarios.apellidos} {/* Cambiado aquí */}
+                <tr key={index} className={index % 2 === 0 ? 'bg-blue-50' : 'bg-white'}>
+                  <td className="py-2 border-b px-4">{position.posicion}</td>
+                  <td className="py-2 border-b px-4">
+                    {position.usuarios.nombres} {position.usuarios.apellidos}
                   </td>
                 </tr>
               ))}

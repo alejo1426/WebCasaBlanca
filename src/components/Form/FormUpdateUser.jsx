@@ -69,7 +69,15 @@ const UpdateUser = ({ userData, onUserUpdate }) => {
   };
 
   return (
-    <section className="w-full md:w-1/2 bg-white p-6 rounded-lg shadow-md">
+    <section
+      className="w-full md:w-1/2 bg-white p-6 rounded-lg transition-shadow"
+      style={{
+        boxShadow: '0 8px 16px rgba(69, 123, 157, 0.4)', // Sombra azul personalizada
+        transition: 'box-shadow 0.3s ease-in-out',
+      }}
+      onMouseEnter={(e) => e.currentTarget.style.boxShadow = '0 12px 24px rgba(0, 102, 204, 0.8)'} // Sombra más azul al pasar el cursor
+      onMouseLeave={(e) => e.currentTarget.style.boxShadow = '0 8px 16px rgba(69, 123, 157, 0.4)'} // Vuelve a la sombra original
+    >
       <h2 className="text-2xl font-bold mb-4">Modificar Datos</h2>
       <form onSubmit={handleSubmit}>
         <div className="mb-4">

@@ -5,7 +5,6 @@ import FormUpdateClases from '../../Form/FormUpdateClase';
 import FormUpdateUser from '../../Form/FormUpdateUserViewModificar';
 import FormUpdateTorneos from '../../Form/FormUpdateTorneo';
 import FormUpdateCanchas from '../../Form/FormUpdateCanchas';
-import Modal from '../../Ventana/Modal';
 
 const Modificar = () => {
   const [filterType, setFilterType] = useState('clases');
@@ -77,6 +76,7 @@ const Modificar = () => {
 
   const handleDataClick = (data) => {
     setSelectedData(data);
+    setIsModalOpen(true); // Asegúrate de abrir el modal al hacer clic en el elemento
   };
 
   return (
@@ -97,7 +97,8 @@ const Modificar = () => {
               {results.map((result) => (
                 <li
                   key={result.id}
-                  className="border p-2 rounded-md shadow cursor-pointer"
+                  className={`border p-2 rounded-md shadow cursor-pointer transition-transform duration-300 
+                              ${selectedData?.id === result.id ? 'bg-gray-200' : 'hover:scale-105 hover:bg-gray-200'}`}
                   onClick={() => handleDataClick(result)}
                 >
                   {filterType === 'usuarios' ? `${result.nombres} ${result.apellidos}` : result.nombre}
@@ -109,7 +110,7 @@ const Modificar = () => {
 
         <div className="col-span-1">
           {selectedData && (
-            <>
+            <div className="shadow-lg shadow-blue-500 p-4 rounded-md transition-transform duration-300 hover:shadow-blue-700 hover:scale-105">
               <h4 className="text-lg font-semibold">Modificar {filterType}</h4>
 
               {filterType === 'clases' && (
@@ -133,15 +134,13 @@ const Modificar = () => {
               {filterType === 'canchas' && (
                 <FormUpdateCanchas
                   initialData={selectedData}
-                  onUpdate={() => fetchResults(filterType, searchTerm)} // Asegúrate de que esta función esté presente
+                  onUpdate={() => fetchResults(filterType, searchTerm)}
                 />
               )}
-            </>
+            </div>
           )}
         </div>
       </div>
-
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} data={selectedData} />
     </div>
   );
 };

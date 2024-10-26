@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'; // Importar estilos de react-toastify
 import '../css/Signup.css';
 
 const Registro = () => {
@@ -14,19 +16,18 @@ const Registro = () => {
     const [telefono, setTelefono] = useState('');
     const [direccion, setDireccion] = useState('');
     const [edad, setEdad] = useState('');
-    const [error, setError] = useState('');
 
     // Función para manejar el envío del formulario
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         if (!nombres || !apellidos || !correo || !usuario || !password || !telefono || !direccion || !edad) {
-            setError('Por favor, llena todos los campos para poder registrarte.');
+            toast.error('Por favor, llena todos los campos para poder registrarte.'); // Notificación de error
             return;
         }
 
         if (parseInt(edad) < 15) {
-            setError('Debes tener al menos 15 años para registrarte.');
+            toast.error('Debes tener al menos 15 años para registrarte.'); // Notificación de error
             return;
         }
 
@@ -54,10 +55,10 @@ const Registro = () => {
 
         if (!response.ok) {
             // Manejo de errores según el código de estado
-            setError(data.message || 'Hubo un error en el registro. Intenta nuevamente.');
+            toast.error(data.message || 'Hubo un error en el registro. Intenta nuevamente.'); // Notificación de error
         } else {
             console.log('Usuario registrado:', data);
-            alert('¡Registro exitoso!');
+            toast.success('¡Registro exitoso!'); // Notificación de éxito
             navigate('/Login');
         }
     };
@@ -109,13 +110,25 @@ const Registro = () => {
                             />
                         </div>
                     ))}
-                    {error && <p className="text-red-600">{error}</p>}
                     <button type="submit" className="w-full text-[#ffffff] bg-[#1c8be6] focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-4">Registrarse</button>
                     <div className="text-sm font-light text-[#ffffff] text-center">
                         ¿Ya estás vinculado con nosotros? <span className="font-medium text-[#0059ff] hover:underline cursor-pointer" onClick={() => navigate('/Login')}>Iniciar Sesión</span>
                     </div>
                 </form>
             </div>
+
+            {/* Componente ToastContainer para las notificaciones */}
+            <ToastContainer 
+                position="top-right" 
+                autoClose={5000} 
+                hideProgressBar 
+                newestOnTop 
+                closeOnClick 
+                rtl={false} 
+                pauseOnFocusLoss 
+                draggable 
+                pauseOnHover 
+            />
         </div>
     );
 };

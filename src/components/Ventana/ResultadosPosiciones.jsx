@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable react/prop-types */
+import { useState, useEffect } from 'react';
 import { supabase } from '../../../supabaseClient';
 import { ToastContainer, toast } from 'react-toastify';
 

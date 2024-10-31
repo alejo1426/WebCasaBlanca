@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { jwtDecode } from 'jwt-decode';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; // Importar estilos de react-toastify
 import '../css/Login.css'; // Importar estilos
@@ -41,9 +40,6 @@ const Login = () => {
 
             // Guardar el token en el almacenamiento local
             localStorage.setItem('token', data.token);
-
-            // Decodificar el token para obtener el rol del usuario
-            const decodedToken = jwtDecode(data.token);
 
             toast.success('¡Inicio de sesión exitoso!'); // Notificación de éxito
             navigate('/Dashboard');

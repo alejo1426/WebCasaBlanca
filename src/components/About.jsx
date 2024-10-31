@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import Header from './Header';
 import Footer from './Footer';
-import backgroundVideo from '../../public/video/About.mp4';
 import '../css/About.css';
 
 const About = () => {
@@ -26,7 +25,7 @@ const About = () => {
         muted
         playsInline
       >
-        <source src={backgroundVideo} type="video/mp4" />
+        <source src={"/video/About.mp4"} type="video/mp4" />
         Tu navegador no soporta videos.
       </video>
 

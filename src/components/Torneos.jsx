@@ -1,4 +1,3 @@
-import React from 'react';
 import '../css/Torneos.css';
 import { FaClock, FaCalendarAlt, FaDollarSign } from 'react-icons/fa'; // Asegúrate de que esta librería esté instalada
 import { Link } from 'react-router-dom'; // Importa Link

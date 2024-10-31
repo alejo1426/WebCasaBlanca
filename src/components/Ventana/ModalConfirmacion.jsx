@@ -1,5 +1,4 @@
-import React from 'react';
-
+/* eslint-disable react/prop-types */
 const ModalConfirmacion = ({ isOpen, onClose, onConfirm, tipo }) => {
   if (!isOpen) return null; // No renderiza el modal si no está abierto
 

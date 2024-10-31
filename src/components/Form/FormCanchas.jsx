@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { useState } from 'react';
 import { supabase } from '../../../supabaseClient';
 import { ToastContainer, toast } from 'react-toastify';
@@ -54,7 +55,7 @@ const FormCanchas = ({ onCanchaAdded }) => {
     }
 
     // Insertar nueva cancha
-    const { data, error } = await supabase
+    const { error } = await supabase
       .from('canchas')
       .insert([canchaData]);
 

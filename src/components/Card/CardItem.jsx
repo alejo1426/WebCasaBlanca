@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 const CardItem = ({ item, type, onSelect }) => {
   // Formatear las fechas con la zona horaria 'UTC'
   const formatDate = (date) => date 

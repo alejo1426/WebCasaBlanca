@@ -1,4 +1,3 @@
-import React from 'react';
 import logo from '../assets/logo.jpeg'; // Asegúrate de que esta ruta sea correcta
 import { FaFacebook, FaInstagram, FaTwitter } from 'react-icons/fa'; // Asegúrate de tener react-icons instalado
 

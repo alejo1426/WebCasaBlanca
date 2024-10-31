@@ -1,5 +1,6 @@
 import { useState } from 'react';
 
+// eslint-disable-next-line react/prop-types
 const BarraFiltro = ({ onFilterChange, onSearchChange, showFilter = true, showSearch = true }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedFilter, setSelectedFilter] = useState('clases'); // Por defecto "clases"

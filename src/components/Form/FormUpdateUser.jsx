@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { useState, useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify'; // Asegúrate de tener la biblioteca instalada
 import 'react-toastify/dist/ReactToastify.css';

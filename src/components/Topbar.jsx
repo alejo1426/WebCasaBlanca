@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import '../App.css';
 
 const TopBar = ({ selectedView }) => {

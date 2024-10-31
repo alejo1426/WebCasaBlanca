@@ -1,5 +1,4 @@
-import React from 'react';
-
+/* eslint-disable react/prop-types */
 const DetallesTorneo = ({ tournament, participants, positions }) => {
   return (
     <div className="bg-gray-50 p-6 rounded-lg shadow-md">

@@ -1,6 +1,4 @@
-// Modal.jsx
-import React from 'react';
-
+/* eslint-disable react/prop-types */
 const Modal = ({ isOpen, onClose, data }) => {
   if (!isOpen) return null;
 

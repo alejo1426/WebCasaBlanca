@@ -50,7 +50,7 @@ const HeroSection = () => {
         </h1>
       </div>
 
-      <div className="section-2 flex flex-col md:flex-row p-4 space-y-4 md:space-y-0 md:space-x-4">
+      <div className="section-2 flex flex-col md:flex-row p-4 space-y-4 md:space-y-0 md:space-x-4 lg:pl-20 lg:gap-10">
         <InfoCard
           image={image1}
           title="Horarios disponibles Lunes A Domingo"
@@ -67,7 +67,7 @@ const HeroSection = () => {
         />
       </div>
 
-      <div className="section-3 flex flex-col md:flex-row p-4 space-y-4 md:space-y-0 md:space-x-4">
+      <div className="section-3 flex flex-col md:flex-row p-4 space-y-4 md:space-y-0 md:space-x-4 lg:pl-20">
         <InfoCard
           image={image3}
           title="Conoce a Nuestros Entrenadores"

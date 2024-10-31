@@ -1,7 +1,4 @@
-// DetallesCardTorneos.jsx
-
-import React from 'react';
-
+/* eslint-disable react/prop-types */
 const DetallesCardTorneos = ({ tournaments, onTournamentSelect }) => {
   return (
     <section className="mb-6">

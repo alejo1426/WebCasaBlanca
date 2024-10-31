@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { supabase } from '../../../supabaseClient';
 import DetallesTorneo from '../DetallesViewTorneos/DetallesTorneo';
 import DetallesCardTorneos from '../DetallesViewTorneos/DetalleTorneosDisponibles'; // Asegúrate de la ruta correcta

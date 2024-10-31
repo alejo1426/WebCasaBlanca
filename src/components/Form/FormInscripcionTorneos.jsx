@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { supabase } from '../../../supabaseClient';
 import { jwtDecode } from 'jwt-decode';
 import { ToastContainer, toast } from 'react-toastify';

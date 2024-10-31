@@ -1,5 +1,4 @@
-import React from 'react';
-
+/* eslint-disable react/prop-types */
 const DetallesTorneo = ({ torneo, enrolledUsers }) => {
   const formatDate = (date) => 
     date ? new Date(date).toLocaleDateString('es-ES', { timeZone: 'UTC' }) : 'No disponible';

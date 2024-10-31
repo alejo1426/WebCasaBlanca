@@ -1,11 +1,16 @@
-.neon-text-titulo {
-    text-shadow: 
-      0 0 5px rgba(255, 255, 255, 0.5), /* Blanco suave */
-      0 0 10px rgba(255, 255, 255, 0.3), /* Blanco más suave */
-      0 0 15px rgba(0, 110, 220, 0.5),    /* Azul claro */
-      0 0 20px rgba(0, 80, 160, 0.5),     /* Azul medio */
-      0 0 30px rgba(0, 140, 255, 0.7);    /* Azul intenso */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+body {
+    font-family: 'Roboto', sans-serif; /* Establece Roboto como la fuente principal */
 }
+
+.neon-text-titulo {
+    color: #1d3557; /* Color base */
+    text-shadow: 
+        0 0 5px #1d3557, /* Brillo suave */
+        0 0 10px #a8dadc, /* Color del brillo */
+        0 0 15px #a8dadc; /* Color del brillo más intenso */
+  }
 
 
 .neon-text-subtitulo {

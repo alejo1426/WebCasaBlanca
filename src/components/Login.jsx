@@ -54,7 +54,7 @@ const Login = () => {
     };
 
     return (
-        <div className="relative w-full min-h-screen flex items-center justify-center">
+        <div className="relative w-full min-h-screen flex items-center justify-center" style={{ fontFamily: 'Roboto, sans-serif' }}>
             {/* Video de fondo */}
             <video
                 autoPlay
@@ -72,11 +72,11 @@ const Login = () => {
                     <div>
                         <img src="https://eojuwteklxhwwurpioyb.supabase.co/storage/v1/object/public/Img/logo.jpeg" width="150" alt="Logo" />
                     </div>
-                    <h1 className="neon-text-titulo text-3xl font-bold text-[#006aff]">CASA BLANCA</h1>
+                    <h1 className="neon-text-titulo text-3xl font-bold text-[#1d3557]" style={{ fontFamily: 'Roboto, sans-serif' }}>CASA BLANCA</h1>
                 </div>
                 <form className="flex flex-col space-y-4" onSubmit={handleSubmit}>
                     <div>
-                        <label htmlFor="usuario" className="label-text block mb-2 text-sm font-medium text-[#ffffff]">Usuario</label>
+                        <label htmlFor="usuario" className="label-text block mb-2 text-sm font-medium text-[#ffffff] text-center">Usuario</label>
                         <div className="relative text-gray-400">
                             <span className="absolute inset-y-0 left-1 flex items-center p-1 pl-3">
                                 {/* Icono de usuario */}
@@ -97,7 +97,7 @@ const Login = () => {
                         </div>
                     </div>
                     <div>
-                        <label htmlFor="password" className="label-text block mb-2 text-sm font-medium text-[#ffffff]">Password</label>
+                        <label htmlFor="password" className="label-text block mb-2 text-sm font-medium text-[#ffffff] text-center">Password</label>
                         <div className="relative text-gray-400">
                             <span className="absolute inset-y-0 left-1 flex items-center p-1 pl-3">
                                 {/* Icono de candado */}
@@ -117,7 +117,7 @@ const Login = () => {
                             />
                         </div>
                     </div>
-                    <button type="submit" className="w-full text-[#ffffff] bg-[#1c8be6] focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-4">Ingresar</button>
+                    <button type="submit" className="w-full text-[#ffffff] bg-[#1d3557] focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-4">Ingresar</button>
                     <div className="text-sm font-light text-[#ffffff] text-center">
                         No tienes una cuenta? <span className="font-medium text-[#0059ff] hover:underline cursor-pointer" onClick={handleRegistroClick}>Registrarse</span>
                     </div>

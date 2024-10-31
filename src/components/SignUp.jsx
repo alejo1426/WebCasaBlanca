@@ -64,7 +64,7 @@ const Registro = () => {
     };
 
     return (
-        <div className="relative w-full min-h-screen flex items-center justify-center">
+        <div className="relative w-full min-h-screen flex items-center justify-center" style={{ fontFamily: 'Roboto, sans-serif' }}>
             {/* Video de fondo */}
             <video
                 autoPlay
@@ -82,12 +82,12 @@ const Registro = () => {
                     <div>
                         <img src="https://eojuwteklxhwwurpioyb.supabase.co/storage/v1/object/public/Img/logo.jpeg" width="150" alt="Logo" />
                     </div>
-                    <h1 className="neon-text-titulo text-4xl font-bold text-[#006aff]">CASA BLANCA</h1>
+                    <h1 className="neon-text-titulo text-4xl font-bold text-[#1d3557] text-center" style={{ fontFamily: 'Roboto, sans-serif' }}>CASA BLANCA</h1>
                 </div>
                 <div className="neon-text-subtitulo text-sm font-bold text-[#ffffff] pb-8 text-center">Regístrate con nosotros y disfruta!!</div>
                 <form className="flex flex-col space-y-4" onSubmit={handleSubmit}>
                     {/* Campos del formulario */}
-                    {[
+                    {[ 
                         { label: 'Nombres', id: 'nombres', value: nombres, onChange: setNombres, type: 'text', placeholder: 'Ingrese sus nombres' },
                         { label: 'Apellidos', id: 'apellidos', value: apellidos, onChange: setApellidos, type: 'text', placeholder: 'Ingrese sus apellidos' },
                         { label: 'Correo', id: 'correo', value: correo, onChange: setCorreo, type: 'email', placeholder: 'Ingrese su correo' },
@@ -97,8 +97,8 @@ const Registro = () => {
                         { label: 'Dirección', id: 'direccion', value: direccion, onChange: setDireccion, type: 'text', placeholder: 'Ingrese su dirección' },
                         { label: 'Edad', id: 'edad', value: edad, onChange: setEdad, type: 'number', placeholder: 'Ingrese su edad' },
                     ].map(({ label, id, value, onChange, type, placeholder }) => (
-                        <div key={id} className="pb-2">
-                            <label htmlFor={id} className="label-text block mb-2 text-sm font-medium text-[#ffffff]">{label}</label>
+                        <div key={id} className="pb-2 text-center">
+                            <label htmlFor={id} className="label-text block mb-2 text-sm font-medium text-[#ffffff] text-center">{label}</label>
                             <input
                                 type={type}
                                 name={id}
@@ -110,7 +110,7 @@ const Registro = () => {
                             />
                         </div>
                     ))}
-                    <button type="submit" className="w-full text-[#ffffff] bg-[#1c8be6] focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-4">Registrarse</button>
+                    <button type="submit" className="w-full text-[#ffffff] bg-[#1d3557] focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-4">Registrarse</button>
                     <div className="text-sm font-light text-[#ffffff] text-center">
                         ¿Ya estás vinculado con nosotros? <span className="font-medium text-[#0059ff] hover:underline cursor-pointer" onClick={() => navigate('/Login')}>Iniciar Sesión</span>
                     </div>

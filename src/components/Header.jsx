@@ -10,7 +10,6 @@ const Header = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
-  // Cerrar el menú si se hace clic fuera de él
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
@@ -25,22 +24,32 @@ const Header = () => {
   }, []);
 
   return (
-    <header className="bg-transparent fixed w-full z-10">
+    <header className="bg-transparent fixed w-full z-10" style={{ fontFamily: 'Roboto, sans-serif' }}>
       <nav className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8" aria-label="Global">
         <div className="flex lg:flex-1">
           <Link to="/" className="-m-1.5 p-1.5">
             <img className="h-32 w-32" src={logo} alt="Logo" loading="lazy" />
           </Link>
         </div>
-        {/* Menú en pantallas grandes con mayor tamaño de texto */}
+        {/* Menú en pantallas grandes */}
         <div className="hidden lg:flex lg:gap-x-12">
-          <Link to="/" className="text-lg font-bold leading-6 text-white">Inicio</Link>
-          <Link to="/Torneos" className="text-lg font-bold leading-6 text-white">Torneos</Link>
-          <Link to="/Clases" className="text-lg font-bold leading-6 text-white">Clases</Link>
-          <Link to="/About" className="text-lg font-bold leading-6 text-white">About</Link>
+          <Link to="/" className="text-lg font-bold leading-6 text-white rounded-lg py-4 px-3 hover:bg-opacity-80 hover:backdrop-blur-lg transition duration-300 transform hover:scale-110">
+            Inicio
+          </Link>
+          <Link to="/Torneos" className="text-lg font-bold leading-6 text-white rounded-lg py-4 px-3 hover:bg-opacity-80 hover:backdrop-blur-lg transition duration-300 transform hover:scale-110">
+            Torneos
+          </Link>
+          <Link to="/Clases" className="text-lg font-bold leading-6 text-white rounded-lg py-4 px-3 hover:bg-opacity-80 hover:backdrop-blur-lg transition duration-300 transform hover:scale-110">
+            Clases
+          </Link>
+          <Link to="/About" className="text-lg font-bold leading-6 text-white rounded-lg py-4 px-3 hover:bg-opacity-80 hover:backdrop-blur-lg transition duration-300 transform hover:scale-110">
+            About
+          </Link>
         </div>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-          <Link to="/login" className="text-lg font-bold leading-6 text-white">Log in <span aria-hidden="true">&rarr;</span></Link>
+          <Link to="/login" className="text-lg font-bold leading-6 text-white rounded-lg py-4 px-3 hover:bg-opacity-80 hover:backdrop-blur-lg transition duration-300 transform hover:scale-110">
+            Login<span aria-hidden="true">&rarr;</span>
+          </Link>
         </div>
         {/* Botón del menú móvil */}
         <div className="lg:hidden">
@@ -57,7 +66,8 @@ const Header = () => {
       {isMenuOpen && (
         <div 
           ref={menuRef} 
-          className={`lg:hidden fixed inset-0 z-10 bg-transparent backdrop-blur-xl px-6 py-6 transition-opacity duration-300 ${isMenuOpen ? 'opacity-100' : 'opacity-0'}`}
+          className={`lg:hidden fixed inset-0 z-50 bg-opacity-90 backdrop-blur-xl px-6 py-6 transition-opacity duration-300 ${isMenuOpen ? 'opacity-100' : 'opacity-0'}`}
+          style={{ fontFamily: 'Roboto, sans-serif' }} 
         >
           <div className="flex items-center justify-between">
             <button onClick={toggleMenu} className="-m-2.5 rounded-md p-2.5 text-gray-700">
@@ -67,14 +77,19 @@ const Header = () => {
               </svg>
             </button>
           </div>
-          <div className="mt-6">
-            {/* Enlaces del menú móvil con mayor tamaño de texto */}
-            <div className="space-y-2">
-              <Link to="/features" className="block rounded-lg py-2 text-lg font-semibold leading-7 text-gray-900 hover:bg-gray-50">Features</Link>
-              <Link to="/marketplace" className="block rounded-lg py-2 text-lg font-semibold leading-7 text-gray-900 hover:bg-gray-50">Marketplace</Link>
-              <Link to="/company" className="block rounded-lg py-2 text-lg font-semibold leading-7 text-gray-900 hover:bg-gray-50">Company</Link>
-              <Link to="/login" className="block rounded-lg py-2 text-lg font-semibold leading-7 text-gray-900 hover:bg-gray-50">Log in</Link>
-            </div>
+          <div className="flex flex-col items-center mt-6 space-y-2">
+            <Link to="/torneos" className="block rounded-lg py-4 px-2 text-lg font-semibold leading-7 text-white hover:bg-blue-500 hover:bg-opacity-80 hover:backdrop-blur-lg transition duration-300 transform hover:scale-110">
+              Torneos
+            </Link>
+            <Link to="/clases" className="block rounded-lg py-4 px-2 text-lg font-semibold leading-7 text-white hover:bg-blue-500 hover:bg-opacity-80 hover:backdrop-blur-lg transition duration-300 transform hover:scale-110">
+              Clases
+            </Link>
+            <Link to="/about" className="block rounded-lg py-4 px-2 text-lg font-semibold leading-7 text-white hover:bg-blue-500 hover:bg-opacity-80 hover:backdrop-blur-lg transition duration-300 transform hover:scale-110">
+              About
+            </Link>
+            <Link to="/login" className="block rounded-lg py-4 px-2 text-lg font-semibold leading-7 text-white hover:bg-blue-500 hover:bg-opacity-80 hover:backdrop-blur-lg transition duration-300 transform hover:scale-110">
+              Login
+            </Link>
           </div>
         </div>
       )}

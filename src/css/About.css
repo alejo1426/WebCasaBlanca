@@ -3,3 +3,21 @@
 body {
     font-family: 'Roboto', sans-serif; /* Establece Roboto como la fuente principal */
 }
+
+.neon-text{
+    text-shadow: 
+      0 0 5px rgba(0, 0, 0, 0.8), /* Negro suave */
+      0 0 10px rgba(0, 0, 0, 0.8), /* Negro suave */
+      0 0 15px rgba(0, 0, 0, 0.8), /* Negro suave */
+      0 0 20px rgba(0, 0, 0, 1),    /* Negro más intenso */
+      0 0 30px rgba(0, 0, 0, 1);    /* Negro más intenso */
+  }
+
+.neon-text-tittle{
+    text-shadow: 
+      0 0 5px rgba(29, 53, 87, 0.5), /* Azul oscuro suave */
+      0 0 10px rgba(29, 53, 87, 0.6), /* Azul oscuro más fuerte */
+      0 0 15px rgba(29, 53, 87, 0.7), /* Azul oscuro aún más fuerte */
+      0 0 20px rgba(29, 53, 87, 1),   /* Azul destacado */
+      0 0 30px rgba(13, 24, 50, 1);   /* Azul más intenso */
+}

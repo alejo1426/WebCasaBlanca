@@ -5,9 +5,9 @@ import Sidebar from './components/Sidebar';
 import Dashboard from './components/Dashboard';
 import Torneos from './components/Torneos';
 import Formulario from './components/Form/Formulario';
-import Clases from './components/Clases/Clases';
-import ClasesFormulario from './components/Clases/ClasesInfo';
-import Home from './components/Home'; // Importar el nuevo componente Home
+import Clases from './components/Clases';
+import Home from './components/Home';
+import About from './components/About'; // Importar el nuevo componente Home
 import './App.css';
 
 const App = () => {
@@ -16,12 +16,12 @@ const App = () => {
             <div className='App'>
                 <Routes>
                     <Route path="/" element={<Home />} />
-                    <Route path="/torneos" element={<Torneos />} />
-                    <Route path="/formulario" element={<Formulario />} />
-                    <Route path="/clases" element={<Clases />} />
-                    <Route path="/ClasesFormulario" element={<ClasesFormulario />} />
+                    <Route path="/Torneos" element={<Torneos />} />
+                    <Route path="/Clases" element={<Clases />} />
+                    <Route path="/About" element={<About />} />
                     <Route path="/Login" element={<Login />} />
-                    <Route path="/signup" element={<SignUp />} />
+                    <Route path="/Signup" element={<SignUp />} />
+                    <Route path="/Formulario" element={<Formulario />} />
                     <Route path="/Sidebar" element={<Sidebar />} />
                     <Route path="/Dashboard" element={<Dashboard />} />
                 </Routes>

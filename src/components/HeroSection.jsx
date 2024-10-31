@@ -9,7 +9,7 @@ import image4 from '../assets/images/image4.jpg';
 import image5 from '../assets/images/image5.jpg';
 import '../css/HeroSection.css';
 
-const animations = ['fade-up', 'fade-left', 'fade-right', 'zoom-in', 'flip-left']; // Lista de animaciones
+const animations = ['fade-up', 'fade-left', 'fade-right', 'zoom-in', 'fade-down']; // Lista de animaciones
 
 const InfoCard = ({ image, title, subtitle, description, className, aosEffect }) => (
   <div

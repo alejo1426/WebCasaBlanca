@@ -78,16 +78,16 @@ const Header = () => {
             </button>
           </div>
           <div className="flex flex-col items-center mt-6 space-y-2">
-            <Link to="/torneos" className="block rounded-lg py-4 px-2 text-lg font-semibold leading-7 text-white hover:bg-blue-500 hover:bg-opacity-80 hover:backdrop-blur-lg transition duration-300 transform hover:scale-110">
+            <Link to="/Torneos" className="block rounded-lg py-4 px-2 text-lg font-semibold leading-7 text-white hover:bg-blue-500 hover:bg-opacity-80 hover:backdrop-blur-lg transition duration-300 transform hover:scale-110">
               Torneos
             </Link>
-            <Link to="/clases" className="block rounded-lg py-4 px-2 text-lg font-semibold leading-7 text-white hover:bg-blue-500 hover:bg-opacity-80 hover:backdrop-blur-lg transition duration-300 transform hover:scale-110">
+            <Link to="/Clases" className="block rounded-lg py-4 px-2 text-lg font-semibold leading-7 text-white hover:bg-blue-500 hover:bg-opacity-80 hover:backdrop-blur-lg transition duration-300 transform hover:scale-110">
               Clases
             </Link>
-            <Link to="/about" className="block rounded-lg py-4 px-2 text-lg font-semibold leading-7 text-white hover:bg-blue-500 hover:bg-opacity-80 hover:backdrop-blur-lg transition duration-300 transform hover:scale-110">
+            <Link to="/About" className="block rounded-lg py-4 px-2 text-lg font-semibold leading-7 text-white hover:bg-blue-500 hover:bg-opacity-80 hover:backdrop-blur-lg transition duration-300 transform hover:scale-110">
               About
             </Link>
-            <Link to="/login" className="block rounded-lg py-4 px-2 text-lg font-semibold leading-7 text-white hover:bg-blue-500 hover:bg-opacity-80 hover:backdrop-blur-lg transition duration-300 transform hover:scale-110">
+            <Link to="/Login" className="block rounded-lg py-4 px-2 text-lg font-semibold leading-7 text-white hover:bg-blue-500 hover:bg-opacity-80 hover:backdrop-blur-lg transition duration-300 transform hover:scale-110">
               Login
             </Link>
           </div>

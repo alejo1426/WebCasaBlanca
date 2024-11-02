@@ -1,14 +1,18 @@
 import { useState, useEffect, useRef } from 'react';
 import Header from './Header';
 import Footer from './Footer';
+import Loading from '../components/Loading/Loading';
 import '../css/About.css';
 
 const About = () => {
+  const [loading, setLoading] = useState(true);
   const [showFooter, setShowFooter] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const videoRef = useRef(null);
 
   useEffect(() => {
+    setLoading(false);
+
     const handleScroll = () => {
       setShowFooter(window.scrollY > 0);
     };
@@ -32,6 +36,10 @@ const About = () => {
       videoRef.current.load(); // Reload video on resize
     }
   }, [isMobile]);
+
+  if (loading) {
+    return <div><Loading /></div>;
+  }
 
   return (
     <div className="relative overflow-hidden">

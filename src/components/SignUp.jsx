@@ -1,13 +1,11 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css'; // Importar estilos de react-toastify
+import 'react-toastify/dist/ReactToastify.css';
 import '../css/Signup.css';
 
 const Registro = () => {
     const navigate = useNavigate();
-
-    // Crear los estados para cada campo del formulario
     const [nombres, setNombres] = useState('');
     const [apellidos, setApellidos] = useState('');
     const [correo, setCorreo] = useState('');
@@ -17,21 +15,23 @@ const Registro = () => {
     const [direccion, setDireccion] = useState('');
     const [edad, setEdad] = useState('');
 
-    // Función para manejar el envío del formulario
+    const handleBackClick = () => {
+        navigate(-1); // Volver a la pantalla anterior
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         if (!nombres || !apellidos || !correo || !usuario || !password || !telefono || !direccion || !edad) {
-            toast.error('Por favor, llena todos los campos para poder registrarte.'); // Notificación de error
+            toast.error('Por favor, llena todos los campos para poder registrarte.');
             return;
         }
 
         if (parseInt(edad) < 15) {
-            toast.error('Debes tener al menos 15 años para registrarte.'); // Notificación de error
+            toast.error('Debes tener al menos 15 años para registrarte.');
             return;
         }
 
-        // Realiza la solicitud a tu API de registro
         const response = await fetch('https://backend-jwt-ashy.vercel.app/api/auth/registro', {
             method: 'POST',
             headers: {
@@ -54,17 +54,25 @@ const Registro = () => {
         const data = await response.json();
 
         if (!response.ok) {
-            // Manejo de errores según el código de estado
-            toast.error(data.message || 'Hubo un error en el registro. Intenta nuevamente.'); // Notificación de error
+            toast.error(data.message || 'Hubo un error en el registro. Intenta nuevamente.');
         } else {
-            console.log('Usuario registrado:', data);
-            toast.success('¡Registro exitoso!'); // Notificación de éxito
+            toast.success('¡Registro exitoso!');
             navigate('/Login');
         }
     };
 
     return (
         <div className="relative w-full min-h-screen flex items-center justify-center" style={{ fontFamily: 'Roboto, sans-serif' }}>
+            {/* Botón de marcha atrás */}
+            <button 
+                onClick={handleBackClick} 
+                className="absolute top-3 left-5 z-50 text-[#ffffff] bg-[#1d3557] p-2 rounded-full shadow-md focus:outline-none hover:bg-[#0059ff] transition-colors"
+            >
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="h-6 w-6">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+                </svg>
+            </button>
+
             {/* Video de fondo */}
             <video
                 autoPlay
@@ -86,8 +94,7 @@ const Registro = () => {
                 </div>
                 <div className="neon-text-subtitulo text-sm font-bold text-[#ffffff] pb-8 text-center">Regístrate con nosotros y disfruta!!</div>
                 <form className="flex flex-col space-y-4" onSubmit={handleSubmit}>
-                    {/* Campos del formulario */}
-                    {[ 
+                    {[
                         { label: 'Nombres', id: 'nombres', value: nombres, onChange: setNombres, type: 'text', placeholder: 'Ingrese sus nombres' },
                         { label: 'Apellidos', id: 'apellidos', value: apellidos, onChange: setApellidos, type: 'text', placeholder: 'Ingrese sus apellidos' },
                         { label: 'Correo', id: 'correo', value: correo, onChange: setCorreo, type: 'email', placeholder: 'Ingrese su correo' },
@@ -110,14 +117,20 @@ const Registro = () => {
                             />
                         </div>
                     ))}
-                    <button type="submit" className="w-full text-[#ffffff] bg-[#1d3557] focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-4">Registrarse</button>
-                    <div className="text-sm font-light text-[#ffffff] text-center">
+                    <button className="register-button w-full" type="submit">
+                        <span className="button__text">Registrarme</span>
+                        <span className="button__icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="svg">
+                                <path d="M12 5a1 1 0 0 1 .71.29l6 6a1 1 0 1 1-1.42 1.42L13 8.41V20a1 1 0 1 1-2 0V8.41l-4.29 4.3a1 1 0 0 1-1.42-1.42l6-6A1 1 0 0 1 12 5z" />
+                            </svg>
+                        </span>
+                    </button>
+                    <div className="label-text text-sm font-light text-[#ffffff] text-center">
                         ¿Ya estás vinculado con nosotros? <span className="font-medium text-[#0059ff] hover:underline cursor-pointer" onClick={() => navigate('/Login')}>Iniciar Sesión</span>
                     </div>
                 </form>
             </div>
 
-            {/* Componente ToastContainer para las notificaciones */}
             <ToastContainer 
                 position="top-right" 
                 autoClose={5000} 

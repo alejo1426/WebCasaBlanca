@@ -10,8 +10,7 @@ body {
         0 0 5px #1d3557, /* Brillo suave */
         0 0 10px #a8dadc, /* Color del brillo */
         0 0 15px #a8dadc; /* Color del brillo más intenso */
-  }
-
+}
 
 .neon-text-subtitulo {
     text-shadow: 
@@ -22,7 +21,7 @@ body {
       0 0 30px rgba(0, 0, 0, 1);    /* Negro más intenso */
 }
 
-.label-text{
+.label-text {
     text-shadow: 
       0 0 5px rgba(0, 0, 0, 0.8), /* Negro suave */
       0 0 10px rgba(0, 0, 0, 0.8), /* Negro suave */
@@ -31,11 +30,83 @@ body {
       0 0 30px rgba(0, 0, 0, 1);
 }
 
-button {
-    transition: transform 0.2s ease, background-color 0.2s ease;
+.register-button {
+  --main-focus: #007bff;
+  --font-color: #ffffff; /* Color del texto en el botón */
+  --bg-color-sub: #1d3557;
+  --bg-color: #3d5a80;
+  --main-color: #000000;
+  position: relative;
+  width: 100%; /* Asegurarse que el botón ocupe el ancho completo */
+  height: 40px; /* Mantener la misma altura que los inputs */
+  cursor: pointer;
+  display: flex;
+  align-items: center; /* Centrar el contenido del botón */
+  justify-content: center; /* Centrar horizontalmente el texto y el icono */
+  border: 2px solid var(--main-color);
+  box-shadow: 4px 4px var(--main-color);
+  background-color: var(--bg-color);
+  border-radius: 10px;
+  padding: 0; /* Eliminar el padding para un mejor ajuste */
+  overflow: hidden;
+  transition: background 0.3s; /* Añadir transición suave para el hover */
 }
 
-button:hover {
-    transform: scale(1.05);
-    background-color: #1a75d5; /* Puedes ajustar el color al estado hover */
+.register-button, .button__icon, .button__text {
+  transition: all 0.3s;
+}
+
+.register-button .button__text {
+  transform: translateX(0); /* Ajustar la posición inicial */
+  color: var(--font-color); /* Color del texto */
+  font-weight: 600;
+  position: relative; /* Permitir el desplazamiento al centrar el texto */
+  z-index: 2; /* Asegurar que el texto esté por encima del fondo */
+}
+
+.register-button .button__icon {
+  position: absolute; /* Cambiar a absolute */
+  right: 5px; /* Posicionarlo a la derecha */
+  height: 100%;
+  width: 39px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s; /* Suave transición para mover el icono */
+}
+
+.register-button .svg {
+  width: 20px;
+  fill: white;
+}
+
+.register-button:hover {
+  background: var(--bg-color-sub); /* Cambiar el fondo en hover */
+}
+
+.register-button:hover .button__text {
+  color: transparent; /* Mantener el texto en blanco en hover */
+}
+
+/* Ajuste de la posición del icono en hover */
+.register-button:hover .button__icon {
+  transform: translateX(-480%); /* Mover el icono al centro del botón */
+}
+
+/* Media queries para ajustar el desplazamiento en dispositivos más pequeños */
+@media (max-width: 768px) {
+  .register-button:hover .button__icon {
+      transform: translateX(-360%); /* Ajustar para tablets y móviles */
+  }
+}
+
+@media (max-width: 480px) {
+  .register-button:hover .button__icon {
+      transform: translateX(-360%); /* Ajustar para móviles pequeños */
+  }
+}
+
+.register-button:active {
+  transform: translate(3px, 3px);
+  box-shadow: 0px 0px var(--main-color);
 }

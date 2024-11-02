@@ -51,39 +51,40 @@ const HeroSection = () => {
         </h1>
       </div>
 
-      <div className="section-2 flex flex-col md:flex-row p-4 space-y-4 md:space-y-0 md:space-x-4 lg:pl-20 lg:gap-10">
+      <div className="section-2 flex flex-col md:flex-row justify-center items-center p-4 space-y-4 md:space-y-0 md:space-x-4">
         <InfoCard
           image={image1}
           title="Horarios disponibles Lunes A Domingo"
           subtitle="7:00 am - 6:00pm"
           description="Consigue un horario que se adapte a ti."
-          aosEffect={animations[0]} // Animación 1
+          aosEffect={animations[0]}
         />
         <InfoCard
           image={image2}
           title="Academia de Tenis Casa Blanca"
           subtitle="En la Academia de Tenis Casa Blanca, nos dedicamos a formar a tenistas de todas las edades y niveles."
           description="Ofrecemos programas personalizados, entrenamientos de calidad y un ambiente motivador para que cada jugador desarrolle su potencial. ¡Únete a nosotros y comienza tu viaje en el tenis!"
-          aosEffect={animations[1]} // Animación 2
+          aosEffect={animations[1]}
         />
       </div>
 
-      <div className="section-3 flex flex-col md:flex-row p-4 space-y-4 md:space-y-0 md:space-x-4 lg:pl-20">
+      <div className="section-3 flex flex-col md:flex-row justify-center items-center p-4 space-y-4 md:space-y-0 md:space-x-4">
         <InfoCard
           image={image3}
           title="Conoce a Nuestros Entrenadores"
           subtitle="Profesionales apasionados listos para ayudarte a mejorar."
           description="Nuestro equipo de entrenadores cuenta con años de experiencia y están comprometidos con el desarrollo de cada jugador."
-          aosEffect={animations[2]} // Animación 3
+          aosEffect={animations[2]}
         />
         <InfoCard
           image={image4}
           title="Participa en Nuestros Torneos"
           subtitle="Demuestra tus habilidades y gana premios."
           description="Inscríbete en nuestros torneos y compite con otros apasionados del tenis. ¡Los mejores premios te están esperando!"
-          aosEffect={animations[3]} // Animación 4
+          aosEffect={animations[3]}
         />
       </div>
+
       <div className="section-4 flex flex-col md:flex-row p-4 space-y-4 md:space-y-0 md:space-x-4">
         <InfoCard
           image={image5}

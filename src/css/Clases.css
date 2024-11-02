@@ -1,70 +1,63 @@
-.clases-page {
-    background-color: #f0f8ff; /* Color amigable de fondo */
-    padding: 70px;
-    text-align: center;
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+body {
+    font-family: 'Roboto', sans-serif; /* Establece Roboto como la fuente principal */
 }
 
-h1 {
-    margin-top: 200px;
-    margin-bottom: 70px;
-    font-family: 'Times New Roman', Times, serif;
+.neon-text{
+    text-shadow: 
+      0 0 5px rgba(0, 0, 0, 0.8), /* Negro suave */
+      0 0 10px rgba(0, 0, 0, 0.8), /* Negro suave */
+      0 0 15px rgba(0, 0, 0, 0.8), /* Negro suave */
+      0 0 20px rgba(0, 0, 0, 1),    /* Negro más intenso */
+      0 0 30px rgba(0, 0, 0, 1);    /* Negro más intenso */
+  }
+
+.neon-text-tittle{
+    text-shadow: 
+      0 0 5px rgba(29, 53, 87, 0.5), /* Azul oscuro suave */
+      0 0 10px rgba(29, 53, 87, 0.6), /* Azul oscuro más fuerte */
+      0 0 15px rgba(29, 53, 87, 0.7), /* Azul oscuro aún más fuerte */
+      0 0 20px rgba(29, 53, 87, 1),   /* Azul destacado */
+      0 0 30px rgba(13, 24, 50, 1);   /* Azul más intenso */
 }
 
-.clases-container {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-}
-
-.clase {
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    padding: 20px;
-    margin: 90px;
-    width: 350px; /* Ajusta el tamaño según sea necesario */
-    transition: transform 0.2s; /* Efecto hover */
-}
-
-.clase:hover {
-    transform: scale(1.05); /* Aumenta el tamaño al pasar el cursor */
-}
-
-.tag {
-    background-color: #ffbf00; /* Color de fondo para la etiqueta */
-    color: white;
-    border-radius: 5px;
-    padding: 5px 10px;
-    font-weight: bold;
-    position: absolute;
-    top: 10px;
-    left: 10px;
-}
-
-.form-button {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 10px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.form-button:hover {
-    background-color: #0056b3;
-}
-
-.App {
-    min-height: 100vh; /* Asegura que el contenedor principal ocupe al menos la altura total */
-    display: flex;
-    flex-direction: column; /* Hace que los elementos hijos se alineen verticalmente */
-}
-
-footer {
-    margin-top: auto; /* Ajusta este valor según sea necesario */
-    background-color: #333; /* Color de fondo del footer */
-    color: white; /* Color del texto del footer */
-    padding: 20px 0; /* Espaciado interno del footer */
-    text-align: center; /* Centra el texto */
-}
+/* From Uiverse.io by alexroumi */ 
+.clase-button {
+  padding: 15px 25px;
+  border: unset;
+  border-radius: 15px;
+  color: #ffffff;
+  z-index: 1;
+  background: #002642;
+  position: relative;
+  font-weight: 1000;
+  font-size: 17px;
+  -webkit-box-shadow: 4px 8px 19px -3px rgba(0,0,0,0.27);
+  box-shadow: 4px 8px 19px -3px rgba(0,0,0,0.27);
+  transition: all 250ms;
+  overflow: hidden;
+ }
+ 
+ .clase-button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 0;
+  border-radius: 15px;
+  background-color: #1d3557;
+  z-index: -1;
+  -webkit-box-shadow: 4px 8px 19px -3px rgba(0,0,0,0.27);
+  box-shadow: 4px 8px 19px -3px rgba(0,0,0,0.27);
+  transition: all 250ms
+ }
+ 
+ .clase-button:hover {
+  color: #e8e8e8;
+ }
+ 
+ .clase-button:hover::before {
+  width: 100%;
+ }

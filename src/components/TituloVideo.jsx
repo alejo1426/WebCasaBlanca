@@ -44,19 +44,22 @@ const TitleWithVideo = () => {
         Tu navegador no soporta la etiqueta de video.
       </video>
       <div className="overlay-layer absolute inset-0 bg-black opacity-50"></div>
-      <div className="content text-center relative flex flex-col h-full justify-center p-4">
-        <h1 className="title-modern text-white text-5xl sm:text-6xl md:text-7xl font-roboto mt-20">
-          CASA BLANCA<br />
-          TENNIS ACADEMY
-        </h1>
-        <div className="button-container mt-10 mb-0 flex items-center justify-center">
-          <button 
-            onClick={handleRegistroClick} 
-            className="cta-button bg-transparent text-lg sm:text-2xl bg-opacity-80 backdrop-blur-lg text-white px-4 py-2 rounded-[16px] transition duration-300 hover:bg-orange-500 hover:text-white font-roboto"
-          >
-            ¡Regístrate!
-          </button>
-        </div>
+        <div className="content text-center relative flex flex-col h-full justify-center p-4">
+          <h1 className="neon-text title-modern text-white text-5xl sm:text-6xl md:text-7xl font-roboto mt-20">
+            CASA BLANCA<br />
+            TENNIS ACADEMY
+          </h1>
+          <div className="button-container mt-20 mb-0 flex items-center justify-center">
+            <div className="container-button hover:cursor-pointer" onClick={handleRegistroClick} >
+              <div className="hover bt-1" />
+              <div className="hover bt-2" />
+              <div className="hover bt-3" />
+              <div className="hover bt-4" />
+              <div className="hover bt-5" />
+              <div className="hover bt-6" />
+              <button className="button-titulo-video" onClick={handleRegistroClick}></button>
+            </div>
+          </div>
       </div>
     </div>
   );      

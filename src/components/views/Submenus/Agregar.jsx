@@ -67,7 +67,10 @@ const Agregar = () => {
       <div className="grid grid-cols-1 rounded-lg md:grid-cols-2 gap-6 mt-6">
         <div className="col-span-1 bg-gray-100">
           <h3 className="text-xl font-semibold mb-4">Resultados</h3>
-          <ul className="mt-4 space-y-2">
+          <ul
+            className="mt-4 space-y-2 overflow-y-auto" // Habilita el scroll vertical
+            style={{ maxHeight: '400px' }} // Ajusta la altura máxima según lo necesites
+          >
             {results.map((result) => (
               <li
                 key={result.id}

@@ -89,7 +89,7 @@ const FormCanchas = ({ onCanchaAdded }) => {
             name="nombre"
             value={canchaData.nombre}
             onChange={handleChange}
-            className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+            className="mt-1 block w-full border border-gray-300 text-white rounded-md p-2"
             required
           />
         </div>
@@ -100,7 +100,7 @@ const FormCanchas = ({ onCanchaAdded }) => {
             name="capacidad"
             value={canchaData.capacidad}
             onChange={handleChange}
-            className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+            className="mt-1 block w-full border border-gray-300 text-white rounded-md p-2"
             required
           />
         </div>

@@ -88,7 +88,6 @@ const FormTorneo = ({ onTournamentAdded }) => {
 
   return (
     <>
-      <ToastContainer />
       <form onSubmit={handleSubmit} className="bg-gray-100 p-6 rounded-lg shadow">
         {/* Nombre del torneo */}
         <div className="mb-4">
@@ -98,7 +97,7 @@ const FormTorneo = ({ onTournamentAdded }) => {
             name="nombre"
             value={tournamentData.nombre}
             onChange={handleChange}
-            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            className="mt-1 block w-full border-gray-300 text-white rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 pl-2"
             required
           />
         </div>
@@ -110,7 +109,7 @@ const FormTorneo = ({ onTournamentAdded }) => {
             name="descripcion"
             value={tournamentData.descripcion}
             onChange={handleChange}
-            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            className="mt-1 block w-full border-gray-300 text-white rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 pl-2"
           />
         </div>
 
@@ -122,7 +121,7 @@ const FormTorneo = ({ onTournamentAdded }) => {
             name="fecha_inicio"
             value={tournamentData.fecha_inicio}
             onChange={handleChange}
-            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            className="mt-1 block w-full border-gray-300 text-white rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 pl-2"
             required
           />
         </div>
@@ -135,7 +134,7 @@ const FormTorneo = ({ onTournamentAdded }) => {
             name="fecha_fin"
             value={tournamentData.fecha_fin}
             onChange={handleChange}
-            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            className="mt-1 block w-full border-gray-300 text-white rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 pl-2"
             required
           />
         </div>
@@ -148,7 +147,7 @@ const FormTorneo = ({ onTournamentAdded }) => {
             name="ubicacion"
             value={tournamentData.ubicacion}
             onChange={handleChange}
-            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            className="mt-1 block w-full border-gray-300 text-white rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 pl-2"
             required
           />
         </div>
@@ -195,7 +194,7 @@ const FormTorneo = ({ onTournamentAdded }) => {
             name="premios"
             value={tournamentData.premios}
             onChange={handleChange}
-            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            className="mt-1 block w-full border-gray-300 text-white rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 pl-2"
           />
         </div>
 
@@ -207,7 +206,7 @@ const FormTorneo = ({ onTournamentAdded }) => {
             name="cupo_maximo"
             value={tournamentData.cupo_maximo}
             onChange={handleChange}
-            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            className="mt-1 block w-full border-gray-300 text-white rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 pl-2"
             required
           />
         </div>
@@ -220,6 +219,7 @@ const FormTorneo = ({ onTournamentAdded }) => {
           Agregar Torneo
         </button>
       </form>
+      <ToastContainer />
     </>
   );
 };

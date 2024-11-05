@@ -115,7 +115,7 @@ const FormUpdateUser = ({ initialData, onUpdate }) => {
             name="nombres"
             value={formData.nombres}
             onChange={handleInputChange}
-            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            className="mt-1 block w-full border-gray-300 text-white pl-2 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
             required
           />
         </div>
@@ -128,7 +128,7 @@ const FormUpdateUser = ({ initialData, onUpdate }) => {
             name="apellidos"
             value={formData.apellidos}
             onChange={handleInputChange}
-            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            className="mt-1 block w-full border-gray-300 text-white pl-2 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
             required
           />
         </div>
@@ -141,7 +141,7 @@ const FormUpdateUser = ({ initialData, onUpdate }) => {
             name="correo"
             value={formData.correo}
             onChange={handleInputChange}
-            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            className="mt-1 block w-full border-gray-300 text-white pl-2 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
             required
           />
         </div>
@@ -154,7 +154,7 @@ const FormUpdateUser = ({ initialData, onUpdate }) => {
             name="usuario"
             value={formData.usuario}
             onChange={handleInputChange}
-            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            className="mt-1 block w-full border-gray-300 text-white pl-2 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
             required
           />
         </div>
@@ -167,7 +167,7 @@ const FormUpdateUser = ({ initialData, onUpdate }) => {
             name="password"
             value={formData.password}
             onChange={handleInputChange}
-            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            className="mt-1 block w-full border-gray-300 text-white pl-2 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
             placeholder="Deja en blanco para mantener la misma contraseña"
           />
         </div>
@@ -180,7 +180,7 @@ const FormUpdateUser = ({ initialData, onUpdate }) => {
             name="telefono"
             value={formData.telefono}
             onChange={handleInputChange}
-            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            className="mt-1 block w-full border-gray-300 text-white pl-2 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
             required
           />
         </div>
@@ -193,7 +193,7 @@ const FormUpdateUser = ({ initialData, onUpdate }) => {
             name="direccion"
             value={formData.direccion}
             onChange={handleInputChange}
-            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            className="mt-1 block w-full border-gray-300 text-white pl-2 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
             required
           />
         </div>
@@ -206,7 +206,7 @@ const FormUpdateUser = ({ initialData, onUpdate }) => {
             name="edad"
             value={formData.edad}
             onChange={handleInputChange}
-            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            className="mt-1 block w-full border-gray-300 text-white pl-2 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
             min="15"
           />
         </div>
@@ -246,12 +246,14 @@ const FormUpdateUser = ({ initialData, onUpdate }) => {
         </div>
 
         {/* Botón de submit */}
-        <button
-          type="submit"
-          className="py-2 px-4 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition"
-        >
-          Actualizar Usuario
-        </button>
+        <div className="flex justify-center">
+          <button
+            type="submit"
+            className="py-2 px-4 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition"
+          >
+            Actualizar Usuario
+          </button>
+        </div>
       </form>
     </>
   );

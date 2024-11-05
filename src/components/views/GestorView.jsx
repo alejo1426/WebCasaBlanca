@@ -171,12 +171,14 @@ const GestorView = () => {
       <div className="flex-grow p-4">
         {renderSection('Mis Clases', loadingClasses, resultados, 'class', handleClassSelect)}
         {renderSection('Mis Torneos', loadingTournaments, torneos, 'tournament', handleTournamentSelect)}
-        <button onClick={toggleResultsPanel} className="bg-blue-600 text-white px-4 py-2 rounded mb-4">
+        <button 
+          onClick={toggleResultsPanel} 
+          className="bg-blue-600 text-white px-4 py-2 rounded mx-auto block mb-4"> {/* mx-auto para centrar en un contenedor de bloque */}
           Resultados
         </button>
       </div>
 
-      <div className="w-full lg:w-1/3 p-4 lg:p-6 bg-gray-100 rounded-lg shadow-md">
+      <div className="w-full lg:w-1/2 p-4 lg:p-6">
         {selectedClass ? (
           <DetallesClase clase={selectedClass} enrolledUsers={enrolledUsers} />
         ) : selectedTournament ? (

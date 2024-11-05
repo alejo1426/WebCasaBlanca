@@ -119,7 +119,7 @@ const FormUpdateTorneos = ({ initialData, onTournamentUpdated }) => {
             name="nombre"
             value={tournamentData.nombre}
             onChange={handleChange}
-            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            className="mt-1 block w-full border-gray-300 text-white pl-2 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
             required
           />
         </div>
@@ -131,7 +131,7 @@ const FormUpdateTorneos = ({ initialData, onTournamentUpdated }) => {
             name="descripcion"
             value={tournamentData.descripcion}
             onChange={handleChange}
-            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            className="mt-1 block w-full border-gray-300 text-white pl-2 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
           />
         </div>
 
@@ -143,7 +143,7 @@ const FormUpdateTorneos = ({ initialData, onTournamentUpdated }) => {
             name="fecha_inicio"
             value={tournamentData.fecha_inicio}
             onChange={handleChange}
-            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            className="mt-1 block w-full border-gray-300 text-white pl-2 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
             required
           />
         </div>
@@ -156,7 +156,7 @@ const FormUpdateTorneos = ({ initialData, onTournamentUpdated }) => {
             name="fecha_fin"
             value={tournamentData.fecha_fin}
             onChange={handleChange}
-            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            className="mt-1 block w-full border-gray-300 text-white pl-2 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
             required
           />
         </div>
@@ -169,7 +169,7 @@ const FormUpdateTorneos = ({ initialData, onTournamentUpdated }) => {
             name="ubicacion"
             value={tournamentData.ubicacion}
             onChange={handleChange}
-            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            className="mt-1 block w-full border-gray-300 text-white pl-2 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
             required
           />
         </div>
@@ -216,7 +216,7 @@ const FormUpdateTorneos = ({ initialData, onTournamentUpdated }) => {
             name="premios"
             value={tournamentData.premios}
             onChange={handleChange}
-            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            className="mt-1 block w-full border-gray-300 text-white pl-2 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
           />
         </div>
 
@@ -228,18 +228,20 @@ const FormUpdateTorneos = ({ initialData, onTournamentUpdated }) => {
             name="cupo_maximo"
             value={tournamentData.cupo_maximo}
             onChange={handleChange}
-            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            className="mt-1 block w-full border-gray-300 text-white pl-2 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
             required
           />
         </div>
 
         {/* Botón de submit */}
-        <button
-          type="submit"
-          className="py-2 px-4 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition"
-        >
-          Actualizar Torneo
-        </button>
+        <div className="flex justify-center">
+          <button
+            type="submit"
+            className="py-2 px-4 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition"
+          >
+            Actualizar Torneo
+          </button>
+        </div>
       </form>
     </>
   );

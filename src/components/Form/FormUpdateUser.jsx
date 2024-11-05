@@ -88,7 +88,7 @@ const UpdateUser = ({ userData, onUserUpdate }) => {
             name="nombres"
             value={formData.nombres}
             onChange={handleInputChange}
-            className="mt-1 block w-full border-gray-300 rounded-md"
+            className="mt-1 block w-full border-gray-300 text-white pl-2 rounded-md"
             required
           />
         </div>
@@ -99,7 +99,7 @@ const UpdateUser = ({ userData, onUserUpdate }) => {
             name="apellidos"
             value={formData.apellidos}
             onChange={handleInputChange}
-            className="mt-1 block w-full border-gray-300 rounded-md"
+            className="mt-1 block w-full border-gray-300 text-white pl-2 rounded-md"
             required
           />
         </div>
@@ -110,7 +110,7 @@ const UpdateUser = ({ userData, onUserUpdate }) => {
             name="correo"
             value={formData.correo}
             onChange={handleInputChange}
-            className="mt-1 block w-full border-gray-300 rounded-md"
+            className="mt-1 block w-full border-gray-300 text-white pl-2 rounded-md"
             required
           />
         </div>
@@ -121,7 +121,7 @@ const UpdateUser = ({ userData, onUserUpdate }) => {
             name="usuario"
             value={formData.usuario}
             onChange={handleInputChange}
-            className="mt-1 block w-full border-gray-300 rounded-md"
+            className="mt-1 block w-full border-gray-300 text-white pl-2 rounded-md"
             required
           />
         </div>
@@ -132,7 +132,7 @@ const UpdateUser = ({ userData, onUserUpdate }) => {
             name="password"
             value={formData.password}
             onChange={handleInputChange}
-            className="mt-1 block w-full border-gray-300 rounded-md"
+            className="mt-1 block w-full border-gray-300 text-white pl-2 rounded-md"
             placeholder="Deja en blanco para mantener la misma contraseña"
           />
         </div>
@@ -143,7 +143,7 @@ const UpdateUser = ({ userData, onUserUpdate }) => {
             name="telefono"
             value={formData.telefono}
             onChange={handleInputChange}
-            className="mt-1 block w-full border-gray-300 rounded-md"
+            className="mt-1 block w-full border-gray-300 text-white pl-2 rounded-md"
           />
         </div>
         <div className="mb-4">
@@ -153,7 +153,7 @@ const UpdateUser = ({ userData, onUserUpdate }) => {
             name="direccion"
             value={formData.direccion}
             onChange={handleInputChange}
-            className="mt-1 block w-full border-gray-300 rounded-md"
+            className="mt-1 block w-full border-gray-300 text-white pl-2 rounded-md"
           />
         </div>
         <div className="mb-4">
@@ -163,7 +163,7 @@ const UpdateUser = ({ userData, onUserUpdate }) => {
             name="edad"
             value={formData.edad}
             onChange={handleInputChange}
-            className="mt-1 block w-full border-gray-300 rounded-md"
+            className="mt-1 block w-full border-gray-300 text-white pl-2 rounded-md"
             min="15"
           />
         </div>

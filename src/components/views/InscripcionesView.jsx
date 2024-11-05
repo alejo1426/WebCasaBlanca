@@ -63,7 +63,7 @@ const InscripcionesView = () => {
 
     const { data: clases, error: clasesError } = await supabase
       .from('clases')
-      .select('id, nombre, descripcion, horario, nivel, fecha_inicio, fecha_fin, usuarios!clases_instructor_id_fkey(nombres, apellidos)')
+      .select('id, nombre, descripcion, horario, nivel, fecha_inicio, fecha_fin, usuarios (nombres, apellidos)')
       .in('id', claseIds);
 
     if (clasesError) throw clasesError;

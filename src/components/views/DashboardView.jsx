@@ -16,7 +16,7 @@ const DashboardView = () => {
     try {
       const { data, error } = await supabase
         .from('clases')
-        .select('id, nombre, descripcion, horario, fecha_inicio, fecha_fin, nivel, instructor_id, usuarios!clases_instructor_id_fkey(nombres, apellidos)')
+        .select('id, nombre, descripcion, horario, fecha_inicio, fecha_fin, nivel, instructor_id, usuarios (nombres, apellidos)')
         .eq('usuarios.rol', 'instructor');
 
       if (error) throw error;
@@ -78,7 +78,7 @@ const DashboardView = () => {
       </div>
 
       {/* Sección de Formulario */}
-      <div className="w-full lg:w-1/3 p-4 lg:p-6 bg-gray-100 rounded-lg shadow-md">
+      <div className="w-full lg:w-1/2 p-4 lg:p-6">
         {selectedItem && selectedType === 'class' && <FormInscripcionClases selectedItem={selectedItem} />}
         {selectedItem && selectedType === 'tournament' && <FormInscripcionTorneos selectedItem={selectedItem} />}
       </div>

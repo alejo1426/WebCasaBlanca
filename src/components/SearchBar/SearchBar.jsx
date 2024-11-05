@@ -16,12 +16,12 @@ const BarraFiltro = ({ onFilterChange, onSearchChange, showFilter = true, showSe
   };
 
   return (
-    <div className="flex items-center space-x-4 mb-4">
+    <div className="flex flex-col lg:flex-row items-center space-y-4 lg:space-y-0 lg:space-x-4 mb-4">
       {showFilter && (
         <select
           value={selectedFilter}
           onChange={handleFilterChange}
-          className="border-gray-300 rounded-md p-2"
+          className="rounded-lg p-2"
         >
           <option value="clases">Clases</option>
           <option value="usuarios">Usuarios</option>
@@ -36,7 +36,7 @@ const BarraFiltro = ({ onFilterChange, onSearchChange, showFilter = true, showSe
           value={searchTerm}
           onChange={handleSearchChange}
           placeholder="Buscar..."
-          className="border-gray-300 rounded-md p-2 w-full"
+          className="border-gray-300 rounded-md p-2 w-full text-white font-bold"
         />
       )}
     </div>

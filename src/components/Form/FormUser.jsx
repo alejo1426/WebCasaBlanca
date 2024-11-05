@@ -75,7 +75,6 @@ const FormUser = ({ onUserAdded }) => {
 
   return (
     <>
-      <ToastContainer />
       <form onSubmit={handleSubmit} className="bg-gray-100 p-6 rounded-lg shadow">
         {/* Nombres */}
         <div className="mb-4">
@@ -85,7 +84,7 @@ const FormUser = ({ onUserAdded }) => {
             name="nombres"
             value={userData.nombres}
             onChange={handleChange}
-            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-white pl-2"
             required
           />
         </div>
@@ -98,7 +97,7 @@ const FormUser = ({ onUserAdded }) => {
             name="apellidos"
             value={userData.apellidos}
             onChange={handleChange}
-            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-white pl-2"
             required
           />
         </div>
@@ -111,7 +110,7 @@ const FormUser = ({ onUserAdded }) => {
             name="correo"
             value={userData.correo}
             onChange={handleChange}
-            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-white pl-2"
             required
           />
         </div>
@@ -124,7 +123,7 @@ const FormUser = ({ onUserAdded }) => {
             name="usuario"
             value={userData.usuario}
             onChange={handleChange}
-            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-white pl-2"
             required
           />
         </div>
@@ -137,7 +136,7 @@ const FormUser = ({ onUserAdded }) => {
             name="password"
             value={userData.password}
             onChange={handleChange}
-            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-white pl-2"
             required
           />
         </div>
@@ -150,7 +149,7 @@ const FormUser = ({ onUserAdded }) => {
             name="telefono"
             value={userData.telefono}
             onChange={handleChange}
-            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-white pl-2"
           />
         </div>
 
@@ -162,7 +161,7 @@ const FormUser = ({ onUserAdded }) => {
             name="direccion"
             value={userData.direccion}
             onChange={handleChange}
-            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-white pl-2"
           />
         </div>
 
@@ -174,7 +173,7 @@ const FormUser = ({ onUserAdded }) => {
             name="edad"
             value={userData.edad}
             onChange={handleChange}
-            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-white pl-2"
             min="15"
             required
           />
@@ -188,6 +187,7 @@ const FormUser = ({ onUserAdded }) => {
           Agregar
         </button>
       </form>
+      <ToastContainer />
     </>
   );
 };

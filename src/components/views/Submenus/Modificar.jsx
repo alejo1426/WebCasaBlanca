@@ -93,7 +93,10 @@ const Modificar = () => {
           {loading ? (
             <p>Cargando resultados...</p>
           ) : (
-            <ul className="mt-4 space-y-2">
+            <ul 
+              className="mt-4 space-y-2 overflow-y-auto" // Habilita el scroll vertical
+              style={{ maxHeight: '400px' }}
+            >
               {results.map((result) => (
                 <li
                   key={result.id}

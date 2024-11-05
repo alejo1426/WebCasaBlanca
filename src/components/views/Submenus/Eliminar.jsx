@@ -96,7 +96,10 @@ const Eliminar = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
         <div className="col-span-1">
           <h3 className="text-xl font-semibold mb-4">Resultados</h3>
-          <ul className="mt-4 space-y-2">
+          <ul 
+            className="mt-4 space-y-2 overflow-y-auto" // Habilita el scroll vertical
+            style={{ maxHeight: '400px' }}
+          >
             {results.map((result) => (
               <li 
                 key={result.id} 
@@ -161,12 +164,16 @@ const Eliminar = () => {
                   </>
                 )}
               </div>
-              <button 
-                className="bg-red-500 text-white py-2 px-4 rounded"
-                onClick={handleDeleteClick}
-              >
-                Eliminar
-              </button>
+
+              {/* Contenedor para centrar el botón */}
+              <div className="flex justify-center mt-4">
+                <button 
+                  className="bg-red-500 text-white py-2 px-4 rounded"
+                  onClick={handleDeleteClick}
+                >
+                  Eliminar
+                </button>
+              </div>
             </div>
           )}
         </div>

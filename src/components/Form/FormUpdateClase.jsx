@@ -158,7 +158,7 @@ const FormUpdateClases = ({ initialData, onUpdate }) => {
             name="nombre"
             value={classData.nombre}
             onChange={handleChange}
-            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            className="mt-1 block w-full border-gray-300 text-white pl-2 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
             required
           />
         </div>
@@ -170,7 +170,7 @@ const FormUpdateClases = ({ initialData, onUpdate }) => {
             name="descripcion"
             value={classData.descripcion}
             onChange={handleChange}
-            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            className="mt-1 block w-full border-gray-300 text-white pl-2 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
           />
         </div>
 
@@ -182,7 +182,7 @@ const FormUpdateClases = ({ initialData, onUpdate }) => {
             name="horario"
             value={classData.horario}
             onChange={handleChange}
-            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            className="mt-1 block w-full border-gray-300 text-white pl-2 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
             placeholder="Ej: 7am - 8am"
             required
           />
@@ -195,7 +195,7 @@ const FormUpdateClases = ({ initialData, onUpdate }) => {
             name="nivel"
             value={classData.nivel}
             onChange={handleChange}
-            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            className="mt-1 block w-full border-gray-300 pl-2 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
             required
           >
             <option value="principiante">Principiante</option>
@@ -211,7 +211,7 @@ const FormUpdateClases = ({ initialData, onUpdate }) => {
             name="instructor_id"
             value={classData.instructor_id}
             onChange={handleChange}
-            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            className="mt-1 block w-full border-gray-300 pl-2 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
             required
           >
             <option value="">Selecciona un instructor</option>
@@ -231,7 +231,7 @@ const FormUpdateClases = ({ initialData, onUpdate }) => {
             name="fecha_inicio"
             value={classData.fecha_inicio}
             onChange={handleChange}
-            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            className="mt-1 block w-full border-gray-300 text-white pl-2 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
             required
           />
         </div>
@@ -244,16 +244,16 @@ const FormUpdateClases = ({ initialData, onUpdate }) => {
             name="fecha_fin"
             value={classData.fecha_fin}
             onChange={handleChange}
-            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            className="mt-1 block w-full border-gray-300 text-white pl-2 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
             required
           />
         </div>
 
         {/* Botón para enviar */}
-        <div>
+        <div className="flex justify-center">
           <button
             type="submit"
-            className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600"
+            className="w-full max-w-xs bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600"
           >
             Modificar Clase
           </button>

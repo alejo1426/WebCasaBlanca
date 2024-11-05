@@ -129,7 +129,7 @@ const FormClases = ({ onClassAdded }) => {
             name="nombre"
             value={classData.nombre}
             onChange={handleChange}
-            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            className="mt-1 block w-full border-gray-300 text-white rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 pl-2"
             required
           />
         </div>
@@ -141,7 +141,7 @@ const FormClases = ({ onClassAdded }) => {
             name="descripcion"
             value={classData.descripcion}
             onChange={handleChange}
-            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            className="mt-1 block w-full border-gray-300 text-white rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 pl-2"
           />
         </div>
 
@@ -153,7 +153,7 @@ const FormClases = ({ onClassAdded }) => {
             name="horario"
             value={classData.horario}
             onChange={handleChange}
-            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            className="mt-1 block w-full border-gray-300 text-white rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 pl-2"
             required
           />
         </div>
@@ -201,7 +201,7 @@ const FormClases = ({ onClassAdded }) => {
             name="fecha_inicio"
             value={classData.fecha_inicio}
             onChange={handleChange}
-            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            className="mt-1 block w-full border-gray-300 text-white rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 pl-2"
             required
           />
         </div>
@@ -214,7 +214,7 @@ const FormClases = ({ onClassAdded }) => {
             name="fecha_fin"
             value={classData.fecha_fin}
             onChange={handleChange}
-            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            className="mt-1 block w-full border-gray-300 text-white rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 pl-2"
             required
           />
         </div>

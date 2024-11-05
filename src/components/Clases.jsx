@@ -58,13 +58,12 @@ const Clases = () => {
               key={clase.id}
               className="clase p-4 border backdrop-blur-xl rounded-lg shadow-lg hover:shadow-[#415a77] hover:bg-gray-200 transition-shadow duration-300"
             >
-              <span className="tag">{clase.tipo}</span>
-              <h2 className="text-2xl text-[#1d3557] font-bold text-center mb-4">{clase.nombre}</h2>
-              <p className="flex items-center"><FaCalendarAlt className="mr-2" /> <strong>Fecha Inicio: </strong> {clase.fecha_inicio}</p>
-              <p className="flex items-center"><FaCalendarAlt className="mr-2" /> <strong>Fecha Fin: </strong> {clase.fecha_fin}</p>
-              <p className="flex items-center"><FaClock className="mr-2" /> <strong>Horario: </strong> {clase.horario}</p>
-              <p className="flex items-center"><FaDollarSign className="mr-2" /> <strong>Precio: </strong> COP {clase.precio_clase.toLocaleString('es-CO')}</p>
-              <p className="flex items-center"><FaBookReader className="mr-2" /><strong>Categoría:</strong> {clase.nivel}</p>
+              <h2 className="text-2xl text-[#1d3557] font-bold text-center mb-4">{clase.nombre || "Nombre no disponible"}</h2>
+              <p className="flex items-center"><FaCalendarAlt className="mr-2" /> <strong>Fecha Inicio: </strong> {clase.fecha_inicio || "Fecha no disponible"}</p>
+              <p className="flex items-center"><FaCalendarAlt className="mr-2" /> <strong>Fecha Fin: </strong> {clase.fecha_fin || "Fecha no disponible"}</p>
+              <p className="flex items-center"><FaClock className="mr-2" /> <strong>Horario: </strong> {clase.horario || "Horario no disponible"}</p>
+              <p className="flex items-center"><FaDollarSign className="mr-2" /> <strong>Precio: </strong> COP {clase.precio_clase ? clase.precio_clase.toLocaleString('es-CO') : 'No disponible'}</p>
+              <p className="flex items-center"><FaBookReader className="mr-2" /><strong>Categoría:</strong> {clase.nivel || "Categoría no disponible"}</p>
               <div className="flex justify-center mt-4">
                 <Link to="/formulario">
                   <button className="clase-button hover:shadow-xl px-4 py-2">Formulario</button>

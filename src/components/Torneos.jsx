@@ -58,12 +58,13 @@ const Torneos = () => {
               key={torneo.id}
               className="torneo p-4 border backdrop-blur-xl rounded-lg shadow-xl hover:shadow-[#415a77] hover:bg-gray-200 transition-shadow duration-300"
             >
-              <h2 className="text-2xl text-[#1d3557] font-bold text-center mb-4">{torneo.nombre}</h2>
-              <p className="flex items-center"><FaCalendarAlt className="mr-2" /> <strong>Fecha: </strong> {torneo.fecha}</p>
-              <p className="flex items-center"><FaClock className="mr-2" /> <strong>Horario: </strong> {torneo.horario}</p>
-              <p className="flex items-center"><FaDollarSign className="mr-2" /> <strong>Precio: </strong> COP {torneo.precio_torneo.toLocaleString('es-CO')}</p>
-              <p className="flex items-center"><FaBookReader className="mr-2" /> <strong>Categoría:</strong> {torneo.categoria}</p>
-              <p className="flex items-center"><FaSortAmountDown className="mr-2" /> <strong>Cupo Máximo: </strong> {torneo.cupo_maximo}</p>
+              <h2 className="text-2xl text-[#1d3557] font-bold text-center mb-4">{torneo.nombre || "Nombre no disponible"}</h2>
+              <p className="flex items-center"><FaCalendarAlt className="mr-2" /> <strong>Fecha Inicio: </strong> {torneo.fecha_inicio || "Fecha no disponible"}</p>
+              <p className="flex items-center"><FaCalendarAlt className="mr-2" /> <strong>Fecha Fin: </strong> {torneo.fecha_fin || "Fecha no disponible"}</p>
+              <p className="flex items-center"><FaClock className="mr-2" /> <strong>Horario: </strong> {torneo.horario || "Horario no disponible"}</p>
+              <p className="flex items-center"><FaDollarSign className="mr-2" /> <strong>Precio: </strong> COP {torneo.precio_torneo ? torneo.precio_torneo.toLocaleString('es-CO') : 'No disponible'}</p>
+              <p className="flex items-center"><FaBookReader className="mr-2" /> <strong>Categoría:</strong> {torneo.categoria || "Categoría no disponible"}</p>
+              <p className="flex items-center"><FaSortAmountDown className="mr-2" /> <strong>Cupo Máximo: </strong> {torneo.cupo_maximo !== undefined ? torneo.cupo_maximo : "Cupo no disponible"}</p>
               <p className="flex items-center"><FaAward className="mr-2" /> <strong>Premios: </strong> {torneo.premios || "No especificado"}</p>
               <div className="flex justify-center mt-4">
                 <Link to="/formulario">

@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { supabase } from '../../../supabaseClient';
 import CardItem from '../Card/CardItem';
 import DetallesClase from '../DetallesResultados/DetallesClases'; 
@@ -21,6 +21,8 @@ const GestorView = () => {
   const [instructorId, setInstructorId] = useState(null);
   const [showResultsPanel, setShowResultsPanel] = useState(false);
   const [finalizedTournaments, setFinalizedTournaments] = useState([]);
+
+  const detallesRef = useRef(null); // Nueva referencia
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -165,6 +167,12 @@ const GestorView = () => {
     </section>
   );
 
+  useEffect(() => {
+    if ((selectedClass || selectedTournament) && (window.innerWidth <= 1024)) {
+      detallesRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [selectedClass, selectedTournament]);
+
   return (
     <div className="flex flex-col lg:flex-row w-full h-full">
       <div className="flex-grow p-4">
@@ -177,7 +185,7 @@ const GestorView = () => {
         </button>
       </div>
 
-      <div className="w-full lg:w-1/2 p-4 lg:p-6">
+      <div ref={detallesRef} className="w-full lg:w-1/2 p-4 lg:p-6 flex justify-center items-center">
         {loadingUsers && <p className="text-center text-lg">Cargando usuarios inscritos...</p>}
         {errorMessage && <p className="text-center text-red-600">{errorMessage}</p>}
         {selectedClass ? (

@@ -77,7 +77,7 @@ const TorneosView = () => {
       </div>
 
       {/* Sección de Detalles del Torneo Seleccionado */}
-      <div className="lg:w-2/3" ref={detailsRef}> {/* Añadimos la referencia aquí */}
+      <div className="lg:w-2/3 flex justify-center items-center" ref={detailsRef}> {/* Añadimos la referencia aquí */}
         {selectedTournament ? (
           <div
             className="bg-gray-100 p-6 rounded-lg shadow-md transition-shadow"

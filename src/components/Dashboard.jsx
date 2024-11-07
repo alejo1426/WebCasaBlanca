@@ -67,7 +67,7 @@ const Dashboard = () => {
       <Sidebar setSelectedView={setSelectedView} setSelectedItem={setSelectedItem} />
       <div className="flex-grow flex flex-col">
         <TopBar selectedView={selectedView} userRole={userRole} /> {/* Pasa el rol a TopBar */}
-        <main className="max-h-screen bg-gray-100 text-gray-800 flex px-4 lg:ml-64 ml-0 rounded-xl shadow overflow-y-auto">
+        <main className="max-h-screen h-full bg-gray-100 text-gray-800 flex px-4 lg:ml-64 ml-0 rounded-xl shadow overflow-y-auto">
           <div className="flex-grow p-4">{renderSelectedView()}</div>
         </main>
       </div>

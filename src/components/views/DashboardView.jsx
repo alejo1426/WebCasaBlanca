@@ -90,7 +90,7 @@ const DashboardView = () => {
       </div>
 
       {/* Sección de Formulario */}
-      <div ref={formSectionRef} className="w-full lg:w-1/2 p-4 lg:p-6">
+      <div ref={formSectionRef} className="w-full lg:w-1/2 p-4 lg:p-6 flex justify-center items-center">
         {selectedItem && selectedType === 'class' && <FormInscripcionClases selectedItem={selectedItem} />}
         {selectedItem && selectedType === 'tournament' && <FormInscripcionTorneos selectedItem={selectedItem} />}
       </div>

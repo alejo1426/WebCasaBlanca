@@ -42,11 +42,11 @@ const GestorView = () => {
     try {
       const { data, error } = await supabase
         .from('clases')
-        .select('*')
+        .select('*, usuarios(nombres, apellidos)')
         .eq('instructor_id', instructorId);
-
+  
       if (error) throw error;
-
+  
       setResultados(data);
     } catch (error) {
       const errorMsg = error.message || 'Error al cargar las clases.';

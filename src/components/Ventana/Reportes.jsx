@@ -1,10 +1,11 @@
 import '../../css/Report.css';
 import { useState } from 'react';
 import { generateUsuariosPDF } from '../../Reports/ReporteUsuarios';
-import { generateTorneosPDF } from '../../Reports/ReporteTorneos';
-import { generateClasesPDF } from '../../Reports/ReporteClases';
+import { generateTorneosPDF, generateMisTorneosPDF } from '../../Reports/ReporteTorneos';
+import { generateClasesPDF, generateMisClasesPDF } from '../../Reports/ReporteClases';
 
-const ReportModal = ({ onClose, role }) => {
+const ReportModal = ({ onClose, role, Id }) => {
+  console.log('User ID:', Id); // Agregar instructorId como prop
   const options = role === 'admin'
     ? [
         { label: 'Usuarios', value: 'usuarios' },
@@ -32,26 +33,33 @@ const ReportModal = ({ onClose, role }) => {
     for (const option of selectedOptions) {
       switch (option) {
         case 'usuarios':
-          await generateUsuariosPDF(); // Ahora es una función asincrónica
+          await generateUsuariosPDF(Id);
           break;
         case 'torneos':
-          await generateTorneosPDF(); // Asegúrate de definir también esta función
+          await generateTorneosPDF(Id);
           break;
         case 'clases':
-          await generateClasesPDF(); // Asegúrate de definir también esta función
+          await generateClasesPDF(Id);
           break;
         case 'Misclases':
-          await generateMisClasesPDF(); // Asegúrate de definir también esta función
+          if (Id) {
+            await generateMisClasesPDF(Id); // Pasar el ID del instructor a la función
+          } else {
+            console.error('Instructor ID is missing');
+          }
           break;
         case 'Mistorneos':
-          await generateMisTorneosPDF(); // Asegúrate de definir también esta función
+          if (Id) {
+            await generateMisTorneosPDF(Id); // Pasar el ID del instructor a la función
+          } else {
+            console.error('Instructor ID is missing');
+          }
           break;
         default:
           break;
       }
     }
   };
-  
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">

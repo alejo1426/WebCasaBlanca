@@ -1,8 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { supabase } from '../../../supabaseClient';
 import FormInscripcionClases from '../Form/FormInscripcionClases';
 import FormInscripcionTorneos from '../Form/FormInscripcionTorneos';
 import CardItem from '../Card/CardItem';
+
+const MOBILE_WIDTH_THRESHOLD = 768; // Definimos el ancho móvil como constante
 
 const DashboardView = () => {
   const [classes, setClasses] = useState([]);
@@ -11,6 +13,8 @@ const DashboardView = () => {
   const [selectedType, setSelectedType] = useState(null);
   const [loadingClasses, setLoadingClasses] = useState(true);
   const [loadingTournaments, setLoadingTournaments] = useState(true);
+
+  const formSectionRef = useRef(null);
 
   const fetchClassesWithInstructors = async () => {
     try {
@@ -53,9 +57,16 @@ const DashboardView = () => {
     setSelectedType(type);
   };
 
+  useEffect(() => {
+    // Solo desplazarse si el elemento está seleccionado y la pantalla es móvil
+    if (selectedItem && selectedType && window.innerWidth <= MOBILE_WIDTH_THRESHOLD) {
+      formSectionRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [selectedItem, selectedType]);
+
   const renderSection = (title, loading, data, type) => (
     <section className="mb-8">
-      <h1 className="text-2xl font-bold mb-4">{title}</h1>
+      <h1 className="text-2xl font-bold mb-4 text-center">{title}</h1>
       {loading ? (
         <p className="text-center text-lg">Cargando {title.toLowerCase()}...</p>
       ) : data.length === 0 ? (
@@ -78,7 +89,7 @@ const DashboardView = () => {
       </div>
 
       {/* Sección de Formulario */}
-      <div className="w-full lg:w-1/2 p-4 lg:p-6">
+      <div ref={formSectionRef} className="w-full lg:w-1/2 p-4 lg:p-6">
         {selectedItem && selectedType === 'class' && <FormInscripcionClases selectedItem={selectedItem} />}
         {selectedItem && selectedType === 'tournament' && <FormInscripcionTorneos selectedItem={selectedItem} />}
       </div>

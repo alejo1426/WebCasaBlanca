@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import '../../css/Report.css';
 import { useState } from 'react';
 import { generateUsuariosPDF } from '../../Reports/ReporteUsuarios';

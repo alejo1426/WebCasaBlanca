@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import '../App.css';
 import { useState, useEffect } from 'react';
 import { jwtDecode } from 'jwt-decode'; // Asegúrate de que jwt-decode esté instalado
@@ -53,7 +54,7 @@ const TopBar = ({ selectedView }) => {
     <>
       <div className="Dashboard-text h-16 bg-[#1d3557] flex items-center justify-between px-4 lg:ml-64 ml-0 rounded-xl shadow">
         {/* Contenedor para el rol y título */}
-        <div className="flex flex-col lg:flex-row items-center w-full">
+        <div className="flex flex-col lg:flex-row items-center w-full -z-0">
           {/* Rol del usuario (visible solo en resoluciones de escritorio y tablet) */}
           {userRole && (
             <span className="text-white text-sm lg:text-lg mb-2 lg:mb-0 lg:mr-4">{`Rol: ${userRole}`}</span>

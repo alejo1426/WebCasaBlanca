@@ -3,10 +3,12 @@ import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 import logo from '../assets/logo.jpeg';
+import { GiHamburgerMenu } from 'react-icons/gi'; // Icono de tres rayas
+import { IoClose } from 'react-icons/io5';  // Icono de X
 
 const Sidebar = ({ setSelectedView, setSelectedItem }) => {
-  const [active, setActive] = useState(null); // Inicialmente null, sin submenús abiertos
-  const [selectedSubItem, setSelectedSubItem] = useState('Agregar'); // Estado para el submenú seleccionado
+  const [active, setActive] = useState(null); 
+  const [selectedSubItem, setSelectedSubItem] = useState('Agregar');
   const subMenuRefs = useRef({});
   const [heights, setHeights] = useState({});
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -23,12 +25,10 @@ const Sidebar = ({ setSelectedView, setSelectedItem }) => {
         console.error("Error decoding token:", error);
       }
     }
-    // Asegúrate de que active esté en null al cargar
     setActive(null);
   }, []);
 
   useEffect(() => {
-    // Establece las alturas de los submenús según el estado activo
     const newHeights = Object.fromEntries(
       Object.keys(subMenuRefs.current).map((key) => [
         key,
@@ -39,7 +39,7 @@ const Sidebar = ({ setSelectedView, setSelectedItem }) => {
   }, [active]);
 
   const handleToggle = (item) => {
-    setActive((prev) => (prev === item ? null : item)); // Alterna el submenú al hacer clic
+    setActive((prev) => (prev === item ? null : item)); 
   };
 
   const handleCloseSidebar = (e) => {
@@ -62,18 +62,16 @@ const Sidebar = ({ setSelectedView, setSelectedItem }) => {
     { name: 'Inscripciones', icon: 'icons/inscripcion.png' },
     { name: 'Perfil', icon: 'icons/persona.png' },
     { name: 'Torneos', icon: 'icons/torneo.png' },
-    { name: 'Gestion', icon: 'icons/gestion.png' }, // Nueva categoría
+    { name: 'Gestion', icon: 'icons/gestion.png' }, 
     {
       name: 'Ajustes',
       icon: 'icons/gear.png',
       subMenu: ['Agregar', 'Modificar', 'Eliminar'],
     },
   ].filter(item => {
-    // Filtrar "Ajustes" solo si el rol es admin
     if (item.name === 'Ajustes' && role !== 'admin') return false;
-    // Filtrar "Resultados" solo si es visible
     if (item.name === 'Gestion' && role !== 'instructor') return false;
-    return true; // Mostrar otros elementos
+    return true; 
   });
 
   const handleSelect = (name) => {
@@ -81,24 +79,29 @@ const Sidebar = ({ setSelectedView, setSelectedItem }) => {
       Dashboard: 'dashboard',
       Inscripciones: 'inscripciones',
       Torneos: 'torneos',
-      Gestion: 'gestion', // Mapeo de Resultados
+      Gestion: 'gestion',
       Perfil: 'perfil',
       Ajustes: 'ajustes',
     };
     setSelectedView(views[name]);
     if (name === 'Ajustes') {
-      setSelectedSubItem('Agregar'); // Establecer "Agregar" como el submenú seleccionado por defecto
-      setSelectedItem('agregar'); // Cambiar el ítem seleccionado en ajustes a "agregar"
+      setSelectedSubItem('Agregar');
+      setSelectedItem('agregar');
     }
   };
 
   return (
     <>
       <button
-        className="lg:hidden fixed top-4 left-4 z-50 bg-[#b7bbc0] text-white p-3 rounded-full shadow-md"
+        className="lg:hidden fixed top-4 left-4 z-50 bg-[#0b448a] text-white p-3 rounded-full shadow-md"
         onClick={() => setIsSidebarOpen((prev) => !prev)}
       >
-        <i className="ai-menu text-xl"></i>
+        {/* Cambia el ícono entre tres rayas y X */}
+        {isSidebarOpen ? (
+          <IoClose className="text-xl" />
+        ) : (
+          <GiHamburgerMenu className="text-xl" />
+        )}
       </button>
 
       <aside
@@ -106,10 +109,10 @@ const Sidebar = ({ setSelectedView, setSelectedItem }) => {
           isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
         } lg:translate-x-0 lg:inset-y-0 lg:fixed lg:left-0 lg:top-0 z-40 flex flex-col`}
         style={{
-          backgroundImage: `url(${logo})`, // Imagen de fondo
-          backgroundSize: '90%', // Ajusta el tamaño de la imagen al 50%
-          backgroundPosition: 'center 75%', // Posición en la parte inferior derecha
-          backgroundRepeat: 'no-repeat', // No repetir la imagen
+          backgroundImage: `url(${logo})`,
+          backgroundSize: '90%',
+          backgroundPosition: 'center 75%',
+          backgroundRepeat: 'no-repeat',
         }}
       >
         <header className="flex items-center h-18 pb-2 border-b border-black"></header>
@@ -146,7 +149,7 @@ const Sidebar = ({ setSelectedView, setSelectedItem }) => {
                 {subMenu && (
                   <div
                     ref={(el) => (subMenuRefs.current[name] = el)}
-                    style={{ height: heights[name], zIndex: '2' }} // Asegúrate de que el submenú esté por encima
+                    style={{ height: heights[name], zIndex: '2' }}
                     className="sub-menu bg-[rgba(183,187,192,0.7)] shadow-md rounded-md overflow-hidden transition-height duration-300 ease-in-out"
                   >
                     <ul className="list-none p-0 m-0">
@@ -183,7 +186,6 @@ const Sidebar = ({ setSelectedView, setSelectedItem }) => {
           id="overlay"
           className="fixed inset-0 bg-black bg-opacity-50 z-30 lg:hidden"
           onClick={handleCloseSidebar}
-          style={{ pointerEvents: 'all' }} // Asegúrate de que el overlay no intercepte clics en la sidebar
         ></div>
       )}
     </>

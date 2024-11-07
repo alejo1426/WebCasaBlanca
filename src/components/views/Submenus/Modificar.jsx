@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react'; // Importar useRef
 import { supabase } from '../../../../supabaseClient';
 import BarraFiltro from '../../SearchBar/SearchBar';
 import FormUpdateClases from '../../Form/FormUpdateClase';
@@ -11,8 +11,10 @@ const Modificar = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [results, setResults] = useState([]);
   const [selectedData, setSelectedData] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  // Referencia al contenedor de detalles
+  const detailsRef = useRef(null);
 
   const fetchResults = async (filter, search) => {
     setLoading(true);
@@ -76,7 +78,11 @@ const Modificar = () => {
 
   const handleDataClick = (data) => {
     setSelectedData(data);
-    setIsModalOpen(true); // Asegúrate de abrir el modal al hacer clic en el elemento
+    
+    // Desplazarse a la sección de detalles
+    if (detailsRef.current) {
+      detailsRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   return (
@@ -111,7 +117,7 @@ const Modificar = () => {
           )}
         </div>
 
-        <div className="col-span-1">
+        <div className="col-span-1" ref={detailsRef}> {/* Añadimos la referencia aquí */}
           {selectedData && (
             <div className="shadow-lg shadow-blue-500 p-4 rounded-md transition-transform duration-300 hover:shadow-blue-700 hover:scale-105">
               <h4 className="text-lg font-semibold">Modificar {filterType}</h4>

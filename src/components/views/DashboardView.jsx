@@ -4,7 +4,8 @@ import FormInscripcionClases from '../Form/FormInscripcionClases';
 import FormInscripcionTorneos from '../Form/FormInscripcionTorneos';
 import CardItem from '../Card/CardItem';
 
-const MOBILE_WIDTH_THRESHOLD = 768; // Definimos el ancho móvil como constante
+const ResolucionMobile = 768; // Definimos el ancho móvil como constante
+const ResolucionTablet = 1024; // Umbral de 1024px para tabletas
 
 const DashboardView = () => {
   const [classes, setClasses] = useState([]);
@@ -58,8 +59,8 @@ const DashboardView = () => {
   };
 
   useEffect(() => {
-    // Solo desplazarse si el elemento está seleccionado y la pantalla es móvil
-    if (selectedItem && selectedType && window.innerWidth <= MOBILE_WIDTH_THRESHOLD) {
+    // Desplazarse si la pantalla es móvil o tablet (<= 1024px) y un elemento está seleccionado
+    if (selectedItem && selectedType && (window.innerWidth <= ResolucionMobile || window.innerWidth <= ResolucionTablet)) {
       formSectionRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   }, [selectedItem, selectedType]);

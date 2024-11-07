@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { supabase } from '../../../../supabaseClient';
 import BarraFiltro from '../../SearchBar/SearchBar';
 import ModalConfirmacion from '../../Ventana/ModalConfirmacion';
@@ -12,6 +12,9 @@ const Eliminar = () => {
   const [results, setResults] = useState([]);
   const [selectedItem, setSelectedItem] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // Referencia para la sección de detalles
+  const detallesRef = useRef(null);
 
   const fetchResults = async () => {
     let query = supabase.from(filterType).select('*');
@@ -35,7 +38,7 @@ const Eliminar = () => {
   const fetchInstructorName = async (id) => {
     const { data, error } = await supabase
       .from('clases')
-      .select('usuarios!clases_instructor_id_fkey(nombres, apellidos)')
+      .select('usuarios (nombres, apellidos)')
       .eq('id', id)
       .single();
 
@@ -87,6 +90,13 @@ const Eliminar = () => {
     }
   };
 
+  // Desplazarse automáticamente a la sección de detalles al seleccionar un ítem
+  useEffect(() => {
+    if (selectedItem && detallesRef.current) {
+      detallesRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [selectedItem]);
+
   return (
     <div className="container mx-auto p-6">
       <h2 className="text-2xl font-bold mb-6">Eliminar {filterType}</h2>
@@ -114,7 +124,7 @@ const Eliminar = () => {
         </div>
 
         {/* Información detallada del elemento seleccionado */}
-        <div className="col-span-1">
+        <div ref={detallesRef} className="col-span-1">
           {selectedItem && (
             <div className="shadow-lg shadow-blue-500 p-4 rounded-md transition-transform duration-300 hover:shadow-blue-700 hover:scale-105">
               <h4 className="text-lg font-semibold mb-2">Detalles</h4>

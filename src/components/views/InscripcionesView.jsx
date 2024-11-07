@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react'; // Añadimos useRef
 import { supabase } from '../../../supabaseClient';
 import { jwtDecode } from 'jwt-decode';
 import CardItem from '../Card/CardItem';
@@ -17,6 +17,9 @@ const InscripcionesView = () => {
   const [selectedTorneo, setSelectedTorneo] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false); // Estado para el modal
   const [inscripcionToDelete, setInscripcionToDelete] = useState(null); // Inscripción a eliminar
+
+  // Referencia para la sección de detalles
+  const detallesRef = useRef(null);
 
   useEffect(() => {
     const fetchInscripciones = async () => {
@@ -159,6 +162,13 @@ const InscripcionesView = () => {
     }
   };
 
+  // Desplazarse automáticamente a la sección de detalles al seleccionar una clase o torneo
+  useEffect(() => {
+    if ((selectedClase || selectedTorneo) && detallesRef.current) {
+      detallesRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [selectedClase, selectedTorneo]);
+
   return (
     <div className="flex-grow p-6 flex flex-col md:flex-row">
       <div className="flex-1">
@@ -215,7 +225,10 @@ const InscripcionesView = () => {
         )}
       </div>
 
-      <div className="w-full md:w-1/3 md:ml-6 mt-6 md:mt-0">
+      <div 
+        className="w-full md:w-1/3 md:ml-6 mt-6 md:mt-0"
+        ref={detallesRef} // Referencia a la sección de detalles
+      >
         {selectedClase ? (
           <section 
             className="bg-white p-6 rounded-lg transition-shadow mb-4 md:mb-0"

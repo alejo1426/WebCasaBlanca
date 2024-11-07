@@ -249,7 +249,7 @@ const FormUpdateUser = ({ initialData, onUpdate }) => {
         <div className="flex justify-center">
           <button
             type="submit"
-            className="py-2 px-4 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition"
+            className="w-full py-2 px-4 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition"
           >
             Actualizar Usuario
           </button>

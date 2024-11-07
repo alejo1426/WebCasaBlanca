@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { supabase } from '../../../supabaseClient';
 import CardItem from '../Card/CardItem';
 import DetallesClase from '../DetallesResultados/DetallesClases'; 
@@ -6,7 +6,7 @@ import DetallesTorneo from '../DetallesResultados/DetallesTorneos';
 import { jwtDecode } from 'jwt-decode';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import ResultadosPanel from '../Ventana/ResultadosPosiciones'; // Asegúrate de importar el componente modificado
+import ResultadosPanel from '../Ventana/ResultadosPosiciones';
 
 const GestorView = () => {
   const [resultados, setResultados] = useState([]);
@@ -30,14 +30,7 @@ const GestorView = () => {
     }
   }, []);
 
-  useEffect(() => {
-    if (instructorId) {
-      fetchClasses();
-      fetchTournaments();
-    }
-  }, [instructorId]);
-
-  const fetchClasses = async () => {
+  const fetchClasses = useCallback(async () => {
     setLoadingClasses(true);
     try {
       const { data, error } = await supabase
@@ -55,9 +48,9 @@ const GestorView = () => {
     } finally {
       setLoadingClasses(false);
     }
-  };
+  }, [instructorId]);
 
-  const fetchTournaments = async () => {
+  const fetchTournaments = useCallback(async () => {
     setLoadingTournaments(true);
     try {
       const { data, error } = await supabase
@@ -77,7 +70,14 @@ const GestorView = () => {
     } finally {
       setLoadingTournaments(false);
     }
-  };
+  }, [instructorId]);
+
+  useEffect(() => {
+    if (instructorId) {
+      fetchClasses();
+      fetchTournaments();
+    }
+  }, [instructorId, fetchClasses, fetchTournaments]);
 
   const fetchEnrolledUsers = async (id, type) => {
     setLoadingUsers(true);
@@ -128,16 +128,15 @@ const GestorView = () => {
 
   const savePositions = async (torneoId, positions) => {
     try {
-      // Asegúrate de ajustar el formato según la estructura de tu tabla de posiciones
       const positionData = positions.map((usuario_id, index) => ({
         torneo_id: torneoId,
         usuario_id,
-        posicion: index + 1 // Asigna la posición basada en el índice
+        posicion: index + 1
       }));
 
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from('posiciones')
-        .upsert(positionData); // Inserta o actualiza los datos
+        .upsert(positionData);
 
       if (error) throw error;
 
@@ -173,12 +172,14 @@ const GestorView = () => {
         {renderSection('Mis Torneos', loadingTournaments, torneos, 'tournament', handleTournamentSelect)}
         <button 
           onClick={toggleResultsPanel} 
-          className="bg-blue-600 text-white px-4 py-2 rounded mx-auto block mb-4"> {/* mx-auto para centrar en un contenedor de bloque */}
+          className="bg-blue-600 text-white px-4 py-2 rounded mx-auto block mb-4">
           Resultados
         </button>
       </div>
 
       <div className="w-full lg:w-1/2 p-4 lg:p-6">
+        {loadingUsers && <p className="text-center text-lg">Cargando usuarios inscritos...</p>}
+        {errorMessage && <p className="text-center text-red-600">{errorMessage}</p>}
         {selectedClass ? (
           <DetallesClase clase={selectedClass} enrolledUsers={enrolledUsers} />
         ) : selectedTournament ? (
@@ -194,7 +195,7 @@ const GestorView = () => {
         <ResultadosPanel 
           onClose={toggleResultsPanel} 
           tournaments={finalizedTournaments} 
-          onSavePositions={savePositions} // Cambiar de onSavePodium a onSavePositions
+          onSavePositions={savePositions}
         />
       )}
     </div>

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react'; // Añadimos useRef
 import { supabase } from '../../../supabaseClient';
 import DetallesTorneo from '../DetallesViewTorneos/DetallesTorneo';
 import DetallesCardTorneos from '../DetallesViewTorneos/DetalleTorneosDisponibles'; // Asegúrate de la ruta correcta
@@ -8,6 +8,9 @@ const TorneosView = () => {
   const [selectedTournament, setSelectedTournament] = useState(null);
   const [participants, setParticipants] = useState([]);
   const [positions, setPositions] = useState([]);
+
+  // Referencia para la sección de detalles del torneo
+  const detailsRef = useRef(null);
 
   useEffect(() => {
     fetchTournaments();
@@ -46,6 +49,11 @@ const TorneosView = () => {
         setPositions(data);
       }
     }
+
+    // Desplazarse a la sección de detalles cuando se selecciona un torneo
+    if (detailsRef.current) {
+      detailsRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   return (
@@ -69,7 +77,7 @@ const TorneosView = () => {
       </div>
 
       {/* Sección de Detalles del Torneo Seleccionado */}
-      <div className="lg:w-2/3">
+      <div className="lg:w-2/3" ref={detailsRef}> {/* Añadimos la referencia aquí */}
         {selectedTournament ? (
           <div
             className="bg-gray-100 p-6 rounded-lg shadow-md transition-shadow"

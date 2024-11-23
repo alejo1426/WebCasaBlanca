@@ -11,7 +11,8 @@ const FormInscripcionTorneos = ({ selectedItem }) => {
     fecha_inicio, 
     fecha_fin, 
     ubicacion, 
-    categoria, 
+    categoria,
+    precio_torneo, 
     premios, 
     cupo_maximo, 
     id: torneoId 
@@ -106,6 +107,7 @@ const FormInscripcionTorneos = ({ selectedItem }) => {
         <p><strong>Fecha de Fin:</strong> {formattedFechaFin}</p>
         <p><strong>Ubicación:</strong> {ubicacion}</p>
         <p><strong>Categoría:</strong> {categoria}</p>
+        <p><strong>Precio:</strong> COP {precio_torneo ? precio_torneo.toLocaleString('es-CO') : 'No disponible'}</p>
         <p><strong>Premios:</strong> {premios}</p>
         <p><strong>Cupo Máximo:</strong> {cupo_maximo}</p>
       </div>

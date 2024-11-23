@@ -21,7 +21,7 @@ const DashboardView = () => {
     try {
       const { data, error } = await supabase
         .from('clases')
-        .select('id, nombre, descripcion, horario, fecha_inicio, fecha_fin, nivel, instructor_id, usuarios (nombres, apellidos)')
+        .select('id, nombre, descripcion, horario, fecha_inicio, fecha_fin, precio_clase, nivel, instructor_id, usuarios (nombres, apellidos)')
         .eq('usuarios.rol', 'instructor');
 
       if (error) throw error;
@@ -37,7 +37,7 @@ const DashboardView = () => {
     try {
       const { data, error } = await supabase
         .from('torneos')
-        .select('id, nombre, descripcion, fecha_inicio, fecha_fin, categoria, cupo_maximo, ubicacion, premios');
+        .select('id, nombre, descripcion, fecha_inicio, fecha_fin, categoria, precio_torneo, cupo_maximo, ubicacion, premios');
 
       if (error) throw error;
       setTournaments(data);

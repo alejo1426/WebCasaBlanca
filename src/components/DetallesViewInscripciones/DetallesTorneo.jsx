@@ -14,6 +14,7 @@ const DetallesTorneo = ({ torneo, onDelete }) => {
       <p className="text-gray-600"><strong>Premios:</strong> <span className="font-semibold">{torneo.premios}</span></p>
       <p className="text-gray-600"><strong>Cupo Máximo:</strong> <span className="font-semibold">{torneo.cupo_maximo}</span></p>
       <p className="text-gray-600"><strong>Fecha de Inscripción:</strong> <span className="font-semibold">{formatDate(torneo.fecha_inscripcion)}</span></p>
+      <p className="text-gray-600"><strong>Precio: </strong> COP {torneo.precio_torneo ? torneo.precio_torneo.toLocaleString('es-CO') : 'No disponible'}</p>
       <button 
         onClick={onDelete} 
         className="mt-4 w-full py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors"

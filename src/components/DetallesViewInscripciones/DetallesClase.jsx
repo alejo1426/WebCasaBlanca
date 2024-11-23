@@ -13,6 +13,7 @@ const DetallesClase = ({ clase, onDelete }) => {
       <p className="text-gray-600"><strong>Fecha de Inicio:</strong> <span className="font-semibold">{formatDate(clase.fecha_inicio)}</span></p>
       <p className="text-gray-600"><strong>Fecha de Fin:</strong> <span className="font-semibold">{formatDate(clase.fecha_fin)}</span></p>
       <p className="text-gray-600"><strong>Fecha de Inscripción:</strong> <span className="font-semibold">{formatDate(clase.fecha_inscripcion)}</span></p>
+      <p className="text-gray-600"><strong>Precio: </strong> COP {clase.precio_clase ? clase.precio_clase.toLocaleString('es-CO') : 'No disponible'}</p>
       <button 
         onClick={onDelete} 
         className="mt-4 w-full py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors"

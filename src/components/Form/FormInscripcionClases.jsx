@@ -12,7 +12,8 @@ const FormInscripcionClases = ({ selectedItem }) => {
     horario, 
     nivel: nivelClase, 
     fecha_inicio, 
-    fecha_fin, 
+    fecha_fin,
+    precio_clase, 
     id: claseId 
   } = selectedItem;
 
@@ -106,6 +107,7 @@ const FormInscripcionClases = ({ selectedItem }) => {
         <p><strong>Nivel:</strong> {nivelClase}</p>
         <p><strong>Fecha de Inicio:</strong> {formattedFechaInicio}</p>
         <p><strong>Fecha de Fin:</strong> {formattedFechaFin}</p>
+        <p><strong>Precio:</strong> COP {precio_clase ? precio_clase.toLocaleString('es-CO') : 'No disponible'}</p>
       </div>
 
       <button 

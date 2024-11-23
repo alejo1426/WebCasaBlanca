@@ -157,7 +157,7 @@ const Sidebar = ({ setSelectedView, setSelectedItem }) => {
                         <li key={subItem}>
                           <button
                             className={`w-full text-left pl-12 py-2 font-semibold text-black hover:bg-[#457b9d] ${
-                              selectedSubItem === subItem ? 'bg-[#68b9eb] text-white' : ''
+                              selectedSubItem === subItem ? 'bg-[#457b9d] text-white' : ''
                             }`}
                             onClick={() => handleSubItemSelect(subItem)}
                           >

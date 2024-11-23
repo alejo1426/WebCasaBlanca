@@ -66,7 +66,7 @@ const InscripcionesView = () => {
 
     const { data: clases, error: clasesError } = await supabase
       .from('clases')
-      .select('id, nombre, descripcion, horario, nivel, fecha_inicio, fecha_fin, usuarios (nombres, apellidos)')
+      .select('id, nombre, descripcion, horario, nivel, fecha_inicio, fecha_fin, precio_clase, usuarios (nombres, apellidos)')
       .in('id', claseIds);
 
     if (clasesError) throw clasesError;
@@ -95,7 +95,7 @@ const InscripcionesView = () => {
 
     const { data: torneos, error: torneosError } = await supabase
       .from('torneos')
-      .select('id, nombre, descripcion, fecha_inicio, fecha_fin, ubicacion, categoria, premios, cupo_maximo')
+      .select('id, nombre, descripcion, fecha_inicio, fecha_fin, ubicacion, categoria, precio_torneo, premios, cupo_maximo')
       .in('id', torneoIds);
 
     if (torneosError) throw torneosError;

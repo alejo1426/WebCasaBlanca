@@ -29,7 +29,7 @@ const Modificar = () => {
           query = supabase.from('usuarios');
           break;
         case 'torneos':
-          query = supabase.from('torneos').select('id, nombre, descripcion, fecha_inicio, fecha_fin, ubicacion, categoria, premios, cupo_maximo, instructor_id');
+          query = supabase.from('torneos').select('id, nombre, descripcion, fecha_inicio, fecha_fin, ubicacion, categoria, premios, precio_torneo, cupo_maximo, instructor_id');
           break;
         case 'canchas':
           query = supabase.from('canchas');
@@ -70,6 +70,7 @@ const Modificar = () => {
 
   const handleFilterChange = (selectedFilter) => {
     setFilterType(selectedFilter);
+    setSelectedData(null); // Reinicia el dato seleccionado al cambiar la categoría
   };
 
   const handleSearchChange = (searchTerm) => {
@@ -100,13 +101,13 @@ const Modificar = () => {
             <p>Cargando resultados...</p>
           ) : (
             <ul 
-              className="mt-4 space-y-2 overflow-y-auto" // Habilita el scroll vertical
+              className="rounded-md mt-4 space-y-2 overflow-y-auto" // Habilita el scroll vertical
               style={{ maxHeight: '400px' }}
             >
               {results.map((result) => (
                 <li
                   key={result.id}
-                  className={`border p-2 rounded-md shadow cursor-pointer transition-transform duration-300 
+                  className={`border font-semibold p-2 text-center bg-gray-100 border-black rounded-md shadow cursor-pointer transition-transform duration-300 
                               ${selectedData?.id === result.id ? 'bg-gray-200' : 'hover:scale-105 hover:bg-gray-200'}`}
                   onClick={() => handleDataClick(result)}
                 >
@@ -119,8 +120,8 @@ const Modificar = () => {
 
         <div className="col-span-1" ref={detailsRef}> {/* Añadimos la referencia aquí */}
           {selectedData && (
-            <div className="shadow-lg shadow-blue-500 p-4 rounded-md transition-transform duration-300 hover:shadow-blue-700 hover:scale-105">
-              <h4 className="text-lg font-semibold">Modificar {filterType}</h4>
+            <div className="shadow-lg shadow-blue-500 p-4 bg-gray-200 rounded-md transition-transform duration-300 hover:shadow-blue-700 hover:scale-105">
+              <h4 className="text-lg text-center font-semibold">Modificar {filterType}</h4>
 
               {filterType === 'clases' && (
                 <FormUpdateClases

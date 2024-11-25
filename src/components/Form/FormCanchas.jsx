@@ -106,8 +106,8 @@ const FormCanchas = ({ onCanchaAdded }) => {
         </div>
         <button
           type="submit"
-          className="py-2 px-4 bg-blue-500 text-white rounded-md hover:bg-blue-600"
-        >
+          className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          >
           Agregar Cancha
         </button>
       </form>

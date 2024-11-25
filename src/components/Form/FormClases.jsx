@@ -13,25 +13,41 @@ const FormClases = ({ onClassAdded }) => {
     instructor_id: '',
     fecha_inicio: '',
     fecha_fin: '',
+    precio_clase: '',
+    // El campo cancha_id ya no va aquí
   });
 
   const [instructors, setInstructors] = useState([]);
+  const [canchas, setCanchas] = useState([]);
 
+  // Obtener instructores y canchas
   useEffect(() => {
-    const fetchInstructors = async () => {
-      const { data: fetchedInstructors, error } = await supabase
+    const fetchInstructorsAndCanchas = async () => {
+      // Obtener instructores
+      const { data: fetchedInstructors, error: instructorError } = await supabase
         .from('usuarios')
         .select('id, nombres, apellidos')
         .eq('rol', 'instructor');
-
-      if (error) {
-        console.error('Error fetching instructors:', error);
+      
+      if (instructorError) {
+        console.error('Error fetching instructors:', instructorError);
       } else {
         setInstructors(fetchedInstructors);
       }
+
+      // Obtener canchas
+      const { data: fetchedCanchas, error: canchaError } = await supabase
+        .from('canchas')
+        .select('id, nombre');
+      
+      if (canchaError) {
+        console.error('Error fetching canchas:', canchaError);
+      } else {
+        setCanchas(fetchedCanchas);
+      }
     };
 
-    fetchInstructors();
+    fetchInstructorsAndCanchas();
   }, []);
 
   const handleChange = (e) => {
@@ -71,7 +87,7 @@ const FormClases = ({ onClassAdded }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!Object.values(classData).every((field) => field !== '')) {
       toast.error('Todos los campos deben estar llenos.');
       return;
@@ -92,30 +108,60 @@ const FormClases = ({ onClassAdded }) => {
       return;
     }
 
-    const { data, error } = await supabase
+    // Insertar clase sin cancha_id
+    const { data: insertedClass, error: insertClassError } = await supabase
       .from('clases')
-      .insert([classData]);
+      .insert([{
+        nombre: classData.nombre,
+        descripcion: classData.descripcion,
+        horario: classData.horario,
+        nivel: classData.nivel,
+        instructor_id: classData.instructor_id,
+        fecha_inicio: classData.fecha_inicio,
+        fecha_fin: classData.fecha_fin,
+        precio_clase: classData.precio_clase,
+      }])
+      .select('id'); // Obtener el ID de la clase recién insertada
 
-    if (error) {
-      console.error('Error inserting class:', error);
+    if (insertClassError) {
+      console.error('Error inserting class:', insertClassError);
       toast.error('Error al agregar la clase.');
-    } else {
-      console.log('Clase agregada:', data);
-      toast.success('Clase agregada con éxito.');
-
-      // Llamar a la función para recargar los datos
-      onClassAdded();
-
-      setClassData({
-        nombre: '',
-        descripcion: '',
-        horario: '',
-        nivel: 'principiante',
-        instructor_id: '',
-        fecha_inicio: '',
-        fecha_fin: '',
-      });
+      return;
     }
+
+    const classId = insertedClass[0].id;
+
+    // Insertar la relación clase-cancha en la tabla 'clasescanchas'
+    const { error: insertRelationError } = await supabase
+      .from('clasescanchas')
+      .insert([
+        {
+          clase_id: classId,
+          cancha_id: classData.cancha_id, // Usamos el ID de la cancha seleccionada
+        },
+      ]);
+
+    if (insertRelationError) {
+      console.error('Error inserting class-court relation:', insertRelationError);
+      toast.error('Error al agregar la relación clase-cancha.');
+      return;
+    }
+
+    toast.success('Clase agregados exitosamente');
+
+    // Restablecer datos del formulario
+    setClassData({
+      nombre: '',
+      descripcion: '',
+      horario: '',
+      nivel: 'principiante',
+      instructor_id: '',
+      fecha_inicio: '',
+      fecha_fin: '',
+      precio_clase: '',
+    });
+
+    onClassAdded(); // Recargar datos después de agregar la clase
   };
 
   return (
@@ -219,10 +265,42 @@ const FormClases = ({ onClassAdded }) => {
           />
         </div>
 
+        {/* Precio */}
+        <div className="mb-4">
+          <label className="block text-gray-700">Precio Clase</label>
+          <input
+            type="number"
+            name="precio_clase"
+            value={classData.precio_clase}
+            onChange={handleChange}
+            className="mt-1 block w-full border-gray-300 text-white rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 pl-2"
+            required
+          />
+        </div>
+
+        {/* Cancha */}
+        <div className="mb-4">
+          <label className="block text-gray-700">Cancha</label>
+          <select
+            name="cancha_id"
+            value={classData.cancha_id}
+            onChange={handleChange}
+            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            required
+          >
+            <option value="">Selecciona una cancha</option>
+            {canchas.map((cancha) => (
+              <option key={cancha.id} value={cancha.id}>
+                {cancha.nombre}
+              </option>
+            ))}
+          </select>
+        </div>
+
         <button
           type="submit"
-          className="py-2 px-4 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition"
-        >
+          className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          >
           Agregar Clase
         </button>
       </form>

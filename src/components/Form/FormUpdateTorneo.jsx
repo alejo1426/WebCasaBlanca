@@ -4,7 +4,7 @@ import { supabase } from '../../../supabaseClient';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const FormUpdateTorneos = ({ initialData, onTournamentUpdated }) => {
+const FormUpdateTorneos = ({ initialData, onUpdate = () => {} }) => {
   const [tournamentData, setTournamentData] = useState({
     nombre: '',
     descripcion: '',
@@ -15,95 +15,142 @@ const FormUpdateTorneos = ({ initialData, onTournamentUpdated }) => {
     premios: '',
     cupo_maximo: '',
     instructor_id: '',
+    precio_torneo: '',
+    horario: '',
+    cancha_id: '',
   });
 
   const [instructors, setInstructors] = useState([]);
+  const [canchas, setCanchas] = useState([]);
 
-  // Función para obtener la lista de instructores
-  const fetchInstructors = async () => {
-    const { data, error } = await supabase
-      .from('usuarios')
-      .select('*')
-      .eq('rol', 'instructor');
-
-    if (error) {
-      console.error('Error fetching instructors:', error);
-      toast.error('Error al cargar instructores.');
-    } else {
-      setInstructors(data);
-    }
-  };
-
-  // Llamar a la función para obtener instructores al montar el componente
+  // Obtener la lista de instructores
   useEffect(() => {
+    const fetchInstructors = async () => {
+      const { data: fetchedInstructors, error } = await supabase
+        .from('usuarios')
+        .select('id, nombres, apellidos')
+        .eq('rol', 'instructor');
+
+      if (error) {
+        console.error('Error fetching instructors:', error);
+        toast.error('Error al obtener instructores');
+      } else {
+        setInstructors(fetchedInstructors);
+      }
+    };
+
     fetchInstructors();
   }, []);
 
-  // Actualizar el formulario cuando cambia initialData
+  // Obtener las canchas disponibles
   useEffect(() => {
-    setTournamentData({
-      nombre: initialData.nombre || '',
-      descripcion: initialData.descripcion || '',
-      fecha_inicio: initialData.fecha_inicio || '',
-      fecha_fin: initialData.fecha_fin || '',
-      ubicacion: initialData.ubicacion || '',
-      categoria: initialData.categoria || 'principiante',
-      premios: initialData.premios || '',
-      cupo_maximo: initialData.cupo_maximo || '',
-      instructor_id: initialData.instructor_id || '',
-    });
-  }, [initialData]); // Este efecto se ejecuta cada vez que initialData cambia
+    const fetchCanchas = async () => {
+      const { data: fetchedCanchas, error } = await supabase
+        .from('canchas')
+        .select('id, nombre');
+
+      if (error) {
+        console.error('Error fetching canchas:', error);
+        toast.error('Error al obtener canchas');
+      } else {
+        setCanchas(fetchedCanchas);
+      }
+    };
+
+    fetchCanchas();
+  }, []);
+
+  // Cargar datos iniciales si se proporcionan
+  useEffect(() => {
+    const fetchCancha = async () => {
+      if (initialData) {
+        // Obtener la cancha asociada al torneo desde la tabla pivote 'torneoscanchas'
+        const { data: canchaData, error } = await supabase
+          .from('torneoscanchas')
+          .select('cancha_id')
+          .eq('torneo_id', initialData.id)
+          .single(); // Solo debe haber una asociación por torneo
+
+        if (error) {
+          console.error('Error fetching cancha for tournament:', error);
+          toast.error('Error al obtener la cancha asociada');
+        } else {
+          setTournamentData({
+            ...initialData,
+            cancha_id: canchaData ? canchaData.cancha_id : '',
+          });
+        }
+      }
+    };
+
+    fetchCancha();
+  }, [initialData]);
 
   // Manejar cambios en los campos del formulario
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setTournamentData({ ...tournamentData, [name]: value });
+    setTournamentData({ ...tournamentData, [e.target.name]: e.target.value });
   };
 
   // Manejar el envío del formulario
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validación de que todos los campos están llenos
-    for (const key in tournamentData) {
-      if (!tournamentData[key] && key !== 'descripcion' && key !== 'premios') {
-        toast.error(`El campo ${key} es obligatorio.`);
-        return;
-      }
-    }
-
-    // Validación del campo "cupo_maximo"
-    const cupoMaximo = parseInt(tournamentData.cupo_maximo, 10);
-    if (cupoMaximo <= 0 || cupoMaximo > 16) {
-      toast.error('El cupo debe ser mayor a 0 y menor o igual a 16.');
+    // Validar que todos los campos estén llenos
+    if (Object.values(tournamentData).some((value) => value === '')) {
+      toast.error('Todos los campos deben estar llenos.');
       return;
     }
 
-    // Preparar solo los campos que han cambiado para la actualización
-    const updatedFields = {};
-    for (const key in tournamentData) {
-      if (tournamentData[key] !== initialData[key]) {
-        updatedFields[key] = tournamentData[key];
+    try {
+      // Actualizar los datos del torneo
+      const { error: updateTournamentError } = await supabase
+        .from('torneos')
+        .update({
+          nombre: tournamentData.nombre,
+          descripcion: tournamentData.descripcion,
+          fecha_inicio: tournamentData.fecha_inicio,
+          fecha_fin: tournamentData.fecha_fin,
+          ubicacion: tournamentData.ubicacion,
+          categoria: tournamentData.categoria,
+          premios: tournamentData.premios,
+          cupo_maximo: tournamentData.cupo_maximo,
+          instructor_id: tournamentData.instructor_id,
+          precio_torneo: tournamentData.precio_torneo,
+          horario: tournamentData.horario,
+        })
+        .eq('id', initialData.id);
+
+      if (updateTournamentError) {
+        throw updateTournamentError;
       }
-    }
 
-    // Validar que se hayan realizado modificaciones
-    if (Object.keys(updatedFields).length === 0) {
-      toast.info('No se modificó ningún campo.');
-      return;
-    }
+      // Actualizar la cancha en la tabla pivote 'torneoscanchas', si cambió
+      if (tournamentData.cancha_id !== initialData.cancha_id) {
+        // Eliminar la asociación anterior
+        const { error: deleteCanchaError } = await supabase
+          .from('torneoscanchas')
+          .delete()
+          .eq('torneo_id', initialData.id);
 
-    // Actualizar torneo en la base de datos
-    const { error } = await supabase
-      .from('torneos')
-      .update(updatedFields)
-      .eq('id', initialData.id);
-    if (error) {
-      console.error('Error al actualizar el torneo:', error);
-      toast.error('Error al actualizar el torneo. Inténtalo de nuevo.');
-    } else {
-      toast.success('Torneo actualizado exitosamente');
-      onTournamentUpdated();
+        if (deleteCanchaError) {
+          throw deleteCanchaError;
+        }
+
+        // Insertar la nueva asociación
+        const { error: insertCanchaError } = await supabase
+          .from('torneoscanchas')
+          .insert([{ torneo_id: initialData.id, cancha_id: tournamentData.cancha_id }]);
+
+        if (insertCanchaError) {
+          throw insertCanchaError;
+        }
+      }
+
+      toast.success('Torneo modificado con éxito');
+      onUpdate(); // Llamamos a onUpdate para actualizar la lista de torneos
+    } catch (error) {
+      console.error('Error al modificar el torneo:', error);
+      toast.error('Error al modificar el torneo');
     }
   };
 
@@ -204,6 +251,47 @@ const FormUpdateTorneos = ({ initialData, onTournamentUpdated }) => {
             {instructors.map((instructor) => (
               <option key={instructor.id} value={instructor.id}>
                 {`${instructor.nombres} ${instructor.apellidos}`}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Horario */}
+        <div className="mb-4">
+          <label className="block text-gray-700">Horario</label>
+          <input
+            type="text"
+            name="horario"
+            value={tournamentData.horario}
+            onChange={handleChange}
+            className="mt-1 block w-full border-gray-300 text-white pl-2 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+          />
+        </div>
+
+        {/* Precio del torneo */}
+        <div className="mb-4">
+          <label className="block text-gray-700">Precio del Torneo</label>
+          <input
+            type="number"
+            name="precio_torneo"
+            value={tournamentData.precio_torneo}
+            onChange={handleChange}
+            className="mt-1 block w-full text-white pl-2 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+          />
+        </div>
+
+        {/* Cancha asociada */}
+        <div className="mb-4">
+          <label className="block text-gray-700">Cancha</label>
+          <select
+            name="cancha_id"
+            value={tournamentData.cancha_id}
+            onChange={handleChange}
+            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+          >
+            {canchas.map((cancha) => (
+              <option key={cancha.id} value={cancha.id}>
+                {cancha.nombre}
               </option>
             ))}
           </select>

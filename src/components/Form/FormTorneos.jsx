@@ -11,13 +11,17 @@ const FormTorneo = ({ onTournamentAdded }) => {
     fecha_inicio: '',
     fecha_fin: '',
     ubicacion: '',
-    categoria: 'principiante', // Valor por defecto
+    categoria: 'principiante',
+    precio_torneo: '',
+    horario: '',
+    cancha_id: '', // Valor por defecto
     premios: '',
     cupo_maximo: '',
     instructor_id: '', // Campo para el instructor
   });
 
-  const [instructors, setInstructors] = useState([]); // Lista de instructores
+  const [instructors, setInstructors] = useState([]);
+  const [cancha, setCancha] = useState([]); // Lista de canchas
 
   // Función para obtener la lista de instructores
   const fetchInstructors = async () => {
@@ -34,9 +38,24 @@ const FormTorneo = ({ onTournamentAdded }) => {
     }
   };
 
-  // Llamar a la función para obtener instructores al montar el componente
+  // Función para obtener la lista de canchas
+  const fetchCanchas = async () => {
+    const { data, error } = await supabase
+      .from('canchas')
+      .select('id, nombre'); // Asegurarse de traer id y nombre
+  
+    if (error) {
+      console.error('Error fetching canchas:', error);
+      toast.error('Error al cargar canchas.');
+    } else {
+      setCancha(data);
+    }
+  };
+
+  // Llamar a la función para obtener instructores y canchas al montar el componente
   useEffect(() => {
     fetchInstructors();
+    fetchCanchas();
   }, []);
 
   // Manejar cambios en los campos del formulario
@@ -64,26 +83,55 @@ const FormTorneo = ({ onTournamentAdded }) => {
       return;
     }
 
-    // Insertar torneo en la base de datos
-    const { error } = await supabase.from('torneos').insert([tournamentData]);
-    if (error) {
-      console.error('Error al agregar el torneo:', error);
+    // Primero insertamos el torneo en la tabla 'torneos' sin el campo 'cancha_id'
+    const { cancha_id, ...torneoSinCancha } = tournamentData;
+
+    const { data: torneoData, error: torneoError } = await supabase
+      .from('torneos')
+      .insert([torneoSinCancha])
+      .select('id'); // Obtener el id del torneo recién insertado
+
+    if (torneoError) {
+      console.error('Error al agregar el torneo:', torneoError);
       toast.error('Error al agregar el torneo. Inténtalo de nuevo.');
-    } else {
-      toast.success('Torneo agregado exitosamente');
-      setTournamentData({
-        nombre: '',
-        descripcion: '',
-        fecha_inicio: '',
-        fecha_fin: '',
-        ubicacion: '',
-        categoria: 'principiante',
-        premios: '',
-        cupo_maximo: '',
-        instructor_id: '', // Reiniciar el campo de instructor
-      });
-      onTournamentAdded(); // Recargar datos después de agregar el torneo
+      return;
     }
+
+    // Obtener el ID del torneo recién insertado
+    const torneoId = torneoData[0].id;
+
+    // Insertar la relación entre el torneo y la cancha en la tabla 'torneoscanchas'
+    const { error: pivoteError } = await supabase
+      .from('torneoscanchas')
+      .insert([
+        {
+          torneo_id: torneoId,
+          cancha_id: tournamentData.cancha_id,  // Usamos el id de la cancha seleccionada
+        },
+      ]);
+
+    if (pivoteError) {
+      console.error('Error al agregar la relación torneo-cancha:', pivoteError);
+      toast.error('Error al agregar la relación torneo-cancha. Inténtalo de nuevo.');
+      return;
+    }
+
+    toast.success('Torneo y relación con cancha agregados exitosamente');
+    setTournamentData({
+      nombre: '',
+      descripcion: '',
+      fecha_inicio: '',
+      fecha_fin: '',
+      ubicacion: '',
+      categoria: 'principiante',
+      precio_torneo: '',
+      horario: '',
+      premios: '',
+      cupo_maximo: '',
+      instructor_id: '', // Reiniciar el campo de instructor
+      cancha_id: '', // Reiniciar el campo de cancha
+    });
+    onTournamentAdded(); // Recargar datos después de agregar el torneo
   };
 
   return (
@@ -168,6 +216,32 @@ const FormTorneo = ({ onTournamentAdded }) => {
           </select>
         </div>
 
+        {/* Precio */}
+        <div className="mb-4">
+          <label className="block text-gray-700">Precio Torneo</label>
+          <input
+            type='number'
+            name="precio_torneo"
+            value={tournamentData.precio_torneo}
+            onChange={handleChange}
+            className="mt-1 block w-full border-gray-300 text-white rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            required
+          />
+        </div>
+
+        {/* Horario */}
+        <div className="mb-4">
+          <label className="block text-gray-700">Horario</label>
+          <input
+            type="text"
+            name="horario"
+            value={tournamentData.horario}
+            onChange={handleChange}
+            className="mt-1 block w-full border-gray-300 text-white rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 pl-2"
+            required
+          />
+        </div>
+
         {/* Instructores */}
         <div className="mb-4">
           <label className="block text-gray-700">Seleccionar Instructor</label>
@@ -181,21 +255,29 @@ const FormTorneo = ({ onTournamentAdded }) => {
             <option value="">Seleccione un instructor</option>
             {instructors.map((instructor) => (
               <option key={instructor.id} value={instructor.id}>
-                {`${instructor.nombres} ${instructor.apellidos}`} {/* Modificado para incluir nombres y apellidos */}
+                {`${instructor.nombres} ${instructor.apellidos}`}
               </option>
             ))}
           </select>
         </div>
 
-        {/* Premios */}
+        {/* Canchas */}
         <div className="mb-4">
-          <label className="block text-gray-700">Premios</label>
-          <textarea
-            name="premios"
-            value={tournamentData.premios}
+          <label className="block text-gray-700">Seleccionar Cancha</label>
+          <select
+            name="cancha_id"
+            value={tournamentData.cancha_id}
             onChange={handleChange}
-            className="mt-1 block w-full border-gray-300 text-white rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 pl-2"
-          />
+            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            required
+          >
+            <option value="">Seleccione una cancha</option>
+            {cancha.map((cancha) => (
+              <option key={cancha.id} value={cancha.id}>
+                {cancha.nombre}
+              </option>
+            ))}
+          </select>
         </div>
 
         {/* Cupo máximo */}
@@ -206,19 +288,22 @@ const FormTorneo = ({ onTournamentAdded }) => {
             name="cupo_maximo"
             value={tournamentData.cupo_maximo}
             onChange={handleChange}
-            className="mt-1 block w-full border-gray-300 text-white rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 pl-2"
+            className="mt-1 block w-full border-gray-300 text-white rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
             required
           />
         </div>
 
-        {/* Botón de submit */}
-        <button
-          type="submit"
-          className="py-2 px-4 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition"
-        >
-          Agregar Torneo
-        </button>
+        {/* Botón de envío */}
+        <div className="mt-4">
+          <button
+            type="submit"
+            className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          >
+            Agregar Torneo
+          </button>
+        </div>
       </form>
+
       <ToastContainer />
     </>
   );

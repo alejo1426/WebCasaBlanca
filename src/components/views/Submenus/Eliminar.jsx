@@ -35,19 +35,34 @@ const Eliminar = () => {
     }
   };
 
+  // Función para obtener el nombre del instructor
   const fetchInstructorName = async (id) => {
-    const { data, error } = await supabase
-      .from('clases')
-      .select('usuarios (nombres, apellidos)')
-      .eq('id', id)
-      .single();
-
-    if (error) {
-      console.error('Error fetching instructor name:', error);
-      return null;
+    if (!id) {
+      return 'N/A'; // Si no hay id de instructor, retornar 'N/A'
     }
-    
-    return `${data.usuarios.nombres} ${data.usuarios.apellidos}`;
+
+    try {
+      const { data, error } = await supabase
+        .from('usuarios') // Buscamos en la tabla 'usuarios', no en 'torneos'
+        .select('nombres, apellidos')
+        .eq('id', id); // Comparamos con el id del instructor
+
+      if (error) {
+        console.error('Error fetching instructor name:', error.message);
+        return 'N/A'; // Si hay error, retornamos 'N/A'
+      }
+
+      // Verificar si la consulta devolvió datos
+      if (data && data.length > 0) {
+        const instructor = data[0]; // Tomamos solo el primer resultado
+        return `${instructor.nombres} ${instructor.apellidos}`;
+      }
+
+      return 'N/A'; // Si no se encuentra, retornamos 'N/A'
+    } catch (err) {
+      console.error('Error fetching instructor name:', err);
+      return 'N/A'; // Si hay error, retornamos 'N/A'
+    }
   };
 
   const deleteItem = async (id) => {
@@ -55,7 +70,7 @@ const Eliminar = () => {
     if (error) {
       console.error('Error deleting item:', error);
     } else {
-      setResults(results.filter(item => item.id !== id));
+      setResults(results.filter((item) => item.id !== id));
       setSelectedItem(null);
       toast.success('Elemento eliminado correctamente');
     }
@@ -76,7 +91,14 @@ const Eliminar = () => {
   };
 
   const handleItemClick = async (item) => {
-    const instructorNombre = filterType === 'clases' ? await fetchInstructorName(item.id) : null;
+    let instructorNombre = null;
+
+    if (filterType === 'clases') {
+      instructorNombre = await fetchInstructorName(item.instructor_id, 'clases');
+    } else if (filterType === 'torneos') {
+      instructorNombre = await fetchInstructorName(item.instructor_id, 'torneos');
+    }
+
     setSelectedItem({ ...item, instructorNombre });
   };
 
@@ -106,14 +128,14 @@ const Eliminar = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
         <div className="col-span-1">
           <h3 className="text-xl font-semibold mb-4">Resultados</h3>
-          <ul 
+          <ul
             className="mt-4 space-y-2 overflow-y-auto" // Habilita el scroll vertical
             style={{ maxHeight: '400px' }}
           >
             {results.map((result) => (
-              <li 
-                key={result.id} 
-                className={`border p-2 rounded-md cursor-pointer transition-transform duration-300 
+              <li
+                key={result.id}
+                className={`border border-black font-semibold text-center p-2 rounded-md cursor-pointer transition-transform duration-300 
                             ${selectedItem?.id === result.id ? 'bg-gray-200' : 'hover:bg-gray-200 hover:scale-105'}`}
                 onClick={() => handleItemClick(result)}
               >
@@ -127,7 +149,7 @@ const Eliminar = () => {
         <div ref={detallesRef} className="col-span-1">
           {selectedItem && (
             <div className="shadow-lg shadow-blue-500 p-4 rounded-md transition-transform duration-300 hover:shadow-blue-700 hover:scale-105">
-              <h4 className="text-lg font-semibold mb-2">Detalles</h4>
+              <h4 className="text-lg text-center font-semibold text-[#1d3557] mb-2">Detalles</h4>
               <div>
                 {filterType === 'clases' && (
                   <>
@@ -135,9 +157,10 @@ const Eliminar = () => {
                     <p><strong>Descripción:</strong> {selectedItem.descripcion}</p>
                     <p><strong>Horario:</strong> {selectedItem.horario}</p>
                     <p><strong>Nivel:</strong> {selectedItem.nivel}</p>
-                    <p><strong>Instructor:</strong> {selectedItem.instructorNombre}</p>
+                    <p><strong>Instructor:</strong> {selectedItem.instructorNombre || 'Cargando...'}</p>
                     <p><strong>Fecha de Inicio:</strong> {selectedItem.fecha_inicio}</p>
                     <p><strong>Fecha de Fin:</strong> {selectedItem.fecha_fin || 'N/A'}</p>
+                    <p><strong>Precio:</strong> COP {selectedItem.precio_clase ? selectedItem.precio_clase.toLocaleString('es-CO') : 'N/A'}</p>
                   </>
                 )}
                 {filterType === 'torneos' && (
@@ -151,6 +174,9 @@ const Eliminar = () => {
                     <p><strong>Estado:</strong> {selectedItem.estado}</p>
                     <p><strong>Premios:</strong> {selectedItem.premios || 'N/A'}</p>
                     <p><strong>Cupo Máximo:</strong> {selectedItem.cupo_maximo}</p>
+                    <p><strong>Horario:</strong> {selectedItem.horario || 'N/A'}</p>
+                    <p><strong>Precio:</strong> COP {selectedItem.precio_torneo ? selectedItem.precio_torneo.toLocaleString('es-CO') : 'N/A'}</p>
+                    <p><strong>Instructor:</strong> {selectedItem.instructorNombre || 'Cargando...'}</p>
                   </>
                 )}
                 {filterType === 'usuarios' && (
@@ -164,31 +190,30 @@ const Eliminar = () => {
                     <p><strong>Edad:</strong> {selectedItem.edad || 'N/A'}</p>
                     <p><strong>Rol:</strong> {selectedItem.rol}</p>
                     <p><strong>Nivel de Aprendizaje:</strong> {selectedItem.nivel_aprendizaje || 'N/A'}</p>
-                    <p><strong>Fecha de Registro:</strong> {new Date(selectedItem.fecha_registro).toLocaleString()}</p>
+                    <p><strong>Fecha de Registro:</strong> {selectedItem.fecha_registro}</p>
                   </>
                 )}
+
                 {filterType === 'canchas' && (
                   <>
                     <p><strong>Nombre:</strong> {selectedItem.nombre}</p>
                     <p><strong>Capacidad:</strong> {selectedItem.capacidad}</p>
                   </>
                 )}
+                
               </div>
-
-              {/* Contenedor para centrar el botón */}
-              <div className="flex justify-center mt-4">
-                <button 
-                  className="bg-red-500 text-white py-2 px-4 rounded"
-                  onClick={handleDeleteClick}
-                >
-                  Eliminar
-                </button>
-              </div>
+              <button
+                className="bg-red-500 text-white p-2 rounded-md mt-4 w-full hover:bg-red-600"
+                onClick={handleDeleteClick}
+              >
+                Eliminar
+              </button>
             </div>
           )}
         </div>
       </div>
 
+      {/* Modal de confirmación */}
       <ModalConfirmacion 
         isOpen={isModalOpen} 
         onClose={() => setIsModalOpen(false)} 
@@ -196,6 +221,7 @@ const Eliminar = () => {
         tipo={filterType} 
       />
 
+      {/* Toast de notificación */}
       <ToastContainer />
     </div>
   );

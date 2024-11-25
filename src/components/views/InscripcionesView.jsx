@@ -55,27 +55,42 @@ const InscripcionesView = () => {
       .from('inscripcionesclases')
       .select('clase_id, fecha_inscripcion')
       .eq('usuario_id', usuarioId);
-
+  
     if (inscripcionesError) throw inscripcionesError;
-
-    const claseIds = inscripcionesClases.map(inscripcion => inscripcion.clase_id);
+  
+    const claseIds = inscripcionesClases.map((inscripcion) => inscripcion.clase_id);
     if (claseIds.length === 0) {
       setClasesInscritas([]);
       return;
     }
-
+  
     const { data: clases, error: clasesError } = await supabase
       .from('clases')
-      .select('id, nombre, descripcion, horario, nivel, fecha_inicio, fecha_fin, precio_clase, usuarios (nombres, apellidos)')
+      .select(`
+        id, 
+        nombre, 
+        descripcion, 
+        horario, 
+        nivel, 
+        fecha_inicio, 
+        fecha_fin, 
+        precio_clase, 
+        usuarios (nombres, apellidos), 
+        clasescanchas (canchas (nombre))
+      `)
       .in('id', claseIds);
-
+  
     if (clasesError) throw clasesError;
-
-    const clasesConInscripcion = clases.map(clase => {
-      const inscripcion = inscripcionesClases.find(insc => insc.clase_id === clase.id);
-      return { ...clase, fecha_inscripcion: inscripcion.fecha_inscripcion };
+  
+    const clasesConInscripcion = clases.map((clase) => {
+      const inscripcion = inscripcionesClases.find((insc) => insc.clase_id === clase.id);
+      return {
+        ...clase,
+        fecha_inscripcion: inscripcion.fecha_inscripcion,
+        cancha: clase.clasescanchas[0]?.canchas?.nombre || 'No asignada', // Campo de cancha asociada
+      };
     });
-
+  
     setClasesInscritas(clasesConInscripcion);
   };
 
@@ -84,27 +99,47 @@ const InscripcionesView = () => {
       .from('inscripcionestorneos')
       .select('torneo_id, fecha_inscripcion')
       .eq('usuario_id', usuarioId);
-
+  
     if (inscripcionesError) throw inscripcionesError;
-
-    const torneoIds = inscripcionesTorneos.map(inscripcion => inscripcion.torneo_id);
+  
+    const torneoIds = inscripcionesTorneos.map((inscripcion) => inscripcion.torneo_id);
     if (torneoIds.length === 0) {
       setTorneosInscritos([]);
       return;
     }
-
+  
     const { data: torneos, error: torneosError } = await supabase
       .from('torneos')
-      .select('id, nombre, descripcion, fecha_inicio, fecha_fin, ubicacion, categoria, precio_torneo, premios, cupo_maximo')
+      .select(`
+        id, 
+        nombre, 
+        descripcion, 
+        fecha_inicio, 
+        fecha_fin, 
+        ubicacion, 
+        categoria, 
+        premios, 
+        cupo_maximo, 
+        estado, 
+        precio_torneo, 
+        horario,
+        torneoscanchas (canchas (nombre)),
+        usuarios:instructor_id (nombres, apellidos) /* Relación con la tabla usuarios */
+      `)
       .in('id', torneoIds);
-
+  
     if (torneosError) throw torneosError;
-
-    const torneosConInscripcion = torneos.map(torneo => {
-      const inscripcion = inscripcionesTorneos.find(insc => insc.torneo_id === torneo.id);
-      return { ...torneo, fecha_inscripcion: inscripcion.fecha_inscripcion };
+  
+    const torneosConInscripcion = torneos.map((torneo) => {
+      const inscripcion = inscripcionesTorneos.find((insc) => insc.torneo_id === torneo.id);
+      return {
+        ...torneo,
+        fecha_inscripcion: inscripcion.fecha_inscripcion,
+        cancha: torneo.torneoscanchas[0]?.canchas?.nombre || 'No asignada', // Cancha asociada
+        instructor: torneo.usuarios ? `${torneo.usuarios.nombres} ${torneo.usuarios.apellidos}` : 'No asignado', // Instructor
+      };
     });
-
+  
     setTorneosInscritos(torneosConInscripcion);
   };
 

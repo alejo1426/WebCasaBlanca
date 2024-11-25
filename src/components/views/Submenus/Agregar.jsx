@@ -17,8 +17,34 @@ const Agregar = () => {
   const fetchData = async (table, search = '') => {
     let query = supabase.from(table).select('*');
 
+    if (table === 'torneos') {
+      // Incluyendo la cancha asociada a cada torneo
+      query = query.select(`
+        *,
+        torneoscanchas (
+          cancha_id,
+          canchas (
+            id,
+            nombre
+          )
+        )
+      `);
+    } else if (table === 'clases') {
+      // Incluyendo la cancha asociada a cada clase
+      query = query.select(`
+        *,
+        clasescanchas (
+          cancha_id,
+          canchas (
+            id,
+            nombre
+          )
+        )
+      `);
+    }
+
     if (search) {
-      query = query.ilike('nombre', `%${search}%`); // Ajusta esto según la estructura de tu base de datos
+      query = query.ilike('nombre', `%${search}%`);
     }
 
     const { data, error } = await query;
@@ -65,16 +91,16 @@ const Agregar = () => {
       />
 
       <div className="grid grid-cols-1 rounded-lg md:grid-cols-2 gap-6 mt-6">
-        <div className="col-span-1 bg-gray-100">
+        <div className="col-span-1">
           <h3 className="text-xl font-semibold mb-4">Resultados</h3>
           <ul
-            className="mt-4 space-y-2 overflow-y-auto" // Habilita el scroll vertical
-            style={{ maxHeight: '400px' }} // Ajusta la altura máxima según lo necesites
+            className="mt-4 space-y-2 overflow-y-auto" 
+            style={{ maxHeight: '400px' }}
           >
             {results.map((result) => (
               <li
                 key={result.id}
-                className={`border p-2 rounded-md shadow cursor-pointer transition-transform duration-300 
+                className={`border-black p-2 rounded-md border font-semibold text-center shadow cursor-pointer transition-transform duration-300 
                             ${selectedItem?.id === result.id ? 'bg-gray-200' : 'hover:scale-105 hover:bg-gray-300'}`}
                 onClick={() => handleItemClick(result)}
               >
@@ -85,7 +111,8 @@ const Agregar = () => {
         </div>
 
         <div className="col-span-1">
-          <div className="shadow-lg shadow-blue-500 p-4 rounded-md transition-transform duration-300 hover:shadow-blue-700 hover:scale-105">
+          <div className="shadow-lg shadow-blue-500 p-4 bg-gray-200 rounded-md transition-transform duration-300 hover:shadow-blue-700 hover:scale-105">
+          <h4 className="text-lg text-center font-semibold">Agregar {filterType}</h4>
             {formComponents[filterType]}
           </div>
         </div>

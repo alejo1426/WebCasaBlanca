@@ -67,55 +67,86 @@ const FormTorneo = ({ onTournamentAdded }) => {
   // Manejar el envío del formulario
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Validación de que todos los campos están llenos
+  
+    // Validación de campos obligatorios
     for (const key in tournamentData) {
       if (!tournamentData[key] && key !== 'descripcion' && key !== 'premios') {
         toast.error(`El campo ${key} es obligatorio.`);
         return;
       }
     }
-
-    // Validación del campo "cupo_maximo"
-    const cupoMaximo = parseInt(tournamentData.cupo_maximo, 10);
-    if (cupoMaximo <= 0 || cupoMaximo > 16) {
-      toast.error('El cupo debe ser mayor a 0 y menor o igual a 16.');
+  
+    // Validación de formato del horario (6am - 7am)
+    const horarioRegex = /^\d{1,2}(am|pm)\s-\s\d{1,2}(am|pm)$/;
+    if (!horarioRegex.test(tournamentData.horario)) {
+      toast.error(
+        'El campo horario debe tener el formato "6am - 7am". Por favor corrige el valor.'
+      );
       return;
     }
-
+  
+    // Validación de fechas
+    const fechaInicio = new Date(tournamentData.fecha_inicio);
+    const fechaFin = new Date(tournamentData.fecha_fin);
+    if (fechaInicio > fechaFin) {
+      toast.error('La fecha de inicio no puede ser posterior a la fecha de fin.');
+      return;
+    }
+  
+    if (fechaFin < fechaInicio) {
+      toast.error('La fecha de fin no puede ser anterior a la fecha de inicio.');
+      return;
+    }
+  
+    // Validación del campo "precio_torneo"
+    const precio = parseFloat(tournamentData.precio_torneo);
+    if (precio < 20000) {
+      toast.error('El precio del torneo no puede ser menor a 20.000');
+      return;
+    }
+  
+    // Validación del campo "cupo_maximo"
+    const cupoMaximo = parseInt(tournamentData.cupo_maximo, 10);
+    if (cupoMaximo !== 16) {
+      toast.error('El cupo máximo debe ser exactamente 16.');
+      return;
+    }
+  
     // Primero insertamos el torneo en la tabla 'torneos' sin el campo 'cancha_id'
     const { cancha_id, ...torneoSinCancha } = tournamentData;
-
+  
     const { data: torneoData, error: torneoError } = await supabase
       .from('torneos')
       .insert([torneoSinCancha])
       .select('id'); // Obtener el id del torneo recién insertado
-
+  
     if (torneoError) {
       console.error('Error al agregar el torneo:', torneoError);
       toast.error('Error al agregar el torneo. Inténtalo de nuevo.');
       return;
     }
-
+  
     // Obtener el ID del torneo recién insertado
     const torneoId = torneoData[0].id;
-
+  
     // Insertar la relación entre el torneo y la cancha en la tabla 'torneoscanchas'
     const { error: pivoteError } = await supabase
       .from('torneoscanchas')
       .insert([
         {
           torneo_id: torneoId,
-          cancha_id: tournamentData.cancha_id,  // Usamos el id de la cancha seleccionada
+          cancha_id: tournamentData.cancha_id, // Usamos el id de la cancha seleccionada
         },
       ]);
-
+  
     if (pivoteError) {
       console.error('Error al agregar la relación torneo-cancha:', pivoteError);
-      toast.error('Error al agregar la relación torneo-cancha. Inténtalo de nuevo.');
+      toast.error(
+        'Error al agregar la relación torneo-cancha. Inténtalo de nuevo.'
+      );
       return;
     }
-
+  
     toast.success('Torneo y relación con cancha agregados exitosamente');
     setTournamentData({
       nombre: '',
@@ -132,7 +163,7 @@ const FormTorneo = ({ onTournamentAdded }) => {
       cancha_id: '', // Reiniciar el campo de cancha
     });
     onTournamentAdded(); // Recargar datos después de agregar el torneo
-  };
+  };  
 
   return (
     <>
@@ -224,7 +255,7 @@ const FormTorneo = ({ onTournamentAdded }) => {
             name="precio_torneo"
             value={tournamentData.precio_torneo}
             onChange={handleChange}
-            className="mt-1 block w-full border-gray-300 text-white rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            className="mt-1 block w-full border-gray-300 pl-2 text-white rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
             required
           />
         </div>
@@ -239,6 +270,17 @@ const FormTorneo = ({ onTournamentAdded }) => {
             onChange={handleChange}
             className="mt-1 block w-full border-gray-300 text-white rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 pl-2"
             required
+          />
+        </div>
+
+        {/* Premios */}
+        <div className="mb-4">
+          <label className="block text-gray-700">Premios</label>
+          <textarea
+            name="premios"
+            value={tournamentData.premios}
+            onChange={handleChange}
+            className="mt-1 block w-full border-gray-300 text-white rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 pl-2"
           />
         </div>
 
@@ -288,7 +330,7 @@ const FormTorneo = ({ onTournamentAdded }) => {
             name="cupo_maximo"
             value={tournamentData.cupo_maximo}
             onChange={handleChange}
-            className="mt-1 block w-full border-gray-300 text-white rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            className="mt-1 block w-full border-gray-300 pl-2 text-white rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
             required
           />
         </div>

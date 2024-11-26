@@ -60,8 +60,14 @@ const FormUpdateUser = ({ initialData, onUpdate }) => {
     }
 
     // Validación de la edad
-    if (edad && (isNaN(edad) || edad < 15)) {
-      toast.error('La edad debe ser un número y mayor de 14.');
+    if (edad && (isNaN(edad) || edad < 15 || edad > 80)) {
+      toast.error('La edad debe ser un número y mayor de 14 o menor a 80.');
+      return false;
+    }
+
+    // Validación de la contraseña (solo si no está vacía)
+    if (password && !/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9\W]).{8,}$/.test(password)) {
+      toast.error('La contraseña debe contener al menos 1 mayúscula, 1 minúscula, y 1 número o símbolo.');
       return false;
     }
 

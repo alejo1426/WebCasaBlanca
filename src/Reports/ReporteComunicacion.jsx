@@ -3,7 +3,7 @@ import 'jspdf-autotable'; // Asegúrate de que tienes esta librería instalada
 import { supabase } from '../../supabaseClient';
 import logo from '../assets/logo.jpeg'; // Ajusta la ruta según tu estructura
 
-export const generateUsuariosPDF = async (Id) => {
+export const generateComunicacionPDF = async (Id) => {
   // Consulta para obtener el nombre del usuario que descarga el PDF
   const { data: adminData, error: adminError } = await supabase
     .from('usuarios')
@@ -18,8 +18,8 @@ export const generateUsuariosPDF = async (Id) => {
 
   // Consulta para obtener los usuarios
   const { data, error } = await supabase
-    .from('usuarios')
-    .select('nombres, apellidos, correo, usuario, telefono, direccion, edad');
+    .from('contactos')
+    .select('nombres, apellidos, correo, celular, mensaje, fecha_emision');
 
   if (error) {
     console.error('Error fetching users:', error);
@@ -42,7 +42,7 @@ export const generateUsuariosPDF = async (Id) => {
     doc.text('Dirección: Cra. 76 # 146-30, Bogotá', doc.internal.pageSize.getWidth() / 2, 25, { align: 'center' });
 
     doc.setFontSize(16);
-    doc.text('Reporte de Usuarios', doc.internal.pageSize.getWidth() / 2, 35, { align: 'center' });
+    doc.text('Reporte de Comunicacion', doc.internal.pageSize.getWidth() / 2, 35, { align: 'center' });
 
     // Fecha de generación del reporte
     const fechaActual = new Date().toLocaleDateString('es-ES', {
@@ -65,7 +65,7 @@ export const generateUsuariosPDF = async (Id) => {
     doc.text('Fecha de descarga: ' + fechaActual, doc.internal.pageSize.getWidth() - 25, 50, { align: 'right' });
 
     // Definir encabezados de tabla
-    const headers = [['No.', 'Nombres', 'Apellidos', 'Correo', 'Usuario', 'Teléfono', 'Dirección', 'Edad']];
+    const headers = [['No.', 'Nombres', 'Apellidos', 'Correo', 'Celular', 'Mensaje', 'Fecha']];
 
     // Crear las filas para la tabla
     const rows = data.map((user, index) => [
@@ -73,10 +73,9 @@ export const generateUsuariosPDF = async (Id) => {
       user.nombres,
       user.apellidos,
       user.correo,
-      user.usuario,
-      user.telefono,
-      user.direccion,
-      user.edad,
+      user.celular,
+      user.mensaje,
+      user.fecha_emision,
     ]);
 
     // Crear la tabla
@@ -98,6 +97,6 @@ export const generateUsuariosPDF = async (Id) => {
     });
 
     // Guardar el PDF
-    doc.save('reporte_usuarios.pdf');
+    doc.save('reporte_comunicacion.pdf');
   };
 };

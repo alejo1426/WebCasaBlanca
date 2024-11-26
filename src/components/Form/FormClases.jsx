@@ -59,6 +59,19 @@ const FormClases = ({ onClassAdded }) => {
     return horarioRegex.test(horario);
   };
 
+  const validatePrecio = (precio) => {
+    const precioNum = Number(precio);
+    if (precioNum < 20000) {
+      toast.error('El precio de la clase no puede ser menor a 20.000');
+      return false;
+    }
+    if (precioNum < 0) {
+      toast.error('El precio de la clase no puede ser un número negativo.');
+      return false;
+    }
+    return true;
+  };
+
   const areDatesValid = () => {
     const fechaInicio = new Date(classData.fecha_inicio);
     const fechaFin = new Date(classData.fecha_fin);
@@ -100,6 +113,10 @@ const FormClases = ({ onClassAdded }) => {
     if (!validateHorario(classData.horario)) {
       toast.error('El horario debe tener el formato correcto (ej. 7am - 8am).');
       return;
+    }
+
+    if (!validatePrecio(classData.precio_clase)) {
+      return; // Detener si el precio no es válido
     }
 
     const classExists = await checkClassExists();

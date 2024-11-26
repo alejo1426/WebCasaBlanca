@@ -27,8 +27,15 @@ const Registro = () => {
             return;
         }
 
-        if (parseInt(edad) < 15) {
-            toast.error('Debes tener al menos 15 años para registrarte.');
+        if (parseInt(edad) < 15 || parseInt(edad) > 80) {
+            toast.error('Debes tener al menos 15 y no mayor a 80 años para registrarte.');
+            return;
+        }
+
+        // Validación de contraseña
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9\W]).{8,}$/;
+        if (!passwordRegex.test(password)) {
+            toast.error('La contraseña debe contener al menos 1 mayúscula, 1 minúscula, y 1 número o símbolo.');
             return;
         }
 

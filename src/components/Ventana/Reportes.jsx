@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { generateUsuariosPDF } from '../../Reports/ReporteUsuarios';
 import { generateTorneosPDF, generateMisTorneosPDF } from '../../Reports/ReporteTorneos';
 import { generateClasesPDF, generateMisClasesPDF } from '../../Reports/ReporteClases';
+import {generateComunicacionPDF} from '../../Reports/ReporteComunicacion'
 
 const ReportModal = ({ onClose, role, Id }) => {
   console.log('User ID:', Id); // Agregar instructorId como prop
@@ -11,7 +12,8 @@ const ReportModal = ({ onClose, role, Id }) => {
     ? [
         { label: 'Usuarios', value: 'usuarios' },
         { label: 'Torneos', value: 'torneos' },
-        { label: 'Clases', value: 'clases' }
+        { label: 'Clases', value: 'clases' },
+        { label: 'Comunicacion', value: 'comunicacion' },
       ]
     : role === 'instructor'
     ? [
@@ -41,6 +43,9 @@ const ReportModal = ({ onClose, role, Id }) => {
           break;
         case 'clases':
           await generateClasesPDF(Id);
+          break;
+        case 'comunicacion':
+          await generateComunicacionPDF(Id);
           break;
         case 'Misclases':
           if (Id) {

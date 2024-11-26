@@ -187,7 +187,12 @@ const FormUser = ({ onUserAdded }) => {
           Agregar Usuario
         </button>
       </form>
-      <ToastContainer />
+      <ToastContainer 
+        position="top-right" 
+        autoClose={2000} 
+        hideProgressBar={false} 
+        newestOnTop={false} 
+      />
     </>
   );
 };

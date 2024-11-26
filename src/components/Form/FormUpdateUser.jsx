@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import { useState, useEffect } from 'react';
-import { ToastContainer, toast } from 'react-toastify'; // Asegúrate de tener la biblioteca instalada
+import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const UpdateUser = ({ userData, onUserUpdate }) => {
@@ -9,7 +9,7 @@ const UpdateUser = ({ userData, onUserUpdate }) => {
     apellidos: userData.apellidos || '',
     correo: userData.correo || '',
     usuario: userData.usuario || '',
-    password: '', // Mantener el campo de contraseña vacío
+    password: '',
     telefono: userData.telefono || '',
     direccion: userData.direccion || '',
     edad: userData.edad || '',
@@ -17,14 +17,15 @@ const UpdateUser = ({ userData, onUserUpdate }) => {
     nivel_aprendizaje: userData.nivel_aprendizaje || '',
   });
 
-  // Efecto para actualizar el formulario cuando cambian los datos del usuario
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[\d\W]).*$/;
+
   useEffect(() => {
     setFormData({
       nombres: userData.nombres || '',
       apellidos: userData.apellidos || '',
       correo: userData.correo || '',
       usuario: userData.usuario || '',
-      password: '', // Mantener el campo de contraseña vacío
+      password: '',
       telefono: userData.telefono || '',
       direccion: userData.direccion || '',
       edad: userData.edad || '',
@@ -41,6 +42,11 @@ const UpdateUser = ({ userData, onUserUpdate }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (formData.password && !passwordRegex.test(formData.password)) {
+      toast.error('La contraseña debe incluir al menos una mayúscula, una minúscula y un número o símbolo.');
+      return;
+    }
+
     try {
       const response = await fetch('https://backend-jwt-ashy.vercel.app/api/auth/actualizar', {
         method: 'PUT',
@@ -49,7 +55,7 @@ const UpdateUser = ({ userData, onUserUpdate }) => {
         },
         body: JSON.stringify({
           ...formData,
-          id: userData.id, // Asegúrate de incluir el ID del usuario
+          id: userData.id,
         }),
       });
 
@@ -57,8 +63,6 @@ const UpdateUser = ({ userData, onUserUpdate }) => {
 
       if (response.ok) {
         toast.success('¡Datos actualizados exitosamente!');
-
-        // Llama a la función para actualizar los datos en el componente padre
         onUserUpdate({ ...formData, id: userData.id });
       } else {
         toast.error(result.error || 'Hubo un error al actualizar los datos');
@@ -73,11 +77,11 @@ const UpdateUser = ({ userData, onUserUpdate }) => {
     <section
       className="w-full md:w-1/2 bg-white p-6 rounded-lg transition-shadow"
       style={{
-        boxShadow: '0 8px 16px rgba(69, 123, 157, 0.4)', // Sombra azul personalizada
+        boxShadow: '0 8px 16px rgba(69, 123, 157, 0.4)',
         transition: 'box-shadow 0.3s ease-in-out',
       }}
-      onMouseEnter={(e) => e.currentTarget.style.boxShadow = '0 12px 24px rgba(0, 102, 204, 0.8)'} // Sombra más azul al pasar el cursor
-      onMouseLeave={(e) => e.currentTarget.style.boxShadow = '0 8px 16px rgba(69, 123, 157, 0.4)'} // Vuelve a la sombra original
+      onMouseEnter={(e) => (e.currentTarget.style.boxShadow = '0 12px 24px rgba(0, 102, 204, 0.8)')}
+      onMouseLeave={(e) => (e.currentTarget.style.boxShadow = '0 8px 16px rgba(69, 123, 157, 0.4)')}
     >
       <h2 className="text-2xl font-bold mb-4">Modificar Datos</h2>
       <form onSubmit={handleSubmit}>
@@ -135,6 +139,11 @@ const UpdateUser = ({ userData, onUserUpdate }) => {
             className="mt-1 block w-full border-gray-300 text-white pl-2 rounded-md"
             placeholder="Deja en blanco para mantener la misma contraseña"
           />
+          {!passwordRegex.test(formData.password) && formData.password && (
+            <p className="text-red-500 text-sm">
+              La contraseña debe incluir al menos una mayúscula, una minúscula y un número o símbolo.
+            </p>
+          )}
         </div>
         <div className="mb-4">
           <label className="block text-gray-700">Teléfono</label>
@@ -167,8 +176,6 @@ const UpdateUser = ({ userData, onUserUpdate }) => {
             min="15"
           />
         </div>
-
-        {/* Mostrar campos adicionales solo si el rol es admin */}
         {formData.rol === 'admin' && (
           <>
             <div className="mb-4">
@@ -202,7 +209,6 @@ const UpdateUser = ({ userData, onUserUpdate }) => {
             </div>
           </>
         )}
-
         <button
           type="submit"
           className="w-full py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
@@ -210,9 +216,12 @@ const UpdateUser = ({ userData, onUserUpdate }) => {
           Actualizar Datos
         </button>
       </form>
-
-      {/* Contenedor de Toastify */}
-      <ToastContainer />
+      <ToastContainer 
+        position="top-right" 
+        autoClose={2000} 
+        hideProgressBar={false} 
+        newestOnTop={false} 
+      />
     </section>
   );
 };

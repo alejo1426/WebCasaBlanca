@@ -321,7 +321,12 @@ const FormClases = ({ onClassAdded }) => {
           Agregar Clase
         </button>
       </form>
-      <ToastContainer />
+      <ToastContainer 
+        position="top-right" 
+        autoClose={2000} 
+        hideProgressBar={false} 
+        newestOnTop={false} 
+      />
     </div>
   );
 };

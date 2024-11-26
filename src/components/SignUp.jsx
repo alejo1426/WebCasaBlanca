@@ -140,14 +140,9 @@ const Registro = () => {
 
             <ToastContainer 
                 position="top-right" 
-                autoClose={5000} 
-                hideProgressBar 
-                newestOnTop 
-                closeOnClick 
-                rtl={false} 
-                pauseOnFocusLoss 
-                draggable 
-                pauseOnHover 
+                autoClose={2000} 
+                hideProgressBar={false} 
+                newestOnTop={false} 
             />
         </div>
     );

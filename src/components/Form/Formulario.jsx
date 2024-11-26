@@ -242,7 +242,12 @@ const Formulario = () => {
           </button>
         </div>
       </form>
-      <ToastContainer />
+      <ToastContainer 
+        position="top-right" 
+        autoClose={2000} 
+        hideProgressBar={false} 
+        newestOnTop={false} 
+      />
     </div>
   );
   

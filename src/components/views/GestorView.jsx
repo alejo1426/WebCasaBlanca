@@ -197,7 +197,12 @@ const GestorView = () => {
         )}
       </div>
 
-      <ToastContainer />
+      <ToastContainer 
+        position="top-right" 
+        autoClose={2000} 
+        hideProgressBar={false} 
+        newestOnTop={false} 
+      />
 
       {showResultsPanel && (
         <ResultadosPanel 

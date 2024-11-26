@@ -156,7 +156,6 @@ const FormUpdateTorneos = ({ initialData, onUpdate = () => {} }) => {
 
   return (
     <>
-      <ToastContainer />
       <form onSubmit={handleSubmit} className="bg-gray-100 p-6 rounded-lg shadow">
         {/* Nombre del torneo */}
         <div className="mb-4">
@@ -331,6 +330,13 @@ const FormUpdateTorneos = ({ initialData, onUpdate = () => {} }) => {
           </button>
         </div>
       </form>
+      
+      <ToastContainer 
+        position="top-right" 
+        autoClose={2000} 
+        hideProgressBar={false} 
+        newestOnTop={false} 
+      />
     </>
   );
 };

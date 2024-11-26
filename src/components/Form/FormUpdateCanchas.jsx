@@ -112,7 +112,12 @@ const FormUpdateCanchas = ({ initialData, onUpdate }) => {
         </div>
       </form>
 
-      <ToastContainer /> {/* Agregar el ToastContainer aquí */}
+      <ToastContainer 
+        position="top-right" 
+        autoClose={2000} 
+        hideProgressBar={false} 
+        newestOnTop={false} 
+      />
     </>
   );
 };

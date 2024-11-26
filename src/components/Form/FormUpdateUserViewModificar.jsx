@@ -39,38 +39,53 @@ const FormUpdateUser = ({ initialData, onUpdate }) => {
   };
 
   const validateForm = () => {
-    const { nombres, apellidos, correo, usuario, telefono, edad, rol, nivel_aprendizaje } = formData;
-
+    const {
+      nombres,
+      apellidos,
+      correo,
+      usuario,
+      telefono,
+      edad,
+      rol,
+      nivel_aprendizaje,
+      password,
+    } = formData;
+  
     // Validar que todos los campos obligatorios estén llenos
     if (!nombres || !apellidos || !correo || !usuario || !rol || !nivel_aprendizaje) {
       toast.error('Por favor, complete todos los campos obligatorios.');
       return false;
     }
-
+  
     // Validación del correo electrónico
     if (!/^\S+@\S+\.\S+$/.test(correo)) {
       toast.error('Por favor, ingrese un correo electrónico válido.');
       return false;
     }
-
+  
     // Validación del teléfono
     if (telefono && !/^\d+$/.test(telefono)) {
       toast.error('El teléfono debe contener solo números.');
       return false;
     }
-
+  
     // Validación de la edad
     if (edad && (isNaN(edad) || edad < 15 || edad > 80)) {
-      toast.error('La edad debe ser un número y mayor de 14 o menor a 80.');
+      toast.error('La edad debe ser un número y mayor de 14.');
       return false;
     }
-
-    // Validación de la contraseña (solo si no está vacía)
-    if (password && !/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9\W]).{8,}$/.test(password)) {
-      toast.error('La contraseña debe contener al menos 1 mayúscula, 1 minúscula, y 1 número o símbolo.');
-      return false;
+  
+    // Validación de la nueva contraseña
+    if (password) {
+      const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[\d\W]).+$/;
+      if (!passwordRegex.test(password)) {
+        toast.error(
+          'La contraseña debe contener al menos una letra mayúscula, una letra minúscula y un número o símbolo.'
+        );
+        return false;
+      }
     }
-
+  
     return true;
   };
 
@@ -109,7 +124,6 @@ const FormUpdateUser = ({ initialData, onUpdate }) => {
 
   return (
     <>
-      <ToastContainer />
       <form onSubmit={handleSubmit} className="bg-gray-100 p-6 rounded-lg shadow">
         <h2 className="text-2xl font-bold mb-4">Modificar Datos</h2>
 
@@ -261,6 +275,7 @@ const FormUpdateUser = ({ initialData, onUpdate }) => {
           </button>
         </div>
       </form>
+      <ToastContainer />
     </>
   );
 };

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { FaUser, FaEnvelope, FaLock, FaPhone, FaMapMarkerAlt, FaBirthdayCake } from 'react-icons/fa';
 import '../css/Signup.css';
 
 const Registro = () => {
@@ -61,7 +62,9 @@ const Registro = () => {
         const data = await response.json();
 
         if (!response.ok) {
-            toast.error(data.message || 'Hubo un error en el registro. Intenta nuevamente.');
+            // Asegurarse de que el servidor esté devolviendo un mensaje de error claro
+            const errorMessage = data.error || data.message || 'Hubo un error en el registro. Intenta nuevamente.';
+            toast.error(errorMessage);
         } else {
             toast.success('¡Registro exitoso!');
             navigate('/Login');
@@ -70,7 +73,6 @@ const Registro = () => {
 
     return (
         <div className="relative w-full min-h-screen flex items-center justify-center" style={{ fontFamily: 'Roboto, sans-serif' }}>
-            {/* Botón de marcha atrás */}
             <button 
                 onClick={handleBackClick} 
                 className="absolute top-3 left-5 z-50 text-[#ffffff] bg-[#1d3557] p-2 rounded-full shadow-md focus:outline-none hover:bg-[#0059ff] transition-colors"
@@ -80,7 +82,6 @@ const Registro = () => {
                 </svg>
             </button>
 
-            {/* Video de fondo */}
             <video
                 autoPlay
                 loop
@@ -91,7 +92,6 @@ const Registro = () => {
                 Your browser does not support the video tag.
             </video>
 
-            {/* Contenedor del formulario */}
             <div className="flex flex-col w-full max-w-lg mx-auto p-6 md:p-10 bg-opacity-80 backdrop-blur-lg rounded-2xl shadow-2xl relative z-10">
                 <div className="flex flex-col justify-center items-center gap-4 pb-4">
                     <div>
@@ -101,27 +101,30 @@ const Registro = () => {
                 </div>
                 <div className="neon-text-subtitulo text-sm font-bold text-[#ffffff] pb-8 text-center">Regístrate con nosotros y disfruta!!</div>
                 <form className="flex flex-col space-y-4" onSubmit={handleSubmit}>
-                    {[
-                        { label: 'Nombres', id: 'nombres', value: nombres, onChange: setNombres, type: 'text', placeholder: 'Ingrese sus nombres' },
-                        { label: 'Apellidos', id: 'apellidos', value: apellidos, onChange: setApellidos, type: 'text', placeholder: 'Ingrese sus apellidos' },
-                        { label: 'Correo', id: 'correo', value: correo, onChange: setCorreo, type: 'email', placeholder: 'Ingrese su correo' },
-                        { label: 'Usuario', id: 'usuario', value: usuario, onChange: setUsuario, type: 'text', placeholder: 'Ingrese su usuario' },
-                        { label: 'Password', id: 'password', value: password, onChange: setPassword, type: 'password', placeholder: '••••••••••' },
-                        { label: 'Teléfono', id: 'telefono', value: telefono, onChange: setTelefono, type: 'text', placeholder: 'Ingrese su teléfono' },
-                        { label: 'Dirección', id: 'direccion', value: direccion, onChange: setDireccion, type: 'text', placeholder: 'Ingrese su dirección' },
-                        { label: 'Edad', id: 'edad', value: edad, onChange: setEdad, type: 'number', placeholder: 'Ingrese su edad' },
-                    ].map(({ label, id, value, onChange, type, placeholder }) => (
-                        <div key={id} className="pb-2 text-center">
-                            <label htmlFor={id} className="label-text block mb-2 text-sm font-medium text-[#ffffff] text-center">{label}</label>
-                            <input
-                                type={type}
-                                name={id}
-                                id={id}
-                                className="pl-12 mb-2 bg-white text-gray-600 border focus:border-transparent border-gray-300 sm:text-sm rounded-lg ring ring-transparent focus:ring-1 focus:outline-none focus:ring-gray-400 block w-full p-2.5"
-                                placeholder={placeholder}
-                                value={value}
-                                onChange={(e) => onChange(e.target.value)}
-                            />
+                    {[ 
+                        { label: 'Nombres', id: 'nombres', value: nombres, onChange: setNombres, type: 'text', placeholder: 'Ingrese sus nombres', icon: <FaUser className="h-5 w-5 text-gray-600 absolute left-3 top-1/2 transform -translate-y-1/2" /> },
+                        { label: 'Apellidos', id: 'apellidos', value: apellidos, onChange: setApellidos, type: 'text', placeholder: 'Ingrese sus apellidos', icon: <FaUser className="h-5 w-5 text-gray-600 absolute left-3 top-1/2 transform -translate-y-1/2" /> },
+                        { label: 'Correo', id: 'correo', value: correo, onChange: setCorreo, type: 'email', placeholder: 'Ingrese su correo', icon: <FaEnvelope className="h-5 w-5 text-gray-600 absolute left-3 top-1/2 transform -translate-y-1/2" /> },
+                        { label: 'Usuario', id: 'usuario', value: usuario, onChange: setUsuario, type: 'text', placeholder: 'Ingrese su usuario', icon: <FaUser className="h-5 w-5 text-gray-600 absolute left-3 top-1/2 transform -translate-y-1/2" /> },
+                        { label: 'Contraseña', id: 'password', value: password, onChange: setPassword, type: 'password', placeholder: '••••••••••', icon: <FaLock className="h-5 w-5 text-gray-600 absolute left-3 top-1/2 transform -translate-y-1/2" /> },
+                        { label: 'Teléfono', id: 'telefono', value: telefono, onChange: setTelefono, type: 'text', placeholder: 'Ingrese su teléfono', icon: <FaPhone className="h-5 w-5 text-gray-600 absolute left-3 top-1/2 transform -translate-y-1/2" /> },
+                        { label: 'Dirección', id: 'direccion', value: direccion, onChange: setDireccion, type: 'text', placeholder: 'Ingrese su dirección', icon: <FaMapMarkerAlt className="h-5 w-5 text-gray-600 absolute left-3 top-1/2 transform -translate-y-1/2" /> },
+                        { label: 'Edad', id: 'edad', value: edad, onChange: setEdad, type: 'number', placeholder: 'Ingrese su edad', icon: <FaBirthdayCake className="h-5 w-5 text-gray-600 absolute left-3 top-1/2 transform -translate-y-1/2" /> },
+                    ].map(({ label, id, value, onChange, type, placeholder, icon }) => (
+                        <div key={id} className="relative pb-2 text-center">
+                            <label htmlFor={id} className="label-text block mb-2 text-sm font-medium text-[#ffffff]">{label}</label>
+                            <div className="relative">
+                                {icon}
+                                <input
+                                    type={type}
+                                    name={id}
+                                    id={id}
+                                    className="pl-12 mb-2 font-semibold bg-white text-[#1d3557] border focus:border-transparent border-gray-300 sm:text-sm rounded-lg ring ring-transparent focus:ring-1 focus:outline-none focus:ring-gray-400 block w-full p-2.5"
+                                    placeholder={placeholder}
+                                    value={value}
+                                    onChange={(e) => onChange(e.target.value)}
+                                />
+                            </div>
                         </div>
                     ))}
                     <button className="register-button w-full" type="submit">

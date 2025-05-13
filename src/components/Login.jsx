@@ -12,6 +12,8 @@ const Login = () => {
     const handleRegistroClick = () => {
         navigate('/signup');
     };
+    
+    const [showPassword, setShowPassword] = useState(false);
 
     const handleBackClick = () => {
         navigate(-1); // Volver a la pantalla anterior
@@ -112,15 +114,35 @@ const Login = () => {
                                 </svg>
                             </span>
                             <input 
-                                type="password" 
+                                type={showPassword ? 'text' : 'password'}
                                 name="password" 
                                 id="password" 
                                 placeholder="••••••••••" 
-                                className="pl-12 mb-2 bg-white text-gray-600 border border-gray-300 rounded-lg focus:border-transparent focus:ring-1 focus:ring-gray-400 focus:outline-none block w-full p-2.5" 
+                                className="pl-12 pr-10 mb-2 bg-white text-gray-600 border border-gray-300 rounded-lg focus:border-transparent focus:ring-1 focus:ring-gray-400 focus:outline-none block w-full p-2.5" 
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)} 
                                 autoComplete="current-password" 
                             />
+                            {/* Botón mostrar/ocultar */}
+                            <button
+                                type="button"
+                                onClick={() => setShowPassword(!showPassword)}
+                                className="absolute inset-y-0 right-3 flex items-center text-[#006aff] focus:outline-none"
+                            >
+                                {showPassword ? (
+                                    // Icono de ojo tachado
+                                    <svg width="21px" height="21px" viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" transform="translate(2 10)">
+                                        <path d="m0 .5c2.53705308 3.66666667 5.37038642 5.5 8.5 5.5 3.1296136 0 5.9629469-1.83333333 8.5-5.5"/>
+                                        <path d="m2.5 3.423-2 2.077"/><path d="m14.5 3.423 2 2.077"/><path d="m10.5 6 1 2.5"/>
+                                        <path d="m6.5 6-1 2.5"/></g>
+                                    </svg>
+                                ) : (
+                                    // Icono de ojo abierto
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="h-5 w-5">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12s3.75-6.75 9.75-6.75S21.75 12 21.75 12s-3.75 6.75-9.75 6.75S2.25 12 2.25 12zm9.75 3a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
+                                    </svg>
+                                )}
+                            </button>
                         </div>
                     </div>
                     <button className="login-button w-full" type="submit">
@@ -135,6 +157,11 @@ const Login = () => {
                         No tienes una cuenta? <span className="font-medium text-[#0059ff] hover:underline cursor-pointer" onClick={handleRegistroClick}>Registrarse</span>
                     </div>
                 </form>
+                <div className='pt-5 label-text text-sm font-roboto text-[#ffffff] text-center font-bold'>
+                    <h3>NOTA:</h3>
+                    <h2>~* USER: Prueba</h2>
+                    <h2>PASSWORD: Prueba1234 *~</h2>
+                </div>
             </div>
 
             <ToastContainer 

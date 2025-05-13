@@ -40,7 +40,7 @@ const Registro = () => {
             return;
         }
 
-        const response = await fetch('https://backend-jwt-ashy.vercel.app/api/auth/registro', {
+        const response = await fetch('https://backend-jwt-vt2o.vercel.app/api/auth/registro', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

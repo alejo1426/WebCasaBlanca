@@ -7,7 +7,8 @@ import 'react-toastify/dist/ReactToastify.css';
 const FormInscripcionTorneos = ({ selectedItem }) => {
   const { 
     nombre, 
-    descripcion, 
+    descripcion,
+    usuarios,
     fecha_inicio, 
     fecha_fin, 
     ubicacion, 
@@ -36,6 +37,12 @@ const FormInscripcionTorneos = ({ selectedItem }) => {
       usuarioId = decoded.id;
     } catch {
       handleError('Error al decodificar el token.');
+      return;
+    }
+
+    // Verificar si el usuario es el instructor de la clase
+    if (selectedItem?.instructor_id === usuarioId) {
+      toast.warn('No puedes inscribirte en un torneo que tú mismo estás impartiendo.');
       return;
     }
 
@@ -110,6 +117,7 @@ const FormInscripcionTorneos = ({ selectedItem }) => {
         <p><strong>Precio:</strong> COP {precio_torneo ? precio_torneo.toLocaleString('es-CO') : 'No disponible'}</p>
         <p><strong>Premios:</strong> {premios}</p>
         <p><strong>Cupo Máximo:</strong> {cupo_maximo}</p>
+        <p><strong>Profesor:</strong> {usuarios?.nombres ? `${usuarios.nombres} ${usuarios.apellidos}` : 'Sin asignar'}</p>
       </div>
 
       <button 

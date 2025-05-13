@@ -3,6 +3,7 @@ import { supabase } from '../../../supabaseClient';
 import FormInscripcionClases from '../Form/FormInscripcionClases';
 import FormInscripcionTorneos from '../Form/FormInscripcionTorneos';
 import CardItem from '../Card/CardItem';
+import '../../css/DashboardView.css';
 
 const ResolucionMobile = 768; // Definimos el ancho móvil como constante
 const ResolucionTablet = 1024; // Umbral de 1024px para tabletas
@@ -14,8 +15,9 @@ const DashboardView = () => {
   const [selectedType, setSelectedType] = useState(null);
   const [loadingClasses, setLoadingClasses] = useState(true);
   const [loadingTournaments, setLoadingTournaments] = useState(true);
-
+  
   const formSectionRef = useRef(null);
+  const scrollContainerRef = useRef(null); // Referencia al contenedor del scroll
 
   const fetchClassesWithInstructors = async () => {
     try {
@@ -37,7 +39,8 @@ const DashboardView = () => {
     try {
       const { data, error } = await supabase
         .from('torneos')
-        .select('id, nombre, descripcion, fecha_inicio, fecha_fin, categoria, precio_torneo, cupo_maximo, ubicacion, premios');
+        .select('id, nombre, descripcion, fecha_inicio, fecha_fin, categoria, precio_torneo, cupo_maximo, ubicacion, premios,instructor_id, usuarios (nombres, apellidos)')
+        .eq('usuarios.rol', 'instructor');
 
       if (error) throw error;
       setTournaments(data);
@@ -59,11 +62,27 @@ const DashboardView = () => {
   };
 
   useEffect(() => {
-    // Desplazarse si la pantalla es móvil o tablet (<= 1024px) y un elemento está seleccionado
-    if (selectedItem && selectedType && (window.innerWidth <= ResolucionMobile || window.innerWidth <= ResolucionTablet)) {
-      formSectionRef.current.scrollIntoView({ behavior: 'smooth' });
+    // Verificar si hay un elemento seleccionado y si se debe desplazar
+    if (selectedItem && selectedType) {
+      if (window.innerWidth <= ResolucionMobile || window.innerWidth <= ResolucionTablet) {
+        // Desplazarse en resoluciones móviles o tabletas
+        formSectionRef.current.scrollIntoView({ behavior: 'smooth' });
+      } else if (window.innerWidth > ResolucionTablet) {
+        // Desplazarse hacia arriba en resoluciones mayores a 1024px
+        formSectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
     }
   }, [selectedItem, selectedType]);
+
+  // Función para manejar el scroll y verificar si el contenedor está al final
+  const handleScroll = () => {
+    const container = scrollContainerRef.current;
+    if (container.scrollHeight - container.scrollTop === container.clientHeight) {
+      container.style.maskImage = 'none'; // Eliminar la máscara cuando se llega al final
+    } else {
+      container.style.maskImage = 'linear-gradient(to bottom, black 90%, transparent 100%)'; // Aplicar la máscara
+    }
+  };
 
   const renderSection = (title, loading, data, type) => (
     <section className="mb-8">
@@ -73,7 +92,18 @@ const DashboardView = () => {
       ) : data.length === 0 ? (
         <p>No hay {title.toLowerCase()} disponibles</p>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div
+          className="scroll-container grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+          style={{
+            maxHeight: '400px',
+            overflowY: 'auto',
+            maskImage: 'linear-gradient(to bottom, black 90%, transparent 100%)',
+            WebkitMaskImage: 'linear-gradient(to bottom, black 90%, transparent 100%)',
+            paddingBottom: '20px',
+          }}
+          onScroll={handleScroll}
+          ref={scrollContainerRef}
+        >
           {data.map(item => (
             <CardItem key={item.id} item={item} type={type} onSelect={() => handleSelectItem(item, type)} />
           ))}

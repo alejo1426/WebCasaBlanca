@@ -25,7 +25,7 @@ const FormInscripcionClases = ({ selectedItem }) => {
   const handleInscripcion = async () => {
     const token = localStorage.getItem('token');
     let usuarioId;
-
+  
     // Decodificar el token para obtener el usuario_id
     try {
       const decoded = jwtDecode(token);
@@ -34,7 +34,13 @@ const FormInscripcionClases = ({ selectedItem }) => {
       handleError('Error al decodificar el token.');
       return;
     }
-
+  
+    // Verificar si el usuario es el instructor de la clase
+    if (selectedItem?.instructor_id === usuarioId) {
+      toast.warn('No puedes inscribirte en una clase que tú mismo estás impartiendo.');
+      return;
+    }
+  
     // Verificar si el usuario ya está inscrito en la clase
     try {
       const { data: inscripciones, error: inscripcionError } = await supabase
@@ -42,9 +48,9 @@ const FormInscripcionClases = ({ selectedItem }) => {
         .select('*')
         .eq('usuario_id', usuarioId)
         .eq('clase_id', claseId);
-
+  
       if (inscripcionError) throw inscripcionError;
-
+  
       if (inscripciones.length > 0) {
         toast.warn('Ya estás inscrito en esta clase.');
         return;
@@ -53,7 +59,7 @@ const FormInscripcionClases = ({ selectedItem }) => {
       handleError('Error al verificar la inscripción.');
       return;
     }
-
+  
     // Obtener el nivel del usuario desde Supabase
     let usuarioNivel;
     try {
@@ -62,20 +68,20 @@ const FormInscripcionClases = ({ selectedItem }) => {
         .select('nivel_aprendizaje')
         .eq('id', usuarioId)
         .single();
-
+  
       if (usuarioError) throw usuarioError;
       usuarioNivel = usuarioData.nivel_aprendizaje;
     } catch {
       handleError('No se pudo obtener el nivel del usuario.');
       return;
     }
-
+  
     // Validar si el nivel del usuario coincide con el nivel de la clase
     if (usuarioNivel !== nivelClase) {
       handleError(`No puedes inscribirte. Tu nivel es ${usuarioNivel}, pero la clase es de nivel ${nivelClase}.`);
       return;
     }
-
+  
     // Inscribir al usuario en la clase
     try {
       const { error } = await supabase
@@ -87,7 +93,7 @@ const FormInscripcionClases = ({ selectedItem }) => {
     } catch {
       handleError('Hubo un problema al procesar la inscripción. Por favor, intenta de nuevo.');
     }
-  };
+  };  
 
   const handleSubmit = (e) => {
     e.preventDefault();

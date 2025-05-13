@@ -75,6 +75,8 @@ const ResultadosPanel = ({ onClose, tournaments, onSavePositions }) => {
         </button>
 
         <h2 className="text-2xl font-bold mb-4">Seleccionar Posiciones para {selectedTournament ? selectedTournament.nombre : 'torneo'}</h2>
+        <p>Ten encuenta que para asignar posiciones en un torneo, dicho torneo debe haber finalizado. !!</p>
+        <p>De lo contrario no apareceran ningun torneo para asignacion de posiciones.</p>
 
         <label className="block mb-2">Selecciona un Torneo:</label>
         <select 
